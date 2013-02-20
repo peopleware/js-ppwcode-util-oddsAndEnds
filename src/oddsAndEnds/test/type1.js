@@ -14,7 +14,19 @@
  limitations under the License.
  */
 
-define([
-  "./type1",
-  "./type2"
-], 1);
+window["ppwcode-util-oddsAndEnds-type-2mid-MID"] = "./mockType2Mid";
+console.log('window["ppwcode-util-oddsAndEnds-type-2mid-MID"]: ' + window["ppwcode-util-oddsAndEnds-type-2mid-MID"]);
+
+define(["dojo/main", "util/doh/main", "../type"],
+  function(dojo, doh, type) {
+
+    doh.register("type 1", [
+
+      function testFindTypeRelative() {
+        doh.is(true, true);
+      }
+
+    ]);
+
+  }
+);

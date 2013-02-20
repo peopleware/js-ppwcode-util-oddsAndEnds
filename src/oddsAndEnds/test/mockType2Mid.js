@@ -14,7 +14,13 @@
  limitations under the License.
  */
 
-define([
-  "./type1",
-  "./type2"
-], 1);
+define([],
+  function() {
+    var type2Mid = function(serverTypeIdentifier) {
+      return serverTypeIdentifier;
+    };
+
+    return type2Mid;
+
+  }
+);

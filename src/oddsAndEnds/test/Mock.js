@@ -14,7 +14,20 @@
  limitations under the License.
  */
 
-define([
-  "./type1",
-  "./type2"
-], 1);
+define(["dojo/_base/declare"],
+  function(declare) {
+
+    var Mock = declare([], {
+
+      test: "Test",
+
+      constructor: function() {
+        this.test = "Test2";
+      }
+
+    });
+
+    return Mock;
+
+  }
+);
