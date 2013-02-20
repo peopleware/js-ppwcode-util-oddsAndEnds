@@ -14,8 +14,8 @@
  limitations under the License.
  */
 
-window["ppwcode-util-oddsAndEnds-type-2mid-MID"] = "./mockType2Mid";
-console.log('window["ppwcode-util-oddsAndEnds-type-2mid-MID"]: ' + window["ppwcode-util-oddsAndEnds-type-2mid-MID"]);
+window["ppwcode-util-oddsAndEnds-type-2mid"] = "./mockType2Mid";
+console.log('window["ppwcode-util-oddsAndEnds-type-2mid"]: ' + window["ppwcode-util-oddsAndEnds-type-2mid"]);
 
 define(["dojo/main", "util/doh/main", "../type"],
   function(dojo, doh, type) {
