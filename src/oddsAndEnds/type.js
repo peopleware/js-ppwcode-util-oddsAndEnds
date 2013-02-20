@@ -31,9 +31,9 @@ define(["dojo/has", "dojo/_base/lang", "require"],
     }
 
     function loaderError(mid) {
-      return function(error){
+      return function(e){
         error("problem loading module '" + mid + "'");
-        console.log(error.src, error.id);
+        console.log(e.src, e.id);
       };
     }
 
@@ -53,7 +53,7 @@ define(["dojo/has", "dojo/_base/lang", "require"],
     if (lang.isFunction(type2MidConfig)) {
       type2MidCache = type2MidConfig;
     }
-    trace("initialization done")
+    trace("initialization done");
 
     function requireType2Mid(loadRequire, continuation) {
       if (type2MidCache) {
