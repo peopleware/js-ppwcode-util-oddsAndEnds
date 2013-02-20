@@ -17,7 +17,7 @@
 define(["dojo/has", "dojo/_base/lang", "require"],
   function(has, lang, require1) {
 
-    var type2MidMidConfigName = "ppwcode-util-oddsAndEnds-type-2mid-MID";
+    var type2MidMidConfigName = "ppwcode-util-oddsAndEnds-type-2mid";
 
     function trace(msg) {
       var traceMsg = "type loader: " + msg;

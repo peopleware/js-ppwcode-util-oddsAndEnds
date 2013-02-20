@@ -21,7 +21,7 @@ define(["dojo/main", "util/doh/main", "require"],
     var typeMid = "ding/dong/bar/ANiceType";
 
     function type2MidFunction(sti) {
-      var result1 = serverTypeIdentifier.replace(
+      var result1 = sti.replace(
         /^(?:MyProject\.Foo\.(.*?)),.*$/g,
         "$1");
       var parts = result1.split(".");
