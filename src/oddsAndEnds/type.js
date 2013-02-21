@@ -14,6 +14,10 @@
  limitations under the License.
  */
 
+
+AND THE DAY AFTER IT BECAME CLEAR THAT THIS IS NONSENSE
+ALL THAT IS RELEVANT HAS BEEN ABSTRACTED AWAY
+
 define(["dojo/has", "dojo/_base/lang", "require"],
   function(has, lang, require1) {
 
