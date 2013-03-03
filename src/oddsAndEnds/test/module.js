@@ -15,4 +15,5 @@
  */
 
 define([
+  "./testRequire"
 ], 1);
