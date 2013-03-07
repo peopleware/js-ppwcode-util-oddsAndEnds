@@ -15,5 +15,6 @@
  */
 
 define([
-  "./testRequire"
+  "./testRequire",
+  "./typeOf"
 ], 1);
