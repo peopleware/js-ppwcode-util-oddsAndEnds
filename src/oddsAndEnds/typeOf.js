@@ -4,7 +4,7 @@ define([],
     function toType(obj) {
       // summary:
       //   A better type then Object.toString() or typeof.
-      // decription:
+      // description:
       //      toType(undefined); //"undefined"
       //      toType(new); //"null"
       //      toType({a: 4}); //"object"
@@ -23,7 +23,12 @@ define([],
        http://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/
        */
 
-      return Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();  // return String
+      var result = Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+      // on some browsers, the main window returns as "global", but this is an object too
+      if (result === "global") {
+        result = "object";
+      }
+      return result; // return String
     }
 
     return toType;
