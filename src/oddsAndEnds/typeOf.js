@@ -24,8 +24,8 @@ define([],
        */
 
       var result = Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
-      // on some browsers, the main window returns as "global", but this is an object too
-      if (result === "global") {
+      // on some browsers, the main window returns as "global" (WebKit) or "window" (FF), but this is an object too
+      if (result === "global" || result == "window") {
         result = "object";
       }
       return result; // return String
