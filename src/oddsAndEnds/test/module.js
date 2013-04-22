@@ -16,5 +16,8 @@
 
 define([
   "./testRequire",
-  "./typeOf"
+  "./typeOf", // obsolete
+  "./js"
+  // MUDO tests for xml
+  // MUDO tests for Output
 ], 1);
