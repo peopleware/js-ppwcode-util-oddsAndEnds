@@ -1,4 +1,4 @@
-define(["./js.js"],
+define(["./js"],
   function(js) {
     // summary:
     //   Deprecated. Use js.typeOf instead.
