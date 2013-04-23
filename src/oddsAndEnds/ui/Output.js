@@ -1,6 +1,6 @@
 define(["../../../dojo/_base/declare",
         "dojox/mvc/Output",
-        "./xml"],
+        "../xml"],
   function(declare, DojoxMvcOutput, xml) {
 
     return declare([DojoxMvcOutput], {
