@@ -38,7 +38,13 @@ define([],
       //   is thus Object.prototype.
 
       function recursive(acc, o) {
-        return (o === Object.prototype) ? acc.push(o) :  recursive(acc.push(o), Object.getPrototypeOf(obj));
+        if (!o) {
+          return acc;
+        }
+        else {
+          acc.push(o);
+          return recursive(acc, Object.getPrototypeOf(o));
+        }
       }
 
       return recursive([], obj);
@@ -50,7 +56,7 @@ define([],
       //   Like keys, but for the entire prototype chain. The array starts with the properties
       //   of Object.prototype, and works down the chain.
 
-      return reduceRight(
+      return getPrototypeChain(obj).reduceRight(
         function(acc, proto) {
           return acc.concat(Object.keys(proto));
         },
