@@ -64,12 +64,21 @@ define([],
       );
     }
 
+    function isInt(/*Number*/ n) {
+      // summary:
+      //   True if n is an integer.
+      //   n must be a number.
+
+      return n % 1 === 0;
+    }
+
     var js = {
       // summary:
       //   Methods to aid with the JavaScript language.
       typeOf: typeOf,
       getPrototypeChain: getPrototypeChain,
-      getAllKeys: getAllKeys
+      getAllKeys: getAllKeys,
+      isInt: isInt
     };
 
     return js;
