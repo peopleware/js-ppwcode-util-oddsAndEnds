@@ -12,7 +12,6 @@
   </div>
   <div data-dojo-type="dijit/form/TextBox"
        data-dojo-props="constraints: {places: 3},
-                        value: at('rel:', 'aNumber').direction(at.both).transform(this.aNumberConverter())"></div>
-  <!-- , locale:'en-uk' -->
-
+                        lang: at(this, 'lang').direction(at.from),
+                        value: at('rel:', 'aNumber').direction(at.both).transform(this.aNumberConverter)"></div>
 </div>
