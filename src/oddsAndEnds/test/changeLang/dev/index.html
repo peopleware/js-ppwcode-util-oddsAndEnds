@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+  <!-- TITLE -->
+  <title>PictoPerfect - Medical Sheet</title>
+
+  <!-- STYLE -->
+  <link id="themeStyles" rel="stylesheet" href="../../../../../dijit/themes/claro/claro.css"/>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+
+  <!-- SCRIPT -->
+  <script>
+    var dojoConfig = {
+      async: true,
+      parseOnLoad: false,
+      locale: "fr",
+      extraLocale: ["nl", "en"],
+      has: {
+        "dojo-debug-messages": true,
+        "mvc-bindings-log-api": true
+      }
+    };
+  </script>
+
+  <script src="../../../../../dojo/dojo.js"></script>
+
+  <script type="text/javascript">
+    require(["dojo/parser", "dijit/registry", "ppwcode/oddsAndEnds/test/changeLang/Target",
+             "ppwcode/oddsAndEnds/test/changeLang/Widget",
+             "dojo/domReady!"],
+      function(parser, registry, Target) {
+        var parsePromise = parser.parse();
+        var target = new Target();
+        parsePromise.then(
+          function() {
+            var widget = registry.byId("widget");
+            function buttonClick(locale) {
+              var buttonWidget = registry.byId(locale + "Button");
+              buttonWidget.on("click", function() {
+                widget.set("lang", locale);
+              });
+            }
+            buttonClick("nl");
+            buttonClick("en");
+            buttonClick("fr");
+            buttonClick("de");
+            var setButton = registry.byId("setANumberButton");
+            setButton.on("click", function() {
+              target.set("aNumber", Math.E);
+            });
+            widget.set("target", target);
+          },
+          function(err) {
+            console.error("PARSE ERROR: " + err, err);
+            throw err;
+          }
+        );
+      }
+    );
+  </script>
+</head>
+
+<body class="claro">
+<div id="widget" data-dojo-type="ppwcode/oddsAndEnds/test/changeLang/Widget" data-dojo-props="lang: 'fr'"></div>
+<div>
+  <span id="nlButton" data-dojo-type="dijit/form/Button">nl</span>
+  <span id="enButton" data-dojo-type="dijit/form/Button">en</span>
+  <span id="frButton" data-dojo-type="dijit/form/Button">fr</span>
+  <span id="deButton" data-dojo-type="dijit/form/Button">de (unsupported)</span>
+  <span id="setANumberButton" data-dojo-type="dijit/form/Button">Set aNumber to Math.E</span>
+</div>
+</body>
+</html>
