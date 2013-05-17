@@ -1,4 +1,4 @@
-define(["../../../dojo/_base/declare",
+define(["dojo/_base/declare",
         "dojox/mvc/Output",
         "../xml"],
   function(declare, DojoxMvcOutput, xml) {
