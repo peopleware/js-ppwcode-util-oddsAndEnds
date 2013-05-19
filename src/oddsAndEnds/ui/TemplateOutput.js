@@ -41,7 +41,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         this.inherited(arguments);
       },
 
-      postCreate: function() {
+      startup: function() {
+        this.inherited(arguments);
         this._output();
       },
 

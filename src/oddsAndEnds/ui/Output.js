@@ -15,7 +15,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "../xml"],
       //   Default is true.
       escapeXml: true,
 
-      postCreate: function() {
+      startup: function() {
+        this.inherited(arguments);
         this._output();
       },
 
