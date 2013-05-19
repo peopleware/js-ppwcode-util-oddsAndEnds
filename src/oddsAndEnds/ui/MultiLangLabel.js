@@ -7,7 +7,7 @@ define(["dojo/_base/declare", "./_MultiLangLabelParent", "dojo/_base/kernel", "d
       //   when multiple languages must be shown, and the language can change dynamically.
       //   We need to set
       //   - nlsParentDirectory: the directory containing the used nls directory
-      //   - bundle: the name of the i18n file
+      //   - bundleName: the name of the i18n file
       //   - label: the name of the property in that file to show
       //   - lang; the locale, which can change
       //
@@ -122,7 +122,7 @@ define(["dojo/_base/declare", "./_MultiLangLabelParent", "dojo/_base/kernel", "d
 
         var render = this.missing;
         var nlsParentDir = lookup(this, "nlsParentDirectory");
-        var bundle = lookup(this, "bundle");
+        var bundle = lookup(this, "bundleName");
         var lang = lookup(this, "lang") || kernel.locale;
         if (nlsParentDir && bundle && this.label) {
           try {
@@ -130,7 +130,7 @@ define(["dojo/_base/declare", "./_MultiLangLabelParent", "dojo/_base/kernel", "d
             render = labels[this.label];
           }
           catch (err) {
-            console.info("INFO error while getting (" + this.nlsParentDirectory + "/nls/" + this.bundle + ")." +
+            console.info("INFO error while getting (" + this.nlsParentDirectory + "/nls/" + this.bundleName + ")." +
               this.label + " for locale '" + this.lang + "': " + err.message + " -- rendering missing ('" + this.missing + "')");
           }
         }

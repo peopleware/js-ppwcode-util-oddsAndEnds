@@ -1,11 +1,11 @@
-define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i18n", "../xml"],
+define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel"],
   function(declare, _WidgetBase, kernel) {
 
     var _MultiLangLabelParent = declare([_WidgetBase], {
       // summary:
       //   Optional parent for MultiLangParent. We can set
       //   - nlsParentDirectory: the directory containing the used nls directory
-      //   - bundle: the name of the i18n file
+      //   - bundleName: the name of the i18n file
       //   - lang; the locale, which can change
       //
       //   All locales must be defined as extraLocale in dojoConfig.
@@ -17,8 +17,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
       // nlsParentDirectory: String?
       nlsParentDirectory: null,
 
-      // bundle: String?
-      bundle: null,
+      // bundleName: String?
+      bundleName: null,
 
       lang: kernel.locale, // default language is browser dependent
 
