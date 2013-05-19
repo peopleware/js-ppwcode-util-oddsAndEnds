@@ -1,7 +1,7 @@
-define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i18n", "../xml"],
-  function(declare, _WidgetBase, kernel, i18n, xml) {
+define(["dojo/_base/declare", "./_MultiLangLabelParent", "dojo/_base/kernel", "dojo/i18n", "../xml"],
+  function(declare, _MultiLangLabelParent, kernel, i18n, xml) {
 
-    return declare([_WidgetBase], {
+    return declare([_MultiLangLabelParent], {
       // summary:
       //   Widget that is specially made to represent a i18n (nls) label in a template,
       //   when multiple languages must be shown, and the language can change dynamically.
@@ -10,6 +10,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
       //   - bundle: the name of the i18n file
       //   - label: the name of the property in that file to show
       //   - lang; the locale, which can change
+      //
+      //   If any of these are not a meaningful value, we look upwards in the widget
+      //   tree for a value _MultiLangLabelParent, and use its values.
+      //
+      //   If bindLang is true (the default), we bind lang on startup to the lang of a parent, if there is one.
       //
       //   All locales must be defined as extraLocale in dojoConfig.
       //   The actual i18n resource must be loaded using the i18n! plugin syntax.
@@ -27,19 +32,26 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
       //   Default is true.
       escapeXml: true,
 
-      // nlsParentDirectory: String?
-      nlsParentDirectory: null,
-
-      // bundle: String?
-      bundle: null,
-
       // label: String?
       label: null,
 
-      lang: kernel.locale, // default language is browser dependent
+      bindLang: true,
+      _parentLangHandle: null,
 
-      postCreate: function() {
+      startup: function() {
+        this.inherited(arguments);
+        if (this.bindLang) {
+          this._bindLang();
+        }
         this._output();
+      },
+
+      destroy: function() {
+        this.inherited(arguments);
+        if (this._parentLangHandle) {
+          this._parentLangHandle.remove();
+          this._parentLangHandle = null;
+        }
       },
 
       set: function(name, value){
@@ -55,16 +67,66 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
         }
       },
 
+      _bindLang: function() {
+        function parent(/*_WidgetBase*/ wb) {
+          if (!wb) {
+            return null
+          }
+          var parentWb = wb.getParent();
+          if (parentWb.isInstanceOf(_MultiLangLabelParent)) {
+            return parentWb;
+          }
+          return parent(parentWb);
+        }
+
+        var self = this;
+        var parentWb = parent(self);
+        // TODO do something with own
+        if (parentWb) {
+          self._parentLangHandle = parentWb.watch("lang", function(propName, oldValue, newValue) {
+            if (oldValue !== newValue) {
+              self.set("lang", newValue);
+            }
+          });
+        }
+      },
+
+      _setBindLang: function(value) {
+        if (this.bindLang != value) {
+          if (this.bindLang && this._parentLangHandle) {
+            this._parentLangHandle.remove();
+          }
+          this._set("bindLang", value);
+          if (this.bindLang) {
+            this._bindLang();
+          }
+        }
+      },
+
       _output: function(){
         // summary:
         //		Produce the data-bound output, xml-escaped.
         // tags:
         //		protected
 
+        function lookup(/*_WidgetBase*/ wb, /*String*/ propName) {
+          if (!wb) {
+            return null;
+          }
+          var result;
+          if (wb.isInstanceOf(_MultiLangLabelParent)) { // this is too
+            result = wb.get(propName);
+          }
+          return result || lookup(wb.getParent(), propName);
+        }
+
         var render = this.missing;
-        if (this.nlsParentDirectory && this.bundle && this.label) {
+        var nlsParentDir = lookup(this, "nlsParentDirectory");
+        var bundle = lookup(this, "bundle");
+        var lang = lookup(this, "lang") || kernel.locale;
+        if (nlsParentDir && bundle && this.label) {
           try {
-            var labels = i18n.getLocalization(this.nlsParentDirectory, this.bundle, this.lang || kernel.locale);
+            var labels = i18n.getLocalization(nlsParentDir, bundle, lang);
             render = labels[this.label];
           }
           catch (err) {
