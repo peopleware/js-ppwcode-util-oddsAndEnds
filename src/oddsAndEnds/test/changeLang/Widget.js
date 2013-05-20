@@ -119,7 +119,7 @@ define(["dojo/_base/declare",
 
         format: function(d, options) {
           if (!d && (d !== 0)) {
-            return options && options.na ? options.na : 'N/A';
+            return (options && (options.na || options.na === "")) ? options.na : 'N/A';
           }
           else {
             var opt = lang.clone(options);
