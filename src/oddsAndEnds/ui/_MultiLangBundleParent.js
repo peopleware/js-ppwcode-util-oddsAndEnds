@@ -1,7 +1,7 @@
-define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel"],
-  function(declare, _WidgetBase, kernel) {
+define(["dojo/_base/declare", "./_MultiLangParent", "dojo/_base/kernel"],
+  function(declare, _MultiLangParent) {
 
-    var _MultiLangLabelParent = declare([_WidgetBase], {
+    var _MultiLangBundleParent = declare([_MultiLangParent], {
       // summary:
       //   Optional parent for MultiLangParent. We can set
       //   - nlsParentDirectory: the directory containing the used nls directory
@@ -20,18 +20,16 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel"],
       // bundleName: String?
       bundleName: null,
 
-      lang: kernel.locale, // default language is browser dependent
-
       _getNlsParentDirectoryAttr: function() {
         if ((!this.nlsParentDirectory) && this.constructor.mid) {
-          this.set("nlsParentDirectory", _MultiLangLabelParent.dirFromMid(this.constructor.mid));
+          this.set("nlsParentDirectory", _MultiLangBundleParent.dirFromMid(this.constructor.mid));
         }
         return this.nlsParentDirectory;
       }
 
     });
 
-    _MultiLangLabelParent.dirFromMid = function(mid) {
+    _MultiLangBundleParent.dirFromMid = function(mid) {
       // summary:
       //   Helper function to get the directory from a MID
       var parts = mid.split("/");
@@ -39,6 +37,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel"],
       return parts.join("/");
     };
 
-    return _MultiLangLabelParent;
+    return _MultiLangBundleParent;
   }
 );
