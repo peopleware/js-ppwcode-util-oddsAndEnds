@@ -59,7 +59,7 @@ define(["dojo/_base/declare", "./_MultiLangParent"],
             return null
           }
           var parentWb = wb.getParent();
-          if (parentWb.isInstanceOf(_MultiLangParent)) {
+          if (parentWb && parentWb.isInstanceOf(_MultiLangParent)) {
             return parentWb;
           }
           return parent(parentWb);
