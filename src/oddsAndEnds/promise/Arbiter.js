@@ -79,7 +79,7 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/has", "module"],
             debugMsg("There is a pending Promise. Cancelling.");
             self.processingPromise.cancel(new CancelError("USER CANCELLED"));
           }
-          debugMsg("Starting processing and returning reprocess Promise.");
+          debugMsg("Starting processing and returning process Promise.");
           newPromise();
         }
         return self.processingPromise;
