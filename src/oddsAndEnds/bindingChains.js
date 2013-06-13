@@ -1,5 +1,11 @@
-define(["dojo/_base/declare", "./js"],
-  function(declare, js) {
+define(["dojo/_base/declare", "./js", "dojo/has", "module"],
+  function(declare, js, has, module) {
+
+    function debugMsg(msg) {
+      if (has(module.id + "-debug")) {
+        console.debug(module.id + ": " + msg);
+      }
+    }
 
     function isStateful(/*Stateful*/ s) {
       return s && s.get && s.watch && js.typeOf(s.get) === "function" && js.typeOf(s.watch) === "function";
@@ -10,7 +16,19 @@ define(["dojo/_base/declare", "./js"],
     }
 
     function _getValue(context, propertyName) {
-      return context.get ? context.get(propertyName) /* works for Stateful and Store */ : context[propertyName];
+      debugMsg("    getting value '" + propertyName + "' from " + context);
+      var result;
+      var get = context.get;
+      if (get) {
+        debugMsg("      there is a 'get' function; executing");
+        result = context.get(propertyName);
+      }
+      else {
+        debugMsg("      there is no 'get' function; reading property directly");
+        result = context[propertyName];
+      }
+      debugMsg("      result is '" + result + "'");
+      return result;
     }
 
     function _bChain(/*String*/ contextExpression, /*Stateful|Object|Array|Observable*/ context, /*Array*/ chain, /*Function*/ callback) {
@@ -47,6 +65,8 @@ define(["dojo/_base/declare", "./js"],
       function passThroughCollection() {
         // we are asked to handle all elements of a store or array
         // context must be a Store or an array
+
+        debugMsg("      Handling collection " + context);
         var array;
         if (isObservableStore(context)) {
           array = context.query();
@@ -57,8 +77,9 @@ define(["dojo/_base/declare", "./js"],
         else {
           throw "ERROR: the context of '#' must be an array or an Observable Store";
         }
+        debugMsg("      Array is " + context + " (length: " + array.length + ")");
         var stoppers = array.map(function(el) {
-          _bChain(firstExpression, el, restChain, callback);
+          return _bChain(firstExpression, el, restChain, callback);
         });
         return function stopMe() {
           stoppers.forEach(function(stopper) {
@@ -69,24 +90,29 @@ define(["dojo/_base/declare", "./js"],
 
       function watchFirst() {
         if (context.watch) {
+          debugMsg("  Starting watch on " + firstExpression);
           firstWatcher = context.watch(first, nodeCallBack);
         }
         else if (context.query) {
           var queryResult;
           if (first === "@") {
+            debugMsg("Starting observe on " + firstExpression + " (the entire store)");
             queryResult = context.query();
+            firstWatcher = queryResult.observe(nodeCallBack, true);
           }
           else {
+            debugMsg("Starting observe on " + firstExpression + " (one element of the store)");
             queryResult = context.query(function(el) {
               return context.getIdentity(el) === first;
             }); // complex way of doing context.get(first), but we need the QueryResult
+            firstWatcher = queryResult.observe(nodeCallBack, false);
           }
-          firstWatcher = queryResult.observe(nodeCallBack);
         }
         // else regular object; we cannot watch context; just passing through
       }
 
       function watchDeeper() {
+        debugMsg("  Considering to watch deeper (restChain is '" + restChain + "', currentFirstValue is '" + currentFirstValue + "')");
         if ((restChain.length > 0) && currentFirstValue) {
           // there is more; we aren't really looking for context[first], but context[first][myChain];
           // context[first] is just a stepping stone;
@@ -103,6 +129,7 @@ define(["dojo/_base/declare", "./js"],
         //   of the previous value of context[first]
 
         if (firstWatcher) {
+          debugMsg("  Stopping watch or observe on " + firstExpression);
           firstWatcher.remove();
           firstWatcher = null;
         }
@@ -122,6 +149,7 @@ define(["dojo/_base/declare", "./js"],
         // - call the callback: the chain has changed
         // we must not stop watching context[first] ourselves!
 
+        debugMsg("Callback from " + firstExpression);
         var oldValue = currentFirstValue;
         currentFirstValue = _getValue(context, first);
         if (stopDeeperWatchers) {
@@ -129,13 +157,18 @@ define(["dojo/_base/declare", "./js"],
         }
         watchDeeper();
         if (firstCallback) {
+          debugMsg("Executing callback for " + firstExpression);
           callback(firstExpression, oldValue, currentFirstValue); // different semantics from regular callback!
+        }
+        else {
+          debugMsg("Found '!'; not executing callback for " + firstExpression);
         }
       }
 
 
 
       // main routine
+      debugMsg("Processing " + firstExpression);
       if (first === "#") {
         return passThroughCollection(); // returns aggregate stopper
       }
