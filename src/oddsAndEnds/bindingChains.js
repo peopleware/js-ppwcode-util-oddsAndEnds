@@ -36,8 +36,12 @@ define(["dojo/_base/declare", "./js"],
 
       var restChain = chain.slice(0);
       var first = restChain.shift();
+      var firstCallback = (first.charAt(first.length - 1) !== "!");
+      if (!firstCallback) {
+        first = first.substring(0, first.length - 1);
+      }
       var firstWatcher;
-      var firstExpression = contextExpression + "." + first;
+      var firstExpression = contextExpression ? contextExpression + "." + first : first;
       var stopDeeperWatchers; /*Function*/
 
       function passThroughCollection() {
@@ -68,9 +72,15 @@ define(["dojo/_base/declare", "./js"],
           firstWatcher = context.watch(first, nodeCallBack);
         }
         else if (context.query) {
-          var queryResult = context.query(function(el) {
-            return context.getIdentity(el) === first;
-          }); // complex way of doing context.get(first), but we need the QueryResult
+          var queryResult;
+          if (first === "@") {
+            queryResult = context.query();
+          }
+          else {
+            queryResult = context.query(function(el) {
+              return context.getIdentity(el) === first;
+            }); // complex way of doing context.get(first), but we need the QueryResult
+          }
           firstWatcher = queryResult.observe(nodeCallBack);
         }
         // else regular object; we cannot watch context; just passing through
@@ -118,7 +128,9 @@ define(["dojo/_base/declare", "./js"],
           stopDeeperWatchers();
         }
         watchDeeper();
-        callback(firstExpression, oldValue, currentFirstValue); // different semantics from regular callback!
+        if (firstCallback) {
+          callback(firstExpression, oldValue, currentFirstValue); // different semantics from regular callback!
+        }
       }
 
 
@@ -151,7 +163,11 @@ define(["dojo/_base/declare", "./js"],
       //   Values in the dotExpressions can be Stateful, a regular object, an array, or an ObservableStore.
       //   If a value is a Store or an array, and the next element in the chain is "#", the second next element
       //   is applied to all its values. If a value is a Store, and the next element in the chain is
-      //   not "#", it is used as an id in get(). An array must be followed by "#" before anything else.
+      //   not "#" or "@", it is used as an id in get(). An array must be followed by "#" before anything else.
+      //   If a value is a Store, and the next element in the chain is "@", we observe the Store itself for any
+      //   changes. "@.#" is allowed. "#.@" makes sense if the elements of the first Store are Stores themselves.
+      //   If an element ends with "!" (e.g. "something.other!.foo"), we still watch it to keep the chain in order, but
+      //   don't call callback when changes happen.
       //   An element of the path can contain spaces. When the context of the element has a get-method, it is
       //   used. Otherwise, we try direct property access.
       // return:
