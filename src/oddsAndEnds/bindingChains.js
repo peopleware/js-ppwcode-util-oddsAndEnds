@@ -215,9 +215,34 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
         throw "ERROR: must provide a callback function";
       }
 
+
+      var gatherPeriod = 200; // ms
+      var timeoutId = null;
+
+      function consolidatedCallback() {
+        // summary:
+        //   Calls to callback are gathered during a short time period, to avoid calling for a re-calculate
+        //   very often in a short period.
+
+        debugMsg("Holding callback for (another) " + gatherPeriod + "ms ...");
+        if (timeoutId) {
+          // cancel the previous timer; we'll wait a bit longer
+          clearTimeout(timeoutId);
+        }
+        var args = arguments;
+        timeoutId = setTimeout(
+          function() {
+            timeoutId = null;
+            callback.apply(null, args);
+          },
+          gatherPeriod
+        );
+      }
+
+
       var stoppers = dotExpressions.map(function(expression) {
         var chain = expression.split(".");
-        return _bChain("", context, chain, callback);
+        return _bChain("", context, chain, consolidatedCallback);
       });
       return function stopAll() {
         stoppers.forEach(function(stop) {
