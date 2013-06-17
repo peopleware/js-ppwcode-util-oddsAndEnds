@@ -31,7 +31,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
       return result;
     }
 
-    function _bChain(/*String*/ contextExpression, /*Stateful|Object|Array|Observable*/ context, /*Array*/ chain, /*Function*/ callback) {
+    function _bChain(/*String*/ contextExpression, /*Stateful|Object|Array|Observable*/ context, /*Array*/ chain, /*Function*/ pingSomethingInThePathChanged) {
       // summary:
       //   Call callback when anything in chain changes
       //   (context[chain[0]], context[chain[0]][chain[1]], context[chain[0]][chain[1]][chain[2]], ...
@@ -48,7 +48,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
       if (!((js.typeOf(chain) === "array") && chain.length > 0 && chain.every(function(pn) {return js.typeOf(pn) === "string";}))) {
         throw "ERROR: chain must be an array of Strings of length at least 1";
       }
-      if (js.typeOf(callback) !== "function") {
+      if (js.typeOf(pingSomethingInThePathChanged) !== "function") {
         throw "ERROR: must provide a callback function";
       }
 
@@ -79,9 +79,9 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
         }
         debugMsg("      Array is " + context + " (length: " + array.length + ")");
         var stoppers = array.map(function(el) {
-          return _bChain(firstExpression, el, restChain, callback);
+          return _bChain(firstExpression, el, restChain, pingSomethingInThePathChanged);
         });
-        return function stopMe() {
+        return function() {
           stoppers.forEach(function(stopper) {
             stopper();
           });
@@ -91,21 +91,21 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
       function watchFirst() {
         if (context.watch) {
           debugMsg("  Starting watch on " + firstExpression);
-          firstWatcher = context.watch(first, nodeCallBack);
+          firstWatcher = context.watch(first, pingFirstChanged);
         }
         else if (context.query) {
           var queryResult;
           if (first === "@") {
-            debugMsg("Starting observe on " + firstExpression + " (the entire store)");
+            debugMsg("Starting observe on " + firstExpression + " (elements in the store)");
             queryResult = context.query();
-            firstWatcher = queryResult.observe(nodeCallBack, true);
+            firstWatcher = queryResult.observe(pingFirstChanged, true);
           }
           else {
             debugMsg("Starting observe on " + firstExpression + " (one element of the store)");
             queryResult = context.query(function(el) {
               return context.getIdentity(el) === first;
             }); // complex way of doing context.get(first), but we need the QueryResult
-            firstWatcher = queryResult.observe(nodeCallBack, false);
+            firstWatcher = queryResult.observe(pingFirstChanged, false);
           }
         }
         // else regular object; we cannot watch context; just passing through
@@ -117,7 +117,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
           // there is more; we aren't really looking for context[first], but context[first][myChain];
           // context[first] is just a stepping stone;
           // but if it is null, we cannot go deeper now
-          stopDeeperWatchers = _bChain(firstExpression, currentFirstValue, restChain, callback);
+          stopDeeperWatchers = _bChain(firstExpression, currentFirstValue, restChain, pingSomethingInThePathChanged);
         }
       }
 
@@ -138,7 +138,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
         }
       }
 
-      function nodeCallBack() {
+      function pingFirstChanged() {
         // watcher said that the value of context[first] has changed
         // we must now:
         // - adjust currentFirstValue
@@ -158,7 +158,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
         watchDeeper();
         if (firstCallback) {
           debugMsg("Executing callback for " + firstExpression);
-          callback(firstExpression, oldValue, currentFirstValue); // different semantics from regular callback!
+          pingSomethingInThePathChanged(firstExpression, oldValue, currentFirstValue); // different semantics from regular callback!
         }
         else {
           debugMsg("Found '!'; not executing callback for " + firstExpression);
@@ -183,7 +183,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
       return stopMe;
     }
 
-    function bindingChains(/*Stateful|Object|Array|Observable*/ context, /*Array*/ dotExpressions, /*Function*/ callback) {
+    function bindingChains(/*Stateful|Object|Array|Observable*/ context, /*Array*/ dotExpressions, /*Function*/ pingSomethingInThePathChanged) {
       // summary:
       //   Call callback when anything in chains changes.
       // context: Stateful|Object|Array|Observable
@@ -191,7 +191,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
       // dotExpressions: Array
       //   dotExpressions is an array of string dot-expressions. Changes in any property on each path
       //   result in a call of callback.
-      // callback: Function (dotExpression, oldValue, newValue)
+      // pingSomethingInThePathChanged: Function (dotExpression, oldValue, newValue)
       // description:
       //   Values in the dotExpressions can be Stateful, a regular object, an array, or an ObservableStore.
       //   If a value is a Store or an array, and the next element in the chain is "#", the second next element
@@ -211,44 +211,33 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
       if (!((js.typeOf(dotExpressions) === "array") && dotExpressions.length > 0 && dotExpressions.every(function(pn) {return js.typeOf(pn) === "string";}))) {
         throw "ERROR: dotExpressions must be an array of Strings of length at least 1";
       }
-      if (js.typeOf(callback) !== "function") {
-        throw "ERROR: must provide a callback function";
+      if (js.typeOf(pingSomethingInThePathChanged) !== "function") {
+        throw "ERROR: must provide a callback function to ping a change";
       }
 
 
-      var gatherPeriod = 200; // ms
-      var timeoutId = null;
-
-      function consolidatedCallback() {
-        // summary:
-        //   Calls to callback are gathered during a short time period, to avoid calling for a re-calculate
-        //   very often in a short period.
-
-        debugMsg("Holding callback for (another) " + gatherPeriod + "ms ...");
-        if (timeoutId) {
-          // cancel the previous timer; we'll wait a bit longer
-          clearTimeout(timeoutId);
+      var result = {
+        _stoppers: null,
+        start: function() {
+          if (!this._stoppers) { // we were inactive, and are asked to resume
+            this._stoppers = dotExpressions.map(function(expression) {
+              var chain = expression.split(".");
+              return _bChain("", context, chain, pingSomethingInThePathChanged);
+            });
+          }
+          // else, no change
+        },
+        stop: function() {
+          if (this._stoppers) {
+            this._stoppers.forEach(function(stop) {
+              stop();
+            });
+            this._stoppers = null;
+          }
         }
-        var args = arguments;
-        timeoutId = setTimeout(
-          function() {
-            timeoutId = null;
-            callback.apply(null, args);
-          },
-          gatherPeriod
-        );
-      }
-
-
-      var stoppers = dotExpressions.map(function(expression) {
-        var chain = expression.split(".");
-        return _bChain("", context, chain, consolidatedCallback);
-      });
-      return function stopAll() {
-        stoppers.forEach(function(stop) {
-          stop();
-        });
-      }
+      };
+      result.start();
+      return result;
     }
 
     bindingChains.isStateful = isStateful;
