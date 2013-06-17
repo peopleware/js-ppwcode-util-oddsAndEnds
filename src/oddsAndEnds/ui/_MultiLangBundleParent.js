@@ -1,5 +1,5 @@
-define(["dojo/_base/declare", "./_MultiLangParent", "dojo/_base/kernel"],
-  function(declare, _MultiLangParent) {
+define(["dojo/_base/declare", "./_MultiLangParent", "dojo/i18n", "ppwcode/oddsAndEnds/xml"],
+  function(declare, _MultiLangParent, i18n, xml) {
 
     var _MultiLangBundleParent = declare([_MultiLangParent], {
       // summary:
@@ -25,6 +25,22 @@ define(["dojo/_base/declare", "./_MultiLangParent", "dojo/_base/kernel"],
           this.set("nlsParentDirectory", _MultiLangBundleParent.dirFromMid(this.constructor.mid));
         }
         return this.nlsParentDirectory;
+      },
+
+      getLabel: function(labelName, escapeXml) {
+        var render = "?" + labelName + "?";
+        var nlsParentDir = this.get("nlsParentDirectory");
+        if (nlsParentDir && this.get("bundleName") && labelName) {
+          try {
+            var labels = i18n.getLocalization(nlsParentDir, this.get("bundleName"), this.get("lang"));
+            render = labels[labelName];
+          }
+          catch (err) {
+            console.info("INFO error while getting (" + nlsParentDir + "/nls/" + this.bundleName + ")." +
+              labelName + " for locale '" + this.lang + "': " + (err.message || err));
+          }
+        }
+        return (!escapeXml) ? render : xml.escape(render, false);
       }
 
     });
