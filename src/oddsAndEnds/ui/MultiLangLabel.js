@@ -31,11 +31,6 @@ define(["dojo/_base/declare", "./_MultiLangOutput", "./_MultiLangBundleParent", 
       // label: String?
       label: null,
 
-      // labelFormat: Function?
-      //   If effective, this function is performed on the value of this.label, and the result is used
-      //   as label.
-      labelFormat: null,
-
       _output: function() {
         // summary:
         //		Produce the data-bound output, xml-escaped.
@@ -47,14 +42,13 @@ define(["dojo/_base/declare", "./_MultiLangOutput", "./_MultiLangBundleParent", 
         var bundle = this._lookUpInWidgetHierarchy("bundleName", _MultiLangBundleParent);
         var lang = this._lookUpInWidgetHierarchy("lang", _MultiLangBundleParent) || kernel.locale;
         if (nlsParentDir && bundle && this.label) {
-          var actualLabel = this.labelFormat ? this.labelFormat(this.label) : this.label;
           try {
             var labels = i18n.getLocalization(nlsParentDir, bundle, lang);
-            render = labels[actualLabel];
+            render = labels[this.label];
           }
           catch (err) {
             console.info("INFO error while getting (" + this.nlsParentDirectory + "/nls/" + this.bundleName + ")." +
-              actualLabel + " for locale '" + this.lang + "': " + err.message + " -- rendering missing ('" + this.missing + "')");
+              this.label + " for locale '" + this.lang + "': " + err.message + " -- rendering missing ('" + this.missing + "')");
           }
         }
         var outputNode = this.srcNodeRef || this.domNode;
