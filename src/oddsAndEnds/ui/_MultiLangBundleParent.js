@@ -27,16 +27,21 @@ define(["dojo/_base/declare", "./_MultiLangParent", "dojo/i18n", "ppwcode/oddsAn
         return this.nlsParentDirectory;
       },
 
-      getLabel: function(labelName, escapeXml) {
+      getLabel: function(labelName, escapeXml, /*String?*/ otherBundleName) {
+        // summary:
+        // otherBundleName: String?
+        //   Optional. Use otherBundleName instead of this.bundleName if provided.
+
         var render = "?" + labelName + "?";
         var nlsParentDir = this.get("nlsParentDirectory");
-        if (nlsParentDir && this.get("bundleName") && labelName) {
+        var bundleName = otherBundleName || this.get("bundleName");
+        if (nlsParentDir && bundleName && labelName) {
           try {
-            var labels = i18n.getLocalization(nlsParentDir, this.get("bundleName"), this.get("lang"));
+            var labels = i18n.getLocalization(nlsParentDir, bundleName, this.get("lang"));
             render = labels[labelName];
           }
           catch (err) {
-            console.info("INFO error while getting (" + nlsParentDir + "/nls/" + this.bundleName + ")." +
+            console.info("INFO error while getting (" + nlsParentDir + "/nls/" + bundleName + ")." +
               labelName + " for locale '" + this.lang + "': " + (err.message || err));
           }
         }
