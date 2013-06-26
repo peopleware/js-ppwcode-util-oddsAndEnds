@@ -1,7 +1,7 @@
-define(["dojo/_base/declare", "./_MultiLangParent"],
-  function(declare, _MultiLangParent) {
+define(["dojo/_base/declare",  "dijit/_WidgetBase", "./_MultiLangParent"],
+  function(declare, _WidgetBase, _MultiLangParent) {
 
-    return declare([_MultiLangParent], {
+    return declare([_WidgetBase], {
       // summary:
       //   This widget is a superclass for widgets that show (not-editable) a `value` in an i18n-ed way,
       //   and for which the representation language can change.
@@ -76,7 +76,7 @@ define(["dojo/_base/declare", "./_MultiLangParent"],
         }
       },
 
-      _setBindLang: function(value) {
+      _setBindLangAttr: function(value) {
         if (this.bindLang != value) {
           if (this.bindLang && this._parentLangHandle) {
             this._parentLangHandle.remove();
