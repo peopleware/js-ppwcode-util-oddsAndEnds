@@ -27,7 +27,7 @@ define(["dojo/_base/declare", "./_MultiLangParent", "dojo/i18n", "ppwcode/oddsAn
         return this.nlsParentDirectory;
       },
 
-      getLabel: function(labelName, escapeXml, /*String?*/ otherBundleName) {
+      getLabel: function(labelName, lang, escapeXml, /*String?*/ otherBundleName) {
         // summary:
         // otherBundleName: String?
         //   Optional. Use otherBundleName instead of this.bundleName if provided.
@@ -35,9 +35,10 @@ define(["dojo/_base/declare", "./_MultiLangParent", "dojo/i18n", "ppwcode/oddsAn
         var render = "?" + labelName + "?";
         var nlsParentDir = this.get("nlsParentDirectory");
         var bundleName = otherBundleName || this.get("bundleName");
+        var actualLang = lang || this.get("lang");
         if (nlsParentDir && bundleName && labelName) {
           try {
-            var labels = i18n.getLocalization(nlsParentDir, bundleName, this.get("lang"));
+            var labels = i18n.getLocalization(nlsParentDir, bundleName, actualLang);
             render = labels[labelName];
           }
           catch (err) {
