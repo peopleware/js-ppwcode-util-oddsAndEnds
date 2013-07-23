@@ -1,4 +1,4 @@
-define(["dojo/_base/lang", "log4javascript/log4javascript", "http://d3eyf2cx8mbems.cloudfront.net/js/loggly-0.2.1.js"],
+define(["dojo/_base/lang", "log4javascript/log4javascript_uncompressed", "http://d3eyf2cx8mbems.cloudfront.net/js/loggly-0.2.1.js"],
   function(lang) {
 
   // log4javascript is not AMD
