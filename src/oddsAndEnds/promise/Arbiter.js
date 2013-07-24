@@ -1,11 +1,5 @@
-define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/has", "module"],
-  function(declare, CancelError, has, module) {
-
-    function debugMsg(msg) {
-      if (has(module.id + "-debug")) {
-        console.debug(module.id + ": " + msg);
-      }
-    }
+define(["dojo/_base/declare", "dojo/errors/CancelError", "../log/logger!"],
+  function(declare, CancelError, logger) {
 
     return declare([], {
       // summary:
@@ -38,7 +32,7 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/has", "module"],
         var self = this;
 
         function promiseFulfilled() {
-          debugMsg("Promise for " + arg + " fulfilled. Forgetting the Promise");
+          logger.debug("Promise for " + arg + " fulfilled. Forgetting the Promise");
           self.processingPromise = null;
         }
 
@@ -58,28 +52,28 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/has", "module"],
         }
 
 
-        debugMsg("Request to process " + arg);
+        logger.trace("Request to process " + arg);
         if (arg === self.currentArg) {
-          debugMsg("Requested arg is current arg.");
+          logger.trace("Requested arg is current arg.");
           if (self.processingPromise) {
-            debugMsg("Currently processing arg. Returning current processing Promise.");
+            logger.debug("Currently processing arg. Returning current processing Promise.");
           }
           else if (reprocess) {
-            debugMsg("Not currently processing arg. Starting reprocessing and returning reprocess Promise.");
+            logger.debug("Not currently processing arg. Starting reprocessing and returning reprocess Promise.");
             newPromise();
           }
           else {
-            debugMsg("Not currently processing arg. No reprocessing requested. Returning null.");
+            logger.debug("Not currently processing arg. No reprocessing requested. Returning null.");
           }
         }
         else {
-          debugMsg("Requested arg is different from current arg. New call takes precedence.");
+          logger.debug("Requested arg is different from current arg. New call takes precedence.");
           self.currentArg = arg;
           if (self.processingPromise) {
-            debugMsg("There is a pending Promise. Cancelling.");
+            logger.debug("There is a pending Promise. Cancelling.");
             self.processingPromise.cancel(new CancelError("USER CANCELLED"));
           }
-          debugMsg("Starting processing and returning process Promise.");
+          logger.debug("Starting processing and returning process Promise.");
           newPromise();
         }
         return self.processingPromise;

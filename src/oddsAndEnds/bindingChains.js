@@ -1,11 +1,5 @@
-define(["dojo/_base/declare", "./js", "dojo/has", "module"],
-  function(declare, js, has, module) {
-
-    function debugMsg(msg) {
-      if (has(module.id + "-debug")) {
-        console.debug(module.id + ": " + msg);
-      }
-    }
+define(["./js", "./log/logger!"],
+  function(js, logger) {
 
     function isStateful(/*Stateful*/ s) {
       return s && s.get && s.watch && js.typeOf(s.get) === "function" && js.typeOf(s.watch) === "function";
@@ -16,18 +10,18 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
     }
 
     function _getValue(context, propertyName) {
-      debugMsg("    getting value '" + propertyName + "' from " + context);
+      logger.trace("    getting value '" + propertyName + "' from " + context);
       var result;
       var get = context.get;
       if (get) {
-        debugMsg("      there is a 'get' function; executing");
+        logger.trace("      there is a 'get' function; executing");
         result = context.get(propertyName);
       }
       else {
-        debugMsg("      there is no 'get' function; reading property directly");
+        logger.trace("      there is no 'get' function; reading property directly");
         result = context[propertyName];
       }
-      debugMsg("      result is '" + result + "'");
+      logger.trace("      result is '" + result + "'");
       return result;
     }
 
@@ -66,7 +60,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
         // we are asked to handle all elements of a store or array
         // context must be a Store or an array
 
-        debugMsg("      Handling collection " + context);
+        logger.debug("      Handling collection " + context);
         var array;
         if (isObservableStore(context)) {
           array = context.query();
@@ -77,7 +71,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
         else {
           throw "ERROR: the context of '#' must be an array or an Observable Store";
         }
-        debugMsg("      Array is " + context + " (length: " + array.length + ")");
+        logger.debug("      Array is " + context + " (length: " + array.length + ")");
         var stoppers = array.map(function(el) {
           return _bChain(firstExpression, el, restChain, pingSomethingInThePathChanged);
         });
@@ -90,18 +84,18 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
 
       function watchFirst() {
         if (context.watch) {
-          debugMsg("  Starting watch on " + firstExpression);
+          logger.debug("  Starting watch on " + firstExpression);
           firstWatcher = context.watch(first, pingFirstChanged);
         }
         else if (context.query) {
           var queryResult;
           if (first === "@") {
-            debugMsg("Starting observe on " + firstExpression + " (elements in the store)");
+            logger.debug("Starting observe on " + firstExpression + " (elements in the store)");
             queryResult = context.query();
             firstWatcher = queryResult.observe(pingFirstChanged, true);
           }
           else {
-            debugMsg("Starting observe on " + firstExpression + " (one element of the store)");
+            logger.debug("Starting observe on " + firstExpression + " (one element of the store)");
             queryResult = context.query(function(el) {
               return context.getIdentity(el) === first;
             }); // complex way of doing context.get(first), but we need the QueryResult
@@ -112,7 +106,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
       }
 
       function watchDeeper() {
-        debugMsg("  Considering to watch deeper (restChain is '" + restChain + "', currentFirstValue is '" + currentFirstValue + "')");
+        logger.trace("  Considering to watch deeper (restChain is '" + restChain + "', currentFirstValue is '" + currentFirstValue + "')");
         if ((restChain.length > 0) && currentFirstValue) {
           // there is more; we aren't really looking for context[first], but context[first][myChain];
           // context[first] is just a stepping stone;
@@ -129,7 +123,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
         //   of the previous value of context[first]
 
         if (firstWatcher) {
-          debugMsg("  Stopping watch or observe on " + firstExpression);
+          logger.debug("  Stopping watch or observe on " + firstExpression);
           firstWatcher.remove();
           firstWatcher = null;
         }
@@ -149,7 +143,7 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
         // - call the callback: the chain has changed
         // we must not stop watching context[first] ourselves!
 
-        debugMsg("Callback from " + firstExpression);
+        logger.debug("Callback from " + firstExpression);
         var oldValue = currentFirstValue;
         currentFirstValue = _getValue(context, first);
         if (stopDeeperWatchers) {
@@ -157,18 +151,18 @@ define(["dojo/_base/declare", "./js", "dojo/has", "module"],
         }
         watchDeeper();
         if (firstCallback) {
-          debugMsg("Executing callback for " + firstExpression);
+          logger.trace("Executing callback for " + firstExpression);
           pingSomethingInThePathChanged(firstExpression, oldValue, currentFirstValue); // different semantics from regular callback!
         }
         else {
-          debugMsg("Found '!'; not executing callback for " + firstExpression);
+          logger.debug("Found '!'; not executing callback for " + firstExpression);
         }
       }
 
 
 
       // main routine
-      debugMsg("Processing " + firstExpression);
+      logger.debug("Processing " + firstExpression);
       if (first === "#") {
         return passThroughCollection(); // returns aggregate stopper
       }
