@@ -72,13 +72,34 @@ define([],
       return n % 1 === 0;
     }
 
+    function nub(/*Array*/ array, /*Boolean?*/ removeNull) {
+      // summary:
+      //   Returns an array that has all the elements of `array`, in order, but with later duplicates removed.
+      //   If `removeNull` is given and thruthy, nulls and undefineds are removed too.
+
+      if (!array) {
+        return array;
+      }
+      var result = array.reduce(
+        function(acc, el) {
+          if ((!removeNull || el) && acc.indexOf(el) < 0) {
+            acc.push(el);
+          }
+          return acc;
+        },
+        []
+      );
+      return result;
+    }
+
     var js = {
       // summary:
       //   Methods to aid with the JavaScript language.
       typeOf: typeOf,
       getPrototypeChain: getPrototypeChain,
       getAllKeys: getAllKeys,
-      isInt: isInt
+      isInt: isInt,
+      nub: nub
     };
 
     return js;
