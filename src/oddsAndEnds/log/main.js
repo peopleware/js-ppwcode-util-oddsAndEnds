@@ -1,0 +1,61 @@
+define(["dojo/_base/kernel", "dojo/has", "dojo/io-query", "module", "./log4javascript_uncompressed"],
+  function(kernel, has, ioQuery, module) {
+    // summary:
+    //   This collection of modules makes log4javascript available in Dojo.
+    //   This module returns the log4javascript object, and does some initialisation.
+    // description:
+    //   We use the uncompressed version of log4javascript. A dojo build will do the compression
+    //   if necessary.
+    //   The standard log4javascript code is loaded, and returned as this module. It is removed
+    //   from window.
+    //
+    //   By default, we add a BrowserConsoleAppender with a nice layout. The default
+    //   logging level is INFO.
+    //
+    //   We advise to have a logger per module, with as name the mid of the module, with "/"
+    //   replaced by ".".
+
+    function loggerName2Mid(loggerName) {
+      return loggerName.replace(/\./g, "/");
+    }
+
+    function mid2LoggerName(mid) {
+      return mid.replace("/\//g", ".");
+    }
+
+    function getInitialLogLevelFor(mid) {
+      // summary:
+      //   Initial logging levels are read from dojo config and the location URL. We look for a
+      //   has-property or URL query parameter with name `"loglevel-" + mid` (with "/" separators, not ".").
+      //   The value should be "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", or "OFF" or anything else.
+      //   If no entry is found, we return null. This should mean that we want to use the default of the
+      //   parent logger. If any other value is found, we return "OFF". This means we don't want any logging.
+      //
+      //   The URL query parameters have precedence over the has-setting.
+
+      var paramName = "logLevel-" + mid;
+      var searchArguments = ioQuery.queryToObject(window.location.search.substring(1)); // window.location.search contains "?"
+      var levelName = searchArguments[paramName] || has(paramName);
+      var level = levelName ? (log4javascript.Level[levelName] || "OFF") : null;
+      return level;
+    }
+
+    //noinspection JSUnresolvedVariable
+    var log4javascript = kernel.global.log4javascript;
+    //noinspection JSUnresolvedVariable
+    delete kernel.global.log4javascript;
+
+    log4javascript.mid = module.id;
+    log4javascript.loggerName2Mid = loggerName2Mid;
+    log4javascript.mid2LoggerName = mid2LoggerName;
+    log4javascript.getInitialLogLevelFor = getInitialLogLevelFor;
+
+    var rootLogger = log4javascript.getRootLogger();
+    var layout = new log4javascript.PatternLayout("%d{HH:mm:ss,SSS} %-5p - %c - %m");
+    var consoleAppender = new log4javascript.BrowserConsoleAppender();
+    consoleAppender.setLayout(layout);
+    rootLogger.addAppender(consoleAppender);
+    rootLogger.setLevel(log4javascript.Level.INFO);
+
+    return log4javascript;
+});
