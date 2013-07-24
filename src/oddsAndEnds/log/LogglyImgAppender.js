@@ -18,7 +18,7 @@ define(["./LogglyAppender", "dojo/_base/kernel", "./main",
 
       LogglyAppender.call(this, logglyKey);
       //noinspection JSUnresolvedVariable
-      this.castor = new loggly.castor({url: "http://logs.loggly.com/inputs/" + this.key, level: "log"});
+      this.castor = new loggly.castor({url: "https://logs.loggly.com/inputs/" + this.key, level: "log"});
     };
 
     LogglyImgAppender.prototype = new LogglyAppender();
