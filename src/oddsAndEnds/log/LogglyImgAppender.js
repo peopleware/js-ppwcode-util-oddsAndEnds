@@ -1,5 +1,5 @@
 define(["./LogglyAppender", "dojo/_base/kernel", "./main",
-        "http://d3eyf2cx8mbems.cloudfront.net/js/loggly-0.2.1.js"],
+        "https://d3eyf2cx8mbems.cloudfront.net/js/loggly-0.2.1.js"],
   function(LogglyAppender, kernel, log4javascript) {
 
     //noinspection JSUnresolvedVariable
