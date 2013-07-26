@@ -27,7 +27,9 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "../log/logger!"],
         //   If there is no pending self.processingPromise, we restart
         //   promiseFunction, and return its result, if reprocess === true. Otherwise
         //   we return null.
-        //   If guard is called with arg !== self.currentArg
+        //   If guard is called with arg !== self.currentArg, and there is a
+        //   a self.processingPromise, we cancel it. In any case, we start
+        //   promiseFunction, and return its result;
 
         var self = this;
 
