@@ -1,5 +1,5 @@
-define(["dojo/_base/declare", "./_MultiLangOutput", "./_MultiLangBundleParent", "dojo/_base/kernel", "dojo/i18n", "../xml"],
-  function(declare, _MultiLangOutput, _MultiLangBundleParent, kernel, i18n, xml) {
+define(["dojo/_base/declare", "./_MultiLangOutput", "./_MultiLangBundleParent", "dojo/_base/kernel", "dojo/i18n", "../xml", "../log/logger!"],
+  function(declare, _MultiLangOutput, _MultiLangBundleParent, kernel, i18n, xml, logger) {
 
     return declare([_MultiLangOutput, _MultiLangBundleParent], {
       // summary:
@@ -47,8 +47,9 @@ define(["dojo/_base/declare", "./_MultiLangOutput", "./_MultiLangBundleParent", 
             render = labels[this.label];
           }
           catch (err) {
-            console.info("INFO error while getting (" + this.nlsParentDirectory + "/nls/" + this.bundleName + ")." +
-              this.label + " for locale '" + this.lang + "': " + err.message + " -- rendering missing ('" + this.missing + "')");
+            // not fatal
+            logger.warn("while getting (" + nlsParentDir + "/nls/" + bundle + ")." +
+              this.label + " for locale '" + lang + "': -- rendering missing ('" + this.missing + "')", err);
           }
         }
         var outputNode = this.srcNodeRef || this.domNode;
