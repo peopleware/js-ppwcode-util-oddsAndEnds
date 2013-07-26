@@ -1,7 +1,7 @@
-define(["dojo/_base/declare", "./_MultiLangOutput", "./_MultiLangBundleParent", "dojo/_base/kernel", "dojo/i18n", "../xml", "../log/logger!"],
-  function(declare, _MultiLangOutput, _MultiLangBundleParent, kernel, i18n, xml, logger) {
+define(["dojo/_base/declare", "./_MultiLangOutput"],
+  function(declare, _MultiLangOutput) {
 
-    return declare([_MultiLangOutput, _MultiLangBundleParent], {
+    return declare([_MultiLangOutput], {
       // summary:
       //   Widget that is specially made to represent a i18n (nls) label in a template,
       //   when multiple languages must be shown, and the language can change dynamically.
@@ -37,24 +37,9 @@ define(["dojo/_base/declare", "./_MultiLangOutput", "./_MultiLangBundleParent", 
         // tags:
         //		protected
 
-        var render = this.missing;
-        var nlsParentDir = this._lookUpInWidgetHierarchy("nlsParentDirectory", _MultiLangBundleParent);
-        var bundle = this._lookUpInWidgetHierarchy("bundleName", _MultiLangBundleParent);
-        var lang = this._lookUpInWidgetHierarchy("lang", _MultiLangBundleParent) || kernel.locale;
-        if (nlsParentDir && bundle && this.label) {
-          try {
-            var labels = i18n.getLocalization(nlsParentDir, bundle, lang);
-            render = labels[this.label];
-          }
-          catch (err) {
-            // not fatal
-            logger.warn("while getting (" + nlsParentDir + "/nls/" + bundle + ")." +
-              this.label + " for locale '" + lang + "': -- rendering missing ('" + this.missing + "')", err);
-          }
-        }
+        var render = this.label ? this.getLabel(this.label, this.findLang(), this.escapeXml) : this.get("missing");
         var outputNode = this.srcNodeRef || this.domNode;
-        var cleanValue = this.escapeXml ? xml.escape(render, false) : render;
-        outputNode.innerHTML = (cleanValue || cleanValue === 0 || cleanValue === "0") ? cleanValue : this.missing;
+        outputNode.innerHTML = (render || render === 0 || render === "0") ? render : this.missing;
       }
 
     });

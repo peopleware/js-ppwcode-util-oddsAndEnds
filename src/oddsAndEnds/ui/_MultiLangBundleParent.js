@@ -1,5 +1,5 @@
-define(["dojo/_base/declare", "./_MultiLangParent", "dojo/i18n", "ppwcode/oddsAndEnds/xml"],
-  function(declare, _MultiLangParent, i18n, xml) {
+define(["dojo/_base/declare", "./_MultiLangParent", "dojo/_base/kernel", "dojo/i18n", "ppwcode/oddsAndEnds/xml", "../log/logger!"],
+  function(declare, _MultiLangParent, kernel, i18n, xml, logger) {
 
     var _MultiLangBundleParent = declare([_MultiLangParent], {
       // summary:
@@ -27,26 +27,57 @@ define(["dojo/_base/declare", "./_MultiLangParent", "dojo/i18n", "ppwcode/oddsAn
         return this.nlsParentDirectory;
       },
 
-      getLabel: function(labelName, lang, escapeXml, /*String?*/ otherBundleName) {
+      _lookUpInWidgetHierarchy: function(/*String*/ propName, /*Function*/ Type) {
         // summary:
+        //   Lookup a meaningful value for `propName` up in the widget hierarchy,
+        //   in instances of `Type`, starting at this.
+        //   If no meaningful value is found, undefined is returned (although null, 0,
+        //   false, and empty strings might have been encountered).
+
+        function lookup(/*_WidgetBase*/ wb) {
+          if (!wb) {
+            return undefined;
+          }
+          var result;
+          if (wb.isInstanceOf(Type)) { // this is too
+            result = wb.get(propName);
+          }
+          return result || lookup(wb.getParent());
+        }
+
+        return lookup(this);
+      },
+
+      findLang: function() {
+        return this._lookUpInWidgetHierarchy("lang", _MultiLangParent) || kernel.locale;
+      },
+
+      getLabel: function(/*String*/ labelName, /*String?*/ lang, /*Boolean?*/ escapeXml, /*String?*/ otherBundleName) {
+        // summary:
+        // escapeXml: Boolean?
+        //   Whether or not to escapeXml the retrieved label. Default is true.
         // otherBundleName: String?
         //   Optional. Use otherBundleName instead of this.bundleName if provided.
 
         var render = "?" + labelName + "?";
-        var nlsParentDir = this.get("nlsParentDirectory");
-        var bundleName = otherBundleName || this.get("bundleName");
-        var actualLang = lang || this.get("lang");
+        var nlsParentDir = this._lookUpInWidgetHierarchy("nlsParentDirectory", _MultiLangBundleParent);
+        var bundleName = otherBundleName || this._lookUpInWidgetHierarchy("bundleName", _MultiLangBundleParent);
+        var actualLang = lang || this.findLang();
         if (nlsParentDir && bundleName && labelName) {
           try {
             var labels = i18n.getLocalization(nlsParentDir, bundleName, actualLang);
             render = labels[labelName];
           }
           catch (err) {
-            console.info("INFO error while getting (" + nlsParentDir + "/nls/" + bundleName + ")." +
-              labelName + " for locale '" + this.lang + "': " + (err.message || err));
+            logger.warn("error while getting (" + nlsParentDir + "/nls/" + bundleName + ")." +
+              labelName + " for locale '" + lang + "'-- rendering '" + render + "'", err);
           }
         }
-        return (!escapeXml) ? render : xml.escape(render, false);
+        else {
+          logger.warn("could not find nlsParentDir (" + nlsParentDir + ") or bundle (" + bundleName + ") for label (" +
+            labelName + "): -- rendering '" + render + "'");
+        }
+        return (escapeXml !== false) ? xml.escape(render, false) : render;
       }
 
     });

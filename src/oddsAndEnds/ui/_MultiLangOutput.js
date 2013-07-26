@@ -1,7 +1,7 @@
-define(["dojo/_base/declare",  "dijit/_WidgetBase", "./_MultiLangParent"],
-  function(declare, _WidgetBase, _MultiLangParent) {
+define(["dojo/_base/declare",  "./_MultiLangBundleParent", "./_MultiLangParent"],
+  function(declare, _MultiLangBundleParent, _MultiLangParent) {
 
-    return declare([_WidgetBase], {
+    return declare([_MultiLangBundleParent], {
       // summary:
       //   This widget is a superclass for widgets that show (not-editable) a `value` in an i18n-ed way,
       //   and for which the representation language can change.
@@ -10,16 +10,22 @@ define(["dojo/_base/declare",  "dijit/_WidgetBase", "./_MultiLangParent"],
       //
       //   If `lang` does not have a meaningful value, we look upwards in the widget
       //   tree for a value _MultiLangParent, and use its `lang`.
-      //   Missing values are rendered as `missing`.
+      //   Missing values are rendered as the `missingLabel`, found by `getLabel` (see `_MultiLangBundleParent`),
+      //   if `missingLabel` is filled out. Otherwise `missing` is used.
       //
-      //   If bindLang is true (the default), we bind lang on startup to the lang of a _MultiLangParent,
+      //   If bindLang is true (the default), we bind lang on startup to the lang of a _MultiLangBundleParent,
       //   if there is one.
       //
       //   All locales must be defined as extraLocale in dojoConfig.
 
       // missing: string
-      //   This string is used when there is no value to show.
+      //   This string is used when there is no value to show, if there is no `missinglabel`.
       missing: "?value?",
+
+      // missingLabel: String
+      //   The label of the missing message, defined in an nls bundle.
+      //   `getLabel` (see `_MultiLangParent`) must be able to find the label.
+      missingLabel: null,
 
       bindLang: true,
       _parentLangHandle: null,
@@ -88,25 +94,10 @@ define(["dojo/_base/declare",  "dijit/_WidgetBase", "./_MultiLangParent"],
         }
       },
 
-      _lookUpInWidgetHierarchy: function(/*String*/ propName, /*Function*/ Type) {
-        // summary:
-        //   Lookup a meaningful value for `propName` up in the widget hierarchy,
-        //   in instances of `Type`, starting at this.
-        //   If no meaningful value is found, undefined is returned (although null, 0,
-        //   false, and empty strings might have been encountered).
-
-        function lookup(/*_WidgetBase*/ wb) {
-          if (!wb) {
-            return undefined;
-          }
-          var result;
-          if (wb.isInstanceOf(Type)) { // this is too
-            result = wb.get(propName);
-          }
-          return result || lookup(wb.getParent());
-        }
-
-        return lookup(this);
+      _getMissingAttr: function() {
+        return this.missingLabel ?
+          this.getLabel(this.missingLabel) :
+          (this.missing || this.missing === "") ? this.missing : 'N/A';
       },
 
       _output: function(){

@@ -1,5 +1,5 @@
-define(["dojo/_base/declare", "./_MultiLangOutput", "./_MultiLangParent", "dojo/date/locale", "dojo/_base/lang", "dojo/_base/kernel", "../js"],
-  function(declare, _MultiLangOutput, _MultiLangParent, dateLocale, lang, kernel, js) {
+define(["dojo/_base/declare", "./_MultiLangOutput", "dojo/date/locale", "dojo/_base/lang", "../js", "../log/logger!"],
+  function(declare, _MultiLangOutput, dateLocale, lang, js, logger) {
 
     return declare([_MultiLangOutput], {
       // summary:
@@ -25,14 +25,15 @@ define(["dojo/_base/declare", "./_MultiLangOutput", "./_MultiLangParent", "dojo/
         switch (js.typeOf(this.value)) {
           case "date":
             var options = lang.mixin({}, this.formatOptions);
-            options.locale = this._lookUpInWidgetHierarchy("lang", _MultiLangParent) || kernel.locale;
+            options.locale = this.findLang();
             render = dateLocale.format(this.value, options);
             break;
           case "null":
           case "undefined":
-            render = this.missing;
+            render = this.get("missing");
             break;
           default:
+            logger.warn("was asked to output not a date: ", this.value);
             render = "NOT A DATE";
             break;
         }
