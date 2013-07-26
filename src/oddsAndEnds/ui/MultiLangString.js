@@ -1,6 +1,10 @@
 define(["dojo/_base/declare", "./_MultiLangOutput", "./_MultiLangParent", "dojo/date/locale", "dojo/_base/lang", "dojo/_base/kernel", "../js", "../xml"],
   function(declare, _MultiLangOutput, _MultiLangParent, dateLocale, lang, kernel, js, xml) {
 
+    //MUDO OBSOLETE
+    THIS TEXT HERE TO BREAK IF THIS IS EVER USED
+
+
     return declare([_MultiLangOutput], {
       // summary:
       //   Widget that is specially made to represent a i18n string in a template,
