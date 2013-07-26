@@ -16,7 +16,7 @@ define(["./main"],
       //   and there is little to gain. We cannot extend AjaxAppender, since it is implemented
       //   with a non-null parameter url.
 
-      var instance = new log4javascript.AjaxAppender("http://logs.loggly.com/inputs/" + logglyKey);
+      var instance = new log4javascript.AjaxAppender("http://http-logs.loggly.com/inputs/" + logglyKey);
       instance.setLayout(layout);
       instance.setSessionId(sessionId);
       instance.setSendAllOnUnload(true);
