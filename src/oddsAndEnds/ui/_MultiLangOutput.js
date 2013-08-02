@@ -3,11 +3,11 @@ define(["dojo/_base/declare",  "./_MultiLangBundleParent", "./_MultiLangParent"]
 
     return declare([_MultiLangBundleParent], {
       // summary:
-      //   This widget is a superclass for widgets that show (not-editable) a `value` in an i18n-ed way,
+      //   This widget shows (not-editable) a `value` in an i18n-ed way,
       //   and for which the representation language can change.
       //   `lang` is the locale, which can change. `value` is what is shown.
       //   Setting anything re-renders.
-      //
+      // description:
       //   If `lang` does not have a meaningful value, we look upwards in the widget
       //   tree for a value _MultiLangParent, and use its `lang`.
       //   Missing values are rendered as the `missingLabel`, found by `getLabel` (see `_MultiLangBundleParent`),
@@ -17,6 +17,9 @@ define(["dojo/_base/declare",  "./_MultiLangBundleParent", "./_MultiLangParent"]
       //   if there is one.
       //
       //   All locales must be defined as extraLocale in dojoConfig.
+
+      // value: *?
+      value: null,
 
       // missing: string
       //   This string is used when there is no value to show, if there is no `missinglabel`.
