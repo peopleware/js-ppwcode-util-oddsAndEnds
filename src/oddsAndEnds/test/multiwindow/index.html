@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>First window</title>
+  <script>
+    function onClick() {
+      window.secondwindow = window.open("second.html", "second window");
+      console.log(window.secondwindow);
+    }
+
+    function getData() {
+      var secondData = window.secondwindow.secondData;
+      console.log("secondData: " + secondData);
+      alert(secondData);
+    }
+
+    function writeData() {
+      window.secondwindow.document.writeln("Data from the first window");
+    }
+
+    function calculate() {
+      alert(window.secondwindow.returnSomething(3, 7));
+    }
+
+    function showMyData() {
+      alert(window.secondwindow.getFirstData("FIRST_WINDOW_DATA"));
+    }
+
+    window.FIRST_WINDOW_DATA = 987654321;
+  </script>
+</head>
+<body>
+  <button onclick="onClick()">Second window</button>
+  <button onclick="getData()">Get Data</button>
+  <button onclick="writeData()">Write Data</button>
+  <button onclick="window.secondwindow.doSomething()">Call something</button>
+  <button onclick="calculate()">Calculate</button>
+  <button onclick="showMyData()">Show my data</button>
+</body>
+</html>

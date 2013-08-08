@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Second</title>
+  <script>
+    window.secondData = "This is data from the second window";
+
+    window.doSomething = function() {
+      document.writeln(new Date());
+      window.doSomething.to = setTimeout(window.doSomething, 2000);
+    }
+
+    window.returnSomething = function(a, b) {
+      return a * b;
+    }
+
+    function getFirstData(propName) {
+      return window.opener[propName];
+    }
+  </script>
+</head>
+<body>
+  <p><script>document.writeln(window.name)</script></p>
+</body>
+</html>
