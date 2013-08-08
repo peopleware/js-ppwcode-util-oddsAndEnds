@@ -1,5 +1,5 @@
-define(["../../dojo/_base/declare", "dojo/Stateful", "module", "ppwcode/oddsAndEnds/log/logger!"],
-  function (declare, Stateful, module, logger) {
+define(["../../dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode/oddsAndEnds/log/logger!"],
+  function (declare, Stateful, js, module, logger) {
 
     // IDEA note that derivation, delegation and propagation turn out to be 3 separate mechanisms
 
@@ -29,10 +29,15 @@ define(["../../dojo/_base/declare", "dojo/Stateful", "module", "ppwcode/oddsAndE
         return v;
       },
 
-      constructor: function(/*String*/ path) {
-        var split = path.split(".");
+      constructor: function(/*String*/ arg) {
+        var argIsString = (js.typeOf(arg) === "string");
+        var pStr = argIsString ? arg : arg.path;
+        var split = pStr.split(".");
         this.lastContext = split;
         this.lastName = split.pop();
+        if (!argIsString) {
+          this.map = arg.map;
+        }
       },
 
       propagate: function(/*Stateful*/ from, /*String*/ propName) {
@@ -45,7 +50,7 @@ define(["../../dojo/_base/declare", "dojo/Stateful", "module", "ppwcode/oddsAndE
           throw "ERROR: propagating to same property - infinite loop";
         }
         var baseValue = from.get(propName);
-        var propagationValue = this.map(baseValue);
+        var propagationValue = this.map(baseValue, from);
         logger.debug("Propagating value '" + propagationValue + "' for '" + propName + "' to " + lastContext + "[" + this + "] from " + from);
         if (lastContext.set) {
           lastContext.set(this.lastName, propagationValue);
@@ -122,7 +127,7 @@ define(["../../dojo/_base/declare", "dojo/Stateful", "module", "ppwcode/oddsAndE
       //   When the propagation entry is a String, the value set on the propagation target
       //   is the value with which PROPERTYNAME is `set`. If it is an object, it can have
       //   an optional `map` function. In that case, the value set on the propagation target
-      //   is `map(value)`.
+      //   is `map(value, this)`.
       //
       //   For a given instance, the consolidation is made of all `"-propagate-"` declarations in
       //   the prototypes of all base classes, including this class. The `"-propagate-"` declaration
