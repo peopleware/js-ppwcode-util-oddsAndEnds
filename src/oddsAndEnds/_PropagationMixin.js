@@ -1,4 +1,4 @@
-define(["../../dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode/oddsAndEnds/log/logger!"],
+define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode/oddsAndEnds/log/logger!"],
   function (declare, Stateful, js, module, logger) {
 
     // IDEA note that derivation, delegation and propagation turn out to be 3 separate mechanisms
@@ -10,6 +10,19 @@ define(["../../dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode/
         context
       )
     }
+
+    /* =====
+    var PropagateEntryKwarg = {
+      // path: String
+      path: null,
+
+      // map: Function?
+      map: null,
+
+      // exec: Boolean?
+      exec: false
+    }
+    ===== */
 
     var PropagateEntry = declare([], {
 
@@ -29,14 +42,24 @@ define(["../../dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode/
         return v;
       },
 
-      constructor: function(/*String*/ arg) {
+      // exec: Boolean
+      //   If true, we don't set `lastName`, but expect it to be a function
+      //   that takes the mapped value, and call it in the context of the last context.
+      exec: false,
+
+      constructor: function(/*String|PropagateEntryKwarg*/ arg) {
         var argIsString = (js.typeOf(arg) === "string");
         var pStr = argIsString ? arg : arg.path;
         var split = pStr.split(".");
         this.lastContext = split;
         this.lastName = split.pop();
         if (!argIsString) {
-          this.map = arg.map;
+          if (arg.map) {
+            this.map = arg.map;
+          }
+          if (arg.exec) {
+            this.exec = true;
+          }
         }
       },
 
@@ -52,7 +75,10 @@ define(["../../dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode/
         var baseValue = from.get(propName);
         var propagationValue = this.map(baseValue, from);
         logger.debug("Propagating value '" + propagationValue + "' for '" + propName + "' to " + lastContext + "[" + this + "] from " + from);
-        if (lastContext.set) {
+        if (this.exec) {
+          lastContext[this.lastName].call(lastContext, propagationValue, from);
+        }
+        else if (lastContext.set) {
           lastContext.set(this.lastName, propagationValue);
         }
         else {
@@ -114,6 +140,17 @@ define(["../../dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode/
       //   |   ...
       //   | },
       //
+      //   or
+      //
+      //   | "-propagate-": {
+      //   |   PROPERTYNAME: [
+      //   |    {path: "path.to.first.propagationTarget", exec: true),
+      //   |    "path.to.second.propagationTarget",
+      //   |    ...
+      //   |   ],
+      //   |   ...
+      //   | },
+      //
       //   When PROPERTYNAME is `set`, the new value is propagated to all mentioned propagation targets,
       //   if no `null` or `undefined` are encountered in the mentioned paths. If intermediate objects
       //   are Stateful (i.e., have a `get` method), `get` is used to go down the path. If not, regular
@@ -127,7 +164,10 @@ define(["../../dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode/
       //   When the propagation entry is a String, the value set on the propagation target
       //   is the value with which PROPERTYNAME is `set`. If it is an object, it can have
       //   an optional `map` function. In that case, the value set on the propagation target
-      //   is `map(value, this)`.
+      //   is `map(value, this)`. If it is an object, it can have an optional `exec` property.
+      //   If this is try, the path should resolve to a void function, which is then executed
+      //   in the context of the last context, with the mapped value and this as argument:
+      //   | lastContext.lastContext[lastName](map(value, this), this))
       //
       //   For a given instance, the consolidation is made of all `"-propagate-"` declarations in
       //   the prototypes of all base classes, including this class. The `"-propagate-"` declaration
