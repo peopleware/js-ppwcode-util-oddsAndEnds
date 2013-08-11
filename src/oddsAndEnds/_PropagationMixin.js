@@ -73,7 +73,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode/oddsAn
           throw "ERROR: propagating to same property - infinite loop";
         }
         var baseValue = from.get(propName);
-        var propagationValue = this.map(baseValue, from);
+        var propagationValue = this.map.call(from, baseValue);
         logger.debug("Propagating value '" + propagationValue + "' for '" + propName + "' to " + lastContext + "[" + this + "] from " + from);
         if (this.exec) {
           lastContext[this.lastName].call(lastContext, propagationValue, from);
