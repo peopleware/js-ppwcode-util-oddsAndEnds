@@ -37,7 +37,7 @@ define(["dojo/_base/declare", "./_MultiLangOutput"],
         // tags:
         //		protected
 
-        var render = this.label ? this.getLabel(this.label, this.findLang(), this.escapeXml) : this.get("missing");
+        var render = this.label ? this.getLabel(this.label, null, this.escapeXml) : this.get("missing");
         var outputNode = this.srcNodeRef || this.domNode;
         outputNode.innerHTML = (render || render === 0 || render === "0") ? render : this.missing;
       }
