@@ -1,6 +1,12 @@
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i18n", "../js", "../xml", "../log/logger!"],
   function(declare, _WidgetBase, kernel, i18n, js, xml, logger) {
 
+    function parentDirFromMid(mid) {
+      var parts = mid.split("/");
+      parts.pop();
+      return parts.join("/");
+    }
+
     function substitute(/*String*/ str, /*Object*/ context) {
       // summary:
       //   Like dojo/string.substitute, but evals full code.
@@ -56,10 +62,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
         if (kwargs && kwargs.nlsParentDirectory) {
           this.nlsParentDirectory = kwargs.nlsParentDirectory;
         }
-        else if (this.constructor.mid) {
-          var parts = this.constructor.mid.split("/");
-          parts.pop();
-          this.nlsParentDirectory = parts.join("/");
+        else if (!this.nlsParentDirectory && this.constructor.mid) {
+          this.nlsParentDirectory = parentDirFromMid(this.constructor.mid);
         }
       },
 
@@ -93,16 +97,36 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
         //   Optional. ${}-replacement is done in the context of `this`, except
         //   when this object is provided to use as context instead.
         // otherBundleName: String?
-        //   Optional. Use otherBundleName instead of this.bundleName if provided.
+        //   Optional. Use otherBundleName instead of this.nlsParentDirectory and this.bundleName if provided.
+        //   This is the path to the bundle, without "nls" or the language directory, and can be relative.
 
         var render = "?" + labelName + "?";
-        var nlsParentDir = this.get("nlsParentDirectory");
-        if (!nlsParentDir) {
-          throw "ERROR: no nlsParentDirectory defined for " + this;
+        var nlsParentDir;
+        var bundleName;
+        if (otherBundleName) {
+          var parts = otherBundleName.split("/");
+          bundleName = parts.pop();
+          nlsParentDir = parts.join("/");
+          if (nlsParentDir.charAt(0) === ".") { // relative
+            // now we need a this.constructor.mid!
+            if (!this.constructor.mid) {
+              throw "ERROR: using a relative path to another bundle requires a this.constructor.mid";
+            }
+            nlsParentDir = parentDirFromMid(this.constructor.mid) + "/" + nlsParentDir;
+          }
+          if (!bundleName || !nlsParentDir) {
+            throw "ERROR: trouble parsing otherBundleName '" + otherBundleName + "'";
+          }
         }
-        var bundleName = otherBundleName || this.get("bundleName");
-        if (!bundleName) {
-          throw "ERROR: no bundleName defined for " + this;
+        else {
+          nlsParentDir = this.get("nlsParentDirectory");
+          if (!nlsParentDir) {
+            throw "ERROR: no nlsParentDirectory defined for " + this;
+          }
+          bundleName = this.get("bundleName");
+          if (!bundleName) {
+            throw "ERROR: no bundleName defined for " + this;
+          }
         }
         var actualLang = lang || this.get("lang") || kernel.locale;
         try {

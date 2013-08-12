@@ -20,6 +20,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
       _anchorParent: null,
       _anchorParentLangHandle: null,
 
+      // bundleName: String?
+      //   Optional. Use bundleName instead of the bundle defined in the closest enclosing _MultiLangAnchorParent
+      //   if provided. This is a path, which can be relative to the closest enclosing _MultiLangAnchorParent,
+      //   without the "nls" and language directory.
+      bundleName: null,
+
       startup: function() {
         this.inherited(arguments);
         this._anchorParent = _MultiLangAnchorParent.findEnclosing(this);
@@ -38,7 +44,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         }
       },
 
-      getLabel: function(/*String*/ labelName, /*String?*/ lang, /*Boolean?*/ escapeXml, /*Object?*/ otherContext, /*String?*/ otherBundleName) {
+      getLabel: function(/*String*/ labelName, /*String?*/ lang, /*Boolean?*/ escapeXml) {
         // summary:
         //   Aks for the string for `labelName` from the standard bundle referred to by the closest enclosing
         //   _MultiLangAnchorParent (or another bundle) in the language the closest enclosing
@@ -50,14 +56,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         //   But, this can be used to override that.
         // escapeXml: Boolean?
         //   Whether or not to escapeXml the retrieved label. Default is true.
-        // otherContext: Object?
-        //   Optional. ${}-replacement is done in the context of the closest enclosing _MultiLangAnchorParent, except
-        //   when this object is provided to use as context instead.
-        // otherBundleName: String?
-        //   Optional. Use otherBundleName instead of the bundleName of the closest enclosing _MultiLangAnchorParent
-        //   if provided.
 
-        return this._anchorParent && this._anchorParent.getLabel(labelName, lang, escapeXml, otherContext, otherBundleName);
+        return this._anchorParent && this._anchorParent.getLabel(labelName, lang, escapeXml, null, this.bundleName);
       }
 
     });
