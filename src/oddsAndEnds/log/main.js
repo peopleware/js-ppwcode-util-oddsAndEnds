@@ -53,6 +53,7 @@ define(["dojo/_base/kernel", "dojo/has", "dojo/io-query", "module", "./log4javas
     var rootLogger = log4javascript.getRootLogger();
     var layout = new log4javascript.PatternLayout("%d{HH:mm:ss,SSS} %-5p - %c - %m");
     var consoleAppender = new log4javascript.BrowserConsoleAppender();
+    consoleAppender.setThreshold(log4javascript.Level.ALL);
     consoleAppender.setLayout(layout);
     rootLogger.addAppender(consoleAppender);
     rootLogger.setLevel(log4javascript.Level.INFO);
