@@ -2,7 +2,7 @@ define(["dojo/_base/declare", "ppwcode/oddsAndEnds/ui/_MultiLangOutput", "dojo/_
   function(declare, _MultiLangOutput, lang, xml) {
 
     function defaultFormat(/***/ value, /*Object*/ options) {
-      return value && value.toString();
+      return value ? value.toString() : options.na;
     }
 
     return declare([_MultiLangOutput], {
