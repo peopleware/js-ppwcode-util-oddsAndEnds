@@ -83,7 +83,16 @@ define(["./js", "./log/logger!"],
       }
 
       function watchFirst() {
-        if (context.watch) {
+        if (context.watch && (context.watch !== Object.prototype.watch)) {
+          /*
+           IMPORTANT NOTE:
+           A major bug turned out to be that, in FireFox, all Objects have a watch function (native code)!
+           So, if we test for context.watch first, all contexts will fall in the first category!
+           Also, we do not want to depend on this browser specific behavior. The FireFox watch is somewhat like the
+           Stateful watch, but only allows for 1 listener.
+           What we actually want is a real Stateful watch, but not necessarily the Stateful class. Duck-typing
+           is what we want. So we test for a context.watch, that is different from Object.prototype.watch.
+           */
           logger.debug("  Starting watch on " + firstExpression);
           firstWatcher = context.watch(first, pingFirstChanged);
         }
@@ -111,7 +120,11 @@ define(["./js", "./log/logger!"],
           // there is more; we aren't really looking for context[first], but context[first][myChain];
           // context[first] is just a stepping stone;
           // but if it is null, we cannot go deeper now
+          logger.trace("    Going deeper.");
           stopDeeperWatchers = _bChain(firstExpression, currentFirstValue, restChain, pingSomethingInThePathChanged);
+        }
+        else {
+          logger.trace("    Not going deeper.");
         }
       }
 
