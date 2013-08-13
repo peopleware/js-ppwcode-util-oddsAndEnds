@@ -69,7 +69,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode/oddsAndEnds/bindingChain
           }
         }
 
-        self["-derived"] = self.constructor._meta.bases.reduceRight(
+        self["-derived-"] = self.constructor._meta.bases.reduceRight(
           function(acc, base) {
             var dependencies = base.prototype["-derived-"];
             if (dependencies) {
