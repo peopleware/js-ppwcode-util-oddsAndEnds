@@ -1,0 +1,44 @@
+/* === White Send Button ==*/
+.mblDomButtonWhiteSend {
+	position: relative;
+	width: 29px;
+	height: 29px;
+}
+.mblDomButtonWhiteSend > div { /* box */
+	position: absolute;
+	top: 8px;
+	left: 4px;
+  right: 4px;
+  bottom: 6px;
+	margin: 0;
+	font-size: 1px;
+  background-color: transparent;
+	border-width: 2px;
+	border-style: solid;
+	border-color: white;
+  border-radius: 4px;
+}
+.mblDomButtonWhiteSend > div > div {
+  position: absolute;
+  -webkit-transform: rotate(50deg);
+  left: 6px;
+  top: -10px;
+}
+.mblDomButtonWhiteSend > div > div > div {
+  position: absolute;
+  top: -5px;
+  left: 0;
+  clip: rect(-5px, 35px, 13px, 0px);
+}
+.mblDomButtonWhiteSend > div > div > div > div {
+  top: 0;
+  left: 4px;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  font-size: 1px;
+  background-color: white;
+  border-left: 2px solid #4a5a71;
+  border-top: 2px solid #4a5a71;
+  -webkit-transform: scaleX(0.2) rotate(45deg);
+}

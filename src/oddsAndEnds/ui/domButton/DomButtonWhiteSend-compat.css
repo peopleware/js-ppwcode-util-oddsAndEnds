@@ -1,0 +1,9 @@
+/* === White Send Button ==*/
+.mblDomButtonWhiteSend {
+	background-image: url(./mblDomButtonWhiteSend.png);
+	background-repeat: no-repeat;
+}
+
+.mblDomButtonWhiteSend > div {
+	display: none;
+}
