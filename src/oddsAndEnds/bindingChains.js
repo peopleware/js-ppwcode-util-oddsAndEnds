@@ -2,7 +2,8 @@ define(["./js", "./log/logger!"],
   function(js, logger) {
 
     function isStateful(/*Stateful*/ s) {
-      return s && s.get && s.watch && js.typeOf(s.get) === "function" && js.typeOf(s.watch) === "function";
+      return s && s.get && s.watch && js.typeOf(s.get) === "function" && js.typeOf(s.watch) === "function" && s.watch !== Object.prototype.watch;
+      // the last check protects against FF, where everything has a watch method
     }
 
     function isObservableStore(/*Observable*/ s) {
@@ -12,16 +13,22 @@ define(["./js", "./log/logger!"],
     function _getValue(context, propertyName) {
       logger.trace("    getting value '" + propertyName + "' from " + context);
       var result;
-      var get = context.get;
-      if (get) {
-        logger.trace("      there is a 'get' function; executing");
-        result = context.get(propertyName);
+      if (propertyName === "@") {
+        logger.trace("    propertyName is '@'; this means we just came through a store; the value is the store");
+        result = context;
       }
       else {
-        logger.trace("      there is no 'get' function; reading property directly");
-        result = context[propertyName];
+        var get = context.get;
+        if (get) {
+          logger.trace("      there is a 'get' function; executing");
+          result = context.get(propertyName);
+        }
+        else {
+          logger.trace("      there is no 'get' function; reading property directly");
+          result = context[propertyName];
+        }
+        logger.trace("      result is '" + result + "'");
       }
-      logger.trace("      result is '" + result + "'");
       return result;
     }
 
@@ -83,7 +90,7 @@ define(["./js", "./log/logger!"],
       }
 
       function watchFirst() {
-        if (context.watch && (context.watch !== Object.prototype.watch)) {
+        if (isStateful(context)) {
           /*
            IMPORTANT NOTE:
            A major bug turned out to be that, in FireFox, all Objects have a watch function (native code)!
@@ -96,7 +103,7 @@ define(["./js", "./log/logger!"],
           logger.debug("  Starting watch on " + firstExpression);
           firstWatcher = context.watch(first, pingFirstChanged);
         }
-        else if (context.query) {
+        else if (isObservableStore(context)) {
           var queryResult;
           if (first === "@") {
             logger.debug("Starting observe on " + firstExpression + " (elements in the store)");
