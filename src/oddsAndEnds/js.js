@@ -92,6 +92,31 @@ define([],
       return result;
     }
 
+    function substitute(/*String*/ str, /*Object*/ context) {
+      // summary:
+      //  All occurrences of "${...}$" in `str` are replaced by the result of the
+      //  execution of what is between the curly brackets as JavaScript, with `context`
+      //  as `this`.
+
+      //   Like dojo/string.substitute, but evals full code.
+      //   No formatting (yet).
+      return str.replace( // return String
+        /\$\{(.+?)\}\$/gm,
+        function(match, pattern) {
+          var value;
+          try {
+            var executor = new Function("return (" + pattern + ");");
+            value = executor.call(context);
+          }
+          catch (err) {
+            logger.error("Executing pattern substitution of ${" + pattern + "}$ in '" + str + "' with context " + context, err);
+            return "?? ${" + pattern  + "}$ -- " + (err.message || err) + " ??";
+          }
+          return value ? value.toString() : "?" + pattern  + "?";
+        }
+      );
+    }
+
     var js = {
       // summary:
       //   Methods to aid with the JavaScript language.
@@ -99,7 +124,8 @@ define([],
       getPrototypeChain: getPrototypeChain,
       getAllKeys: getAllKeys,
       isInt: isInt,
-      nub: nub
+      nub: nub,
+      substitute: substitute
     };
 
     return js;

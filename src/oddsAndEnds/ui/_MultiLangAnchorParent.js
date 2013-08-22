@@ -7,27 +7,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
       return parts.join("/");
     }
 
-    function substitute(/*String*/ str, /*Object*/ context) {
-      // summary:
-      //   Like dojo/string.substitute, but evals full code.
-      //   No formatting (yet).
-      return str.replace( // return String
-        /\$\{(.+?)\}\$/gm,
-        function(match, pattern) {
-          var value;
-          try {
-            var executor = new Function("return (" + pattern + ");");
-            value = executor.call(context);
-          }
-          catch (err) {
-            logger.error("Executing pattern substitution of ${" + pattern + "}$ in '" + str + "' with context " + context, err);
-            return "?? ${" + pattern  + "}$ -- " + (err.message || err) + " ??";
-          }
-          return value ? value.toString() : "?" + pattern  + "?";
-        }
-      );
-    }
-
     var _MultiLangAnchorParent = declare([_WidgetBase], {
       // summary:
       //   Widget mixin that makes the widget an parent anchor point for the language used
@@ -135,7 +114,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
           if (js.typeOf(render) === "string") {
             try {
               var substContext = otherContext || this;
-              render = substitute(render, substContext);
+              render = js.substitute(render, substContext);
             }
             catch (err) {
               logger.warn("${}$-replacement failed on '" + render + "' while getting (" +
