@@ -13,9 +13,16 @@ define(["./js", "./log/logger!"],
     function _getValue(context, propertyName) {
       logger.trace("    getting value '" + propertyName + "' from " + context);
       var result;
-      if (propertyName === "@") {
-        logger.trace("    propertyName is '@'; this means we just came through a store; the value is the store");
-        result = context;
+      if (propertyName === "@" || propertyName === "@^") {
+        logger.trace("    propertyName is '@'; this means we just came through a store");
+        if (!isStateful(context) || context.get("lastReloaded")) {
+          logger.trace("        the value is the store");
+          result = context;
+        }
+        else {
+          logger.trace("        the value is lastReloaded, which is undefined; this implies we are not going deeper");
+          // NOP
+        }
       }
       else {
         var get = context.get;
@@ -90,7 +97,33 @@ define(["./js", "./log/logger!"],
       }
 
       function watchFirst() {
-        if (isStateful(context)) {
+        if (isObservableStore(context)) {
+          var queryResult;
+          if (first === "@" || first === "@^") {
+            if (!isStateful(context) || context.get("lastReloaded")) {
+              logger.debug("Starting observe on " + firstExpression + " (elements in the store)");
+              queryResult = context.query();
+              firstWatcher = queryResult.observe(pingFirstChanged, first !== "@^");
+            }
+            else {
+              logger.debug("Store is Stateful, and lastReloaded is not set. Watching lastReloaded, and not going deeper yet.");
+              firstWatcher = context.watch("lastReloaded", function(propName, oldValue, newValue) {
+                logger.debug("lastReloaded on Store changed. Stop watching it, watch the Store, and send an event.");
+                firstWatcher.remove();
+                watchFirst();
+                pingFirstChanged();
+              });
+            }
+          }
+          else {
+            logger.debug("Starting observe on " + firstExpression + " (one element of the store)");
+            queryResult = context.query(function(el) {
+              return context.getIdentity(el) === first;
+            }); // complex way of doing context.get(first), but we need the QueryResult
+            firstWatcher = queryResult.observe(pingFirstChanged, false);
+          }
+        }
+        else if (isStateful(context)) {
           /*
            IMPORTANT NOTE:
            A major bug turned out to be that, in FireFox, all Objects have a watch function (native code)!
@@ -102,21 +135,6 @@ define(["./js", "./log/logger!"],
            */
           logger.debug("  Starting watch on " + firstExpression);
           firstWatcher = context.watch(first, pingFirstChanged);
-        }
-        else if (isObservableStore(context)) {
-          var queryResult;
-          if (first === "@") {
-            logger.debug("Starting observe on " + firstExpression + " (elements in the store)");
-            queryResult = context.query();
-            firstWatcher = queryResult.observe(pingFirstChanged, true);
-          }
-          else {
-            logger.debug("Starting observe on " + firstExpression + " (one element of the store)");
-            queryResult = context.query(function(el) {
-              return context.getIdentity(el) === first;
-            }); // complex way of doing context.get(first), but we need the QueryResult
-            firstWatcher = queryResult.observe(pingFirstChanged, false);
-          }
         }
         // else regular object; we cannot watch context; just passing through
       }
@@ -212,7 +230,11 @@ define(["./js", "./log/logger!"],
       //   is applied to all its values. If a value is a Store, and the next element in the chain is
       //   not "#" or "@", it is used as an id in get(). An array must be followed by "#" before anything else.
       //   If a value is a Store, and the next element in the chain is "@", we observe the Store itself for any
-      //   changes. "@.#" is allowed. "#.@" makes sense if the elements of the first Store are Stores themselves.
+      //   changes, i.e., elements added or removed, and elements changed. "@^" listens to elements added or removed,
+      //   but not to elements changed. "@.#" is allowed. "#.@" makes sense if the elements of the first Store are
+      //   Stores themselves. If the Store has the `watch` function, we look for the `lastReloaded` property.
+      //   If it is falsy, we interpret that as the Store never being loaded, and we won't pass deeper.
+      //   We watch that property however, and when it becomes set, we send one event, and connect deeper.
       //   If an element ends with "!" (e.g. "something.other!.foo"), we still watch it to keep the chain in order, but
       //   don't call callback when changes happen.
       //   An element of the path can contain spaces. When the context of the element has a get-method, it is
@@ -250,6 +272,7 @@ define(["./js", "./log/logger!"],
           }
         }
       };
+      result.remove = result.stop; // this is here for compatibility with Destroyable
       result.start();
       return result;
     }
