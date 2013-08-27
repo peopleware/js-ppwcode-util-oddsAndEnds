@@ -137,6 +137,20 @@ define([],
              );
     }
 
+    function string2CharCode(str) {
+      // summary:
+      //   Transform a string into an array of CharCodes.
+
+      return str.split("").map(function(c) {return c.charCodeAt(0);});
+    }
+
+    function charCode2String(charCodes) {
+      // summary:
+      //   Transform an array of CharCodes into a String.
+
+      return charCodes.map(function(charCode) {return String.fromCharCode(charCode);}).join("");
+    }
+
     var js = {
       // summary:
       //   Methods to aid with the JavaScript language.
@@ -146,7 +160,9 @@ define([],
       isInt: isInt,
       nub: nub,
       substitute: substitute,
-      sortComparable: sortComparable
+      sortComparable: sortComparable,
+      string2CharCode: string2CharCode,
+      charCode2String: charCode2String
     };
 
     return js;
