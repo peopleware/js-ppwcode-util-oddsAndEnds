@@ -9,6 +9,7 @@ define([],
         // summary:
         //	 Adds escape sequences for special characters in XML: `&<>"'`.
         //	 Optionally skips escapes for single quotes.
+        //   str is coerced to string with `toString`
         // doNotEscapeSingleQuotes: Boolean?
         //   Do not escape single quotes when this is true.
         // missing: String?
