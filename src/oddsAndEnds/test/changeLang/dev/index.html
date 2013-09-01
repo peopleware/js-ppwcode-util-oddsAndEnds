@@ -32,8 +32,8 @@
   <script src="../../../../../../dojo/dojo/dojo.js"></script>
 
   <script type="text/javascript">
-    require(["dojo/parser", "dijit/registry", "ppwcode.oddsAndEnds/test/changeLang/Target",
-             "ppwcode.oddsAndEnds/test/changeLang/Widget", "dijit/form/Button",
+    require(["dojo/parser", "dijit/registry", "ppwcode.util.oddsAndEnds/test/changeLang/Target",
+             "ppwcode.util.oddsAndEnds/test/changeLang/Widget", "dijit/form/Button",
              "dojo/domReady!"],
       function(parser, registry, Target) {
         var parsePromise = parser.parse();
@@ -68,7 +68,7 @@
 </head>
 
 <body class="claro">
-<div id="widget" data-dojo-type="ppwcode.oddsAndEnds/test/changeLang/Widget" data-dojo-props="lang: 'fr'"></div>
+<div id="widget" data-dojo-type="ppwcode.util.oddsAndEnds/test/changeLang/Widget" data-dojo-props="lang: 'fr'"></div>
 <div>
   <span id="nlButton" data-dojo-type="dijit/form/Button">nl</span>
   <span id="enButton" data-dojo-type="dijit/form/Button">en</span>

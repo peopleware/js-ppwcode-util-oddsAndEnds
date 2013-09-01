@@ -4,7 +4,7 @@ define(["./main", "module"],
     var plugin = {
       // summary:
       //   This plugin returns a Logger for the module in which it is called.
-      //   | define(["ppwcode.oddsAndEnds/log/logger!#"]
+      //   | define(["ppwcode.util.oddsAndEnds/log/logger!#"]
       //   At least one character (any character) is needed after "!". It is not used, but otherwise
       //   the loader function is not triggered.
       //

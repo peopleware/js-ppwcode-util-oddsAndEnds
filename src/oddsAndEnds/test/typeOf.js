@@ -1,4 +1,4 @@
-define(["ppwcode.contracts/doh", "../typeOf"],
+define(["ppwcode.util.contracts/doh", "../typeOf"],
   function(doh, typeOf) {
 
     doh.register("typeOf", [
