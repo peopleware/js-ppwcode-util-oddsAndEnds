@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "ppwcode/oddsAndEnds/ui/_MultiLangOutput", "dojo/_base/lang", "ppwcode/oddsAndEnds/xml"],
+define(["dojo/_base/declare", "ppwcode.oddsAndEnds/ui/_MultiLangOutput", "dojo/_base/lang", "ppwcode.oddsAndEnds/xml"],
   function(declare, _MultiLangOutput, lang, xml) {
 
     function defaultFormat(/***/ value, /*Object*/ options) {

@@ -1,5 +1,5 @@
 define(["dojo/_base/declare", "dijit/_WidgetBase",
-        "./_MultiLangAnchorParent", "ppwcode/oddsAndEnds/log/logger!"],
+        "./_MultiLangAnchorParent", "ppwcode.oddsAndEnds/log/logger!"],
   function(declare, _WidgetBase,
            _MultiLangAnchorParent, logger) {
 

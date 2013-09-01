@@ -1,13 +1,13 @@
 define(["dojo/_base/declare",
         "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
-        "dojo/Stateful", "dojo/number", "dojo/_base/lang", "dojox/mvc/resolve", "dojo/aspect",
-        "dojo/text!./widget.html", "dojo/i18n", "require", "module",
+        "dojo/number", "dojo/_base/lang", "dojox/mvc/resolve", "dojo/aspect",
+        "dojo/text!./widget.html", "dojo/i18n", "require",
         "dojo/i18n!./nls/labels",
         "dojox/mvc/at", "dojox/mvc/Group", "../../ui/Output", "dijit/form/TextBox"],
   function(declare,
            WidgetBase, TemplatedMixin, WidgetsInTemplateMixin,
-           Stateful, number, lang, resolve, aspect,
-           template, i18n, require, module) {
+           number, lang, resolve, aspect,
+           template, i18n, require) {
 
     function getParent(/*dijit/_WidgetBase*/ w){
       // summary:
@@ -20,7 +20,7 @@ define(["dojo/_base/declare",
       try{
         registry = require("dijit/registry");
       }catch(e){
-        return;
+        return null;
       }
       var pn = w.domNode && w.domNode.parentNode, pw, pb;
       while(pn){
@@ -33,6 +33,7 @@ define(["dojo/_base/declare",
         }
         pn = pw && pw.domNode.parentNode;
       }
+      return null;
     }
 
     // Monkey patch dijit._WidgetBase._setLangAttr to refresh bound values
@@ -74,13 +75,13 @@ define(["dojo/_base/declare",
       target: null,
 
       postMixInProperties: function() {
-        var labels = i18n.getLocalization("ppwcode/oddsAndEnds/test/changeLang", "labels", this.lang);
+        var labels = i18n.getLocalization("ppwcode.oddsAndEnds/test/changeLang", "labels", this.lang);
         this.labels = labels; // cannot use set in postMixInProperties yet
       },
 
       _setLangAttr: function(value) {
         this.inherited(arguments);
-        var labels = i18n.getLocalization("ppwcode/oddsAndEnds/test/changeLang", "labels", value);
+        var labels = i18n.getLocalization("ppwcode.oddsAndEnds/test/changeLang", "labels", value);
         this.set("labels", labels);
       },
 

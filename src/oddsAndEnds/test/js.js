@@ -1,5 +1,5 @@
-define(["dojo/main", "ppwcode/contracts/doh", "../js"],
-  function(dojo, doh, js) {
+define(["ppwcode.contracts/doh", "../js"],
+  function(doh, js) {
 
     doh.register("js", [
 

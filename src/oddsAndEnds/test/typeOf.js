@@ -1,5 +1,5 @@
-define(["dojo/main", "ppwcode/contracts/doh", "../typeOf"],
-  function(dojo, doh, typeOf) {
+define(["ppwcode.contracts/doh", "../typeOf"],
+  function(doh, typeOf) {
 
     doh.register("typeOf", [
 
