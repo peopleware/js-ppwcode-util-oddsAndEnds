@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "dojo/Stateful", "ppwcode.util.oddsAndEnds/bindingChains", "module", "ppwcode.util.oddsAndEnds/log/logger!"],
+define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/bindingChains", "module", "ppwcode-util-oddsAndEnds/log/logger!"],
   function (declare, Stateful, bindingChains, module, logger) {
 
     // IDEA note that derivation, delegation and propagation turn out to be 3 separate mechanisms

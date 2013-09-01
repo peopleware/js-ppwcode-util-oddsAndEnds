@@ -75,13 +75,13 @@ define(["dojo/_base/declare",
       target: null,
 
       postMixInProperties: function() {
-        var labels = i18n.getLocalization("ppwcode.util.oddsAndEnds/test/changeLang", "labels", this.lang);
+        var labels = i18n.getLocalization("ppwcode-util-oddsAndEnds/test/changeLang", "labels", this.lang);
         this.labels = labels; // cannot use set in postMixInProperties yet
       },
 
       _setLangAttr: function(value) {
         this.inherited(arguments);
-        var labels = i18n.getLocalization("ppwcode.util.oddsAndEnds/test/changeLang", "labels", value);
+        var labels = i18n.getLocalization("ppwcode-util-oddsAndEnds/test/changeLang", "labels", value);
         this.set("labels", labels);
       },
 

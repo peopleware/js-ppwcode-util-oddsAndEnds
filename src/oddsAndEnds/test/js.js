@@ -1,4 +1,4 @@
-define(["ppwcode.util.contracts/doh", "../js"],
+define(["ppwcode-util-contracts/doh", "../js"],
   function(doh, js) {
 
     doh.register("js", [
