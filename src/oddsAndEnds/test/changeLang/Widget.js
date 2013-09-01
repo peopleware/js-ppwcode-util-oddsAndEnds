@@ -70,7 +70,7 @@ define(["dojo/_base/declare",
       // ./nls/labels
       labels: null,
 
-      // target: viewmodel/Data
+      // target: Data
       //   Data object of the product documents viewmodel
       target: null,
 
