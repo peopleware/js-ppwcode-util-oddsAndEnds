@@ -151,6 +151,36 @@ define([],
       return charCodes.map(function(charCode) {return String.fromCharCode(charCode);}).join("");
     }
 
+    var MAX_INT = 9007199254740992;
+    var MIN_INT = -9007199254740992;
+
+    // From https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Math/random
+    // Returns a random integer between min and max
+    // Using Math.round() will give you a non-uniform distribution!
+    function randomInt(min, max) {
+      if (!max) {
+        max = MAX_INT;
+      }
+      if (!min) {
+        min = MIN_INT;
+      }
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randomInts(min, max, nr) {
+      var result = [];
+      var r = undefined;
+      for (var i = 0; i < nr; i++) {
+        while (!r || result.some(function(earlierR) {//noinspection JSReferencingMutableVariableFromClosure
+          return r === earlierR;})) {
+          r = randomInt(min, max);
+        }
+        result[i] = r;
+        r = undefined;
+      }
+      return result;
+    }
+
     var js = {
       // summary:
       //   Methods to aid with the JavaScript language.
@@ -162,7 +192,11 @@ define([],
       substitute: substitute,
       sortComparable: sortComparable,
       string2CharCode: string2CharCode,
-      charCode2String: charCode2String
+      charCode2String: charCode2String,
+      MAX_INT: MAX_INT,
+      MIN_INT: MIN_INT,
+      randomInt: randomInt,
+      randomInts: randomInts
     };
 
     return js;
