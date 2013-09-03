@@ -181,6 +181,15 @@ define([],
       return result;
     }
 
+    function haveSameElements(a1, a2) {
+      // summary:
+      //   Returns true if array a1 and array a2 have the samen elements, irrespective of their order.
+      //   Duplicates are allowed.
+
+      return a1.every(function(a1i) {return a2.indexOf(a1i) >= 0;}) &&
+        a2.every(function(a2i) {return a1.indexOf(a2i) >= 0;});
+    }
+
     var js = {
       // summary:
       //   Methods to aid with the JavaScript language.
@@ -196,7 +205,8 @@ define([],
       MAX_INT: MAX_INT,
       MIN_INT: MIN_INT,
       randomInt: randomInt,
-      randomInts: randomInts
+      randomInts: randomInts,
+      haveSameElements: haveSameElements
     };
 
     return js;
