@@ -1,5 +1,5 @@
-define(["dojo/Deferred", "../log/logger!"],
-  function(Deferred, logger) {
+define(["dojo/Deferred", "dojo/when", "../log/logger!"],
+  function(Deferred, when, logger) {
 
     var emptyResolved = new Deferred();
     emptyResolved.resolve([]);
@@ -25,7 +25,8 @@ define(["dojo/Deferred", "../log/logger!"],
       }
       logger.debug("Creating promise for " + array[0]);
       var firstPromise = mapper(array[0]);
-      return firstPromise.then(
+      return when(
+        firstPromise,
         function(firstResult) {
           logger.debug("Promise for " + array[0] + " resolved with result " + firstResult + ". Going to next element in array ...");
           var restPromise = serialized(array.slice(1), mapper);
