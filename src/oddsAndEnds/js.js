@@ -158,10 +158,10 @@ define([],
     // Returns a random integer between min and max
     // Using Math.round() will give you a non-uniform distribution!
     function randomInt(min, max) {
-      if (!max) {
+      if (!max && max !== 0) {
         max = MAX_INT;
       }
-      if (!min) {
+      if (!min && min !== 0) {
         min = MIN_INT;
       }
       return Math.floor(Math.random() * (max - min + 1)) + min;
