@@ -58,7 +58,7 @@ define([],
 
       return getPrototypeChain(obj).reduceRight(
         function(acc, proto) {
-          return acc.concat(Object.keys(proto));
+          return nub(acc.concat(Object.keys(proto)));
         },
         []
       );
