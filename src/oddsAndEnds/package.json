@@ -1,0 +1,35 @@
+{
+  "name": "ppwcode.util.oddsAndEnds",
+  "version": "0.0.1",
+  "description": "ppwcode util oddsAndEnds by PeopleWare",
+  "copyright": "test",
+  "keywords": [
+    "ppwcode",
+    "oddsAndEnds",
+    "PeopleWare"
+  ],
+  "maintainers": [
+    {
+      "name": "Jan Dockx",
+      "email": "Jan_Dockx@peopleware.be"
+    }
+  ],
+  "contributors": [],
+  "bugs": {
+    "url": "https://projects.peopleware.be/jira44//browse/ppwcode"
+  },
+  "licenses": [
+    {
+      "type": "Proprietary"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "svn",
+      "url": "http://projects.peopleware.be/svn16/ppwcode"
+    }
+  ],
+  "dependencies": [
+  ],
+  "dojoBuild": "oddsAndEnds.profile.js"
+}
