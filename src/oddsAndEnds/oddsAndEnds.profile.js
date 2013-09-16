@@ -22,7 +22,7 @@ var profile = (function () {
       },
 
       amd: function (filename, mid) {
-        return isAmd(filename, mid);
+        return !isCopyOnly(filename, mid) && !isTest(filename, mid) && isAmd(filename, mid);
       }
     }
   };
