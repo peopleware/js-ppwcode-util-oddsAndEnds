@@ -8,7 +8,7 @@ var profile = (function () {
   }
 
   function isAmd(filename, mid) {
-    return filename.indexOf(".js/") >= 0 && filename.indexOf(".profile.js") < 0;
+    return filename.indexOf(".json") < 0 && filename.indexOf(".js") >= 0 && filename.indexOf(".profile.js") < 0;
   }
 
   return {
