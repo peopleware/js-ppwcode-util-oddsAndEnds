@@ -197,11 +197,14 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       set: function(/*String*/ propName, value) {
         var self = this;
         // always do the local thing too
+        var oldValue = this.get(propName);
         var result = self.inherited(arguments);
-        // propagate some properties
-        var propagateEntry = getPropagateEntries(self.constructor, propName);
-        if (propagateEntry) {
-          propagateEntry.forEach(function(ppChain) {ppChain.propagate(self, propName);});
+        if (oldValue !== value) {
+          // propagate some properties
+          var propagateEntry = getPropagateEntries(self.constructor, propName);
+          if (propagateEntry) {
+            propagateEntry.forEach(function(ppChain) {ppChain.propagate(self, propName);});
+          }
         }
         return result; // although a setter should not return a result
       }
