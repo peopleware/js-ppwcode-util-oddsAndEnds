@@ -1,6 +1,6 @@
 {
-  "name": "ppwcode.util.oddsAndEnds",
-  "version": "0.0.1",
+  "name": "be.ppwcode-util-oddsAndEnds",
+  "version": "0.1.0",
   "description": "ppwcode util oddsAndEnds by PeopleWare",
   "keywords": [
     "ppwcode",
@@ -19,7 +19,8 @@
   },
   "licenses": [
     {
-      "type": "Proprietary"
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   ],
   "repositories": [
@@ -30,5 +31,5 @@
   ],
   "dependencies": [
   ],
-  "dojoBuild": "oddsAndEnds.profile.js"
+  "dojoBuild": "ppwcode_util_oddsAndEnds.profile.js"
 }
