@@ -137,6 +137,15 @@ define([],
              );
     }
 
+    function sortReversed(/*Function*/ sort) {
+      // summary:
+      //   Produces a compare function that does the reverse sort defined by sort.
+
+      return function(o1, o2) {
+        return -sort(o1, o2);
+      }
+    }
+
     function string2CharCode(str) {
       // summary:
       //   Transform a string into an array of CharCodes.
@@ -200,6 +209,7 @@ define([],
       nub: nub,
       substitute: substitute,
       sortComparable: sortComparable,
+      sortReversed: sortReversed,
       string2CharCode: string2CharCode,
       charCode2String: charCode2String,
       MAX_INT: MAX_INT,
