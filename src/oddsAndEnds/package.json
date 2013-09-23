@@ -1,11 +1,15 @@
 {
   "name": "be.ppwcode-util-oddsAndEnds",
-  "version": "0.1.0",
-  "description": "ppwcode util oddsAndEnds by PeopleWare",
+  "version": "I 0.0",
+  "description": "Utility classes for logging, promises and multilingual user interfaces",
   "keywords": [
+    "PeopleWare",
     "ppwcode",
+    "util",
     "oddsAndEnds",
-    "PeopleWare"
+    "arbiter",
+    "logging",
+    "multi-language"
   ],
   "maintainers": [
     {
@@ -13,9 +17,22 @@
       "email": "Jan_Dockx@peopleware.be"
     }
   ],
-  "contributors": [],
+  "contributors": [
+    {
+      "name": "Jan Dockx",
+      "email": "Jan_Dockx@peopleware.be"
+    },
+    {
+      "name": "Tom Crommen",
+      "email": "Tom_Crommen@peopleware.be"
+    },
+    {
+      "name": "Mark Cuypers",
+      "email": "Mark_Cuypers@peopleware.be"
+    }
+  ],
   "bugs": {
-    "url": "https://projects.peopleware.be/jira44//browse/ppwcode"
+    "mail": "Jan_Dockx@peopleware.be"
   },
   "licenses": [
     {
@@ -26,10 +43,13 @@
   "repositories": [
     {
       "type": "svn",
-      "url": "http://projects.peopleware.be/svn16/ppwcode"
+      "url": "https://ppwcode.googlecode.com/svn/javascript/util/oddsAndEnds/"
     }
   ],
   "dependencies": [
   ],
+  "os": ["linux", "macos", "win"],
+  "cpu": ["x86", "ppc", "x86_64"],
+  "engines": ["v8", "ejs", "node", "rhino"],
   "dojoBuild": "ppwcode_util_oddsAndEnds.profile.js"
 }
