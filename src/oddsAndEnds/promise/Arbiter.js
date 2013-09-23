@@ -1,5 +1,5 @@
-define(["dojo/_base/declare", "dojo/errors/CancelError", "../log/logger!"],
-  function(declare, CancelError, logger) {
+define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/_base/lang", "../log/logger!"],
+  function(declare, CancelError, lang, logger) {
 
     return declare([], {
       // summary:
@@ -50,6 +50,28 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "../log/logger!"],
               throw err;
             }
           );
+          /*
+           Workaround for strange Store / QueryResult behavior.
+           The query from a paging should add a "total" property to the result passed to QueryResult.
+           In an async store, this is a promise for an array. If `promiseFunction` delivers such a Promise,
+           it might have an added "total" property, which is also a Promise.
+           By wrapping the Promise returned by `promiseFunction` in another Promise with `then` above, we hide
+           that "total" property from the recipient.
+           The code below makes it visible again.
+
+           Furthermore, a Promise returned by `then` is frozen, so we cannot add it to the object directly.
+           With a delegate, we can do this.
+            */
+          if (newPromise.total) {
+            self.processingPromise = lang.delegate(
+              self.processingPromise,
+              {
+                total: self.processingPromise.then(function() {
+                  return newPromise.total; // which might be a Promise
+                })
+              }
+            );
+          }
           return self.processingPromise;
         }
 
