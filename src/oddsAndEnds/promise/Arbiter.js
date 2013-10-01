@@ -15,7 +15,7 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/_base/lang", "../
       //   The Promise currently being processed for self.currentArg.
       processingPromise: null,
 
-      guard: function(/*any*/ arg, /*Function*/ promiseFunction, /*Boolean?*/ reprocess) {
+      guard: function(arg, /*Function*/ promiseFunction, /*Boolean?*/ reprocess) {
         // summary:
         //   Guards against calling promiseFunction in parallel multiple
         //   times for the same arg.
