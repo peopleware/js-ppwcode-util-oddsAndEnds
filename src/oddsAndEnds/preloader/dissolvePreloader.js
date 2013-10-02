@@ -46,7 +46,7 @@ define(["dojo/dom", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", "dojo/dom-styl
           baseFx.animateProperty({
             node: preloader,
             properties: {
-              opacity: 0.9
+              opacity: 0.7
             },
             duration: 500
           }),
