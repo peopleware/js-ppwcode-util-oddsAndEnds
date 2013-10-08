@@ -199,6 +199,21 @@ define([],
         a2.every(function(a2i) {return a1.indexOf(a2i) >= 0;});
     }
 
+    function flatten(/*Array*/ arr) {
+      return arr.reduce(
+        function(acc, el) {
+          if (typeOf(el) === "array") {
+            return acc.concat(flatten(el));
+          }
+          else {
+            acc.push(el);
+            return acc;
+          }
+        },
+        []
+      );
+    }
+
     var js = {
       // summary:
       //   Methods to aid with the JavaScript language.
@@ -207,6 +222,7 @@ define([],
       getAllKeys: getAllKeys,
       isInt: isInt,
       nub: nub,
+      flatten: flatten,
       substitute: substitute,
       sortComparable: sortComparable,
       sortReversed: sortReversed,
