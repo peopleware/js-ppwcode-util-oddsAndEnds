@@ -103,9 +103,16 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
           this["-derived-"][dependencyPropName].changed();
           this["-derived-"][dependencyPropName].chain.start();
         }
-      }
+      },
 
-      // MUDO add Destroyable
+      destroy: function() {
+        this.stopDerivedEvents();
+        for (var dependencyPropName in this["-derived-"]) {
+          delete this["-derived-"][dependencyPropName].chain;
+          delete this["-derived-"][dependencyPropName];
+        }
+        delete this["-derived-"];
+      }
 
     });
 
