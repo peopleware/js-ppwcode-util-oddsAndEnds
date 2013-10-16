@@ -112,6 +112,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
           delete this["-derived-"][dependencyPropName];
         }
         delete this["-derived-"];
+        this.inherited(arguments);
       }
 
     });

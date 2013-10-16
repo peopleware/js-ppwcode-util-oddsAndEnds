@@ -37,11 +37,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
       },
 
       destroy: function() {
-        this.inherited(arguments);
         if (this._anchorParentLangHandle) {
           this._anchorParentLangHandle.remove();
           this._anchorParentLangHandle = null;
         }
+        this.inherited(arguments);
       },
 
       getLabel: function(/*String*/ labelName, /*String?*/ lang, /*Boolean?*/ escapeXml) {
