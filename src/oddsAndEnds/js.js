@@ -112,7 +112,7 @@ define([],
             logger.error("Executing pattern substitution of ${" + pattern + "}$ in '" + str + "' with context " + context, err);
             return "?? ${" + pattern  + "}$ -- " + (err.message || err) + " ??";
           }
-          return value ? value.toString() : "?" + pattern  + "?";
+          return value || value === "" ? value.toString() : "?" + pattern  + "?";
         }
       );
     }
