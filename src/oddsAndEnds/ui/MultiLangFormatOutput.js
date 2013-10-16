@@ -37,7 +37,7 @@ define(["dojo/_base/declare", "ppwcode-util-oddsAndEnds/ui/_MultiLangOutput", "d
       _output: function() {
         var outputNode = this.srcNodeRef || this.domNode;
         var result;
-        if (!this.value) {
+        if (!this.value && this.value !== 0 && this.value !== false) { // 0 and false are meaningful values to represent
           result = this.get("missing"); // is xmlEscaped
         }
         else {
