@@ -41,7 +41,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/dom-style", "dojo/fx/To
         //   Returns null if the value is not changed.
 
         var booleanDisplayed = !!displayed; // turn truthy or falsy into true or false
-        if (booleanDisplayed !== this.displayed) {
+        if (booleanDisplayed != !!this.displayed) { // NOT !=== ; somebody DOES insert null into this.displayed directly;
           this._set("displayed", booleanDisplayed);
           if (this.shown()) {
             this._animation().show()
