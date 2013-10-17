@@ -23,6 +23,10 @@ define([],
        http://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/
        */
 
+      if (obj === null) {
+        // workaround for eopdf; it seems that js.typeOf(null) is returned by eopdf as "domwindow"
+        return "null";
+      }
       var result = Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
       // on some browsers, the main window returns as "global" (WebKit) or "window" (FF), but this is an object too
       if (result === "global" || result == "window") {
