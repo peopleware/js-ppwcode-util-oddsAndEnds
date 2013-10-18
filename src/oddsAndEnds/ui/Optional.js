@@ -23,11 +23,24 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/dom-style", "dojo/fx/To
       //   (no need for a format function).
       reversed: false,
 
+      // _toggler: FxToggler
+      _toggler: null,
+
       postCreate: function() {
         this.inherited(arguments);
         if (!this.shown()) {
           domStyle.set(this.domNode, "display", "none");
         }
+        else {
+          domStyle.set(this.domNode, "display", "");
+        }
+        this._toggler = new FxToggler({
+          node: this.domNode,
+          showDuration: 500,
+          hideDuration: 500,
+          showFunc: fx.wipeIn,
+          hideFunc: fx.wipeOut
+        });
       },
 
       shown: function() {
@@ -41,26 +54,17 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/dom-style", "dojo/fx/To
         //   Returns null if the value is not changed.
 
         var booleanDisplayed = !!displayed; // turn truthy or falsy into true or false
-        if (booleanDisplayed != !!this.displayed) { // NOT !=== ; somebody DOES insert null into this.displayed directly;
+        if (booleanDisplayed != !!this.displayed) { // somebody DOES insert null into this.displayed directly; make sure we are comparing booleans
           this._set("displayed", booleanDisplayed);
           if (this.shown()) {
-            this._animation().show()
+            domStyle.set(this.domNode, "display", "");
+//            this._toggler.show();
           }
           else {
-            this._animation().hide();
+            domStyle.set(this.domNode, "display", "none");
+//            this._toggler.hide();
           }
         }
-      },
-
-      _animation: function() {
-        //noinspection JSUnresolvedFunction
-        return new FxToggler({
-          node: this.domNode,
-          showDuration: 500,
-          hideDuration: 500,
-          showFunc: fx.wipeIn,
-          hideFunc: fx.wipeOut
-        });
       }
 
     });
