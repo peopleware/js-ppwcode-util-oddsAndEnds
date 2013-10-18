@@ -23,24 +23,27 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/dom-style", "dojo/fx/To
       //   (no need for a format function).
       reversed: false,
 
-      // _toggler: FxToggler
-      _toggler: null,
+      // _showAnimation: Animation
+      _showAnimation: null,
+
+      // _hideAnimation: Animation
+      _hideAnimation: null,
+
+      _animateDelayHandler: null,
+      _lastRenderedShown: false,
 
       postCreate: function() {
         this.inherited(arguments);
-        if (!this.shown()) {
-          domStyle.set(this.domNode, "display", "none");
+        if (this.shown()) {
+          domStyle.set(this.domNode, "display", "");
+          this._lastRenderedShown = true;
         }
         else {
-          domStyle.set(this.domNode, "display", "");
+          domStyle.set(this.domNode, "display", "none");
+          this._lastRenderedShown = false;
         }
-        this._toggler = new FxToggler({
-          node: this.domNode,
-          showDuration: 500,
-          hideDuration: 500,
-          showFunc: fx.wipeIn,
-          hideFunc: fx.wipeOut
-        });
+        this._showAnimation = fx.wipeIn({node: this.domNode, duration: 500});
+        this._hideAnimation = fx.wipeOut({node: this.domNode, duration: 500});
       },
 
       shown: function() {
@@ -56,15 +59,47 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/dom-style", "dojo/fx/To
         var booleanDisplayed = !!displayed; // turn truthy or falsy into true or false
         if (booleanDisplayed != !!this.displayed) { // somebody DOES insert null into this.displayed directly; make sure we are comparing booleans
           this._set("displayed", booleanDisplayed);
-          if (this.shown()) {
-            domStyle.set(this.domNode, "display", "");
-//            this._toggler.show();
-          }
-          else {
-            domStyle.set(this.domNode, "display", "none");
-//            this._toggler.hide();
-          }
+          this._animate();
+//          if (this.shown()) {
+//            this._hideAnimation.stop();
+//            this._showAnimation.play();
+////            domStyle.set(this.domNode, "display", "");
+//          }
+//          else {
+//            this._showAnimation.stop();
+//            this._hideAnimation.play();
+////            domStyle.set(this.domNode, "display", "none");
+//          }
         }
+      },
+
+      _animate: function() {
+        // summary:
+        //   We start the animation with a delay, so that in that case of many fast switches,
+        //   we get no flicker.
+
+        if (this._animateDelayHandler) { // we were called in quick succession
+          this._animateDelayHandler.remove();
+          this._animateDelayHandler = null;
+        }
+
+        this._animateDelayHandler = this.defer(
+          function() {
+            this._animateDelayHandler = null;
+            if (this.shown() && !this._lastRenderedShown) {
+              this._hideAnimation.stop();
+              this._lastRenderedShown = true;
+              this._showAnimation.play();
+            }
+            else if (!this.shown() && this._lastRenderedShown) {
+              this._showAnimation.stop();
+              this._lastRenderedShown = false;
+              this._hideAnimation.play();
+            }
+            // else NOP; we are where we need to be already
+          },
+          200
+        );
       }
 
     });
