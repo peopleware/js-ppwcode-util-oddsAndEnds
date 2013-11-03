@@ -93,7 +93,11 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
       stopDerivedEvents: function() {
         logger.debug("Stopping derived events");
         for (var dependencyPropName in this["-derived-"]) {
-          this["-derived-"][dependencyPropName].chain.stop();
+          if (this["-derived-"][dependencyPropName].chain) {
+            // MUDO for some unclear reason, chain sometimes doesn't exist
+            //      this is a workaround, but it means that maybe the chain is added later? and the started?
+            this["-derived-"][dependencyPropName].chain.stop();
+          }
         }
       },
 
@@ -106,12 +110,15 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
       },
 
       destroy: function() {
-        this.stopDerivedEvents();
-        for (var dependencyPropName in this["-derived-"]) {
-          delete this["-derived-"][dependencyPropName].chain;
-          delete this["-derived-"][dependencyPropName];
+        if (!this._destroyingDerivedEventListeners) {
+          this._destroyingDerivedEventListeners = true;
+          this.stopDerivedEvents();
+          for (var dependencyPropName in this["-derived-"]) {
+            delete this["-derived-"][dependencyPropName].chain;
+            delete this["-derived-"][dependencyPropName];
+          }
+          delete this["-derived-"];
         }
-        delete this["-derived-"];
         this.inherited(arguments);
       }
 
