@@ -47,7 +47,7 @@ define(["dojo/number", "dojo/_base/lang", "dojo/i18n"],
           bundle = i18n.getLocalization("dojo.cldr", "number", locale);
         options.customs = bundle || {};
         var pattern = options.pattern || bundle[(options.type || "decimal") + "Format"];
-        if (options.group) {
+        if (options.group) { // no sense to pass through the empty string, since _applyPattern doesn't work with the empty string either
           options.customs.group = options.group;
         }
         if(isNaN(value) || Math.abs(value) == Infinity){ return null; } // null
