@@ -177,8 +177,8 @@ define(["ppwcode-util-contracts/doh", "../js"],
         console.log("constructor object: " + Object.prototype.toString.call(test));
       }
 
-      // MUDO tests getPrototypeChain
-      // MUDO tests getAllKeys
+      // TODO tests getPrototypeChain
+      // TODO tests getAllKeys
 
     ]);
 

@@ -205,10 +205,10 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       //   As a performance measure, the consolidated declarative definition is cached in a Constructor
       //   property `"-propagateCache-"`. This property is to be considered private for this implementation.
 
-      postscript: function() {
-        this.inherited(arguments);
-        // TODO move caching prep to postscript, and do first update here
-      },
+// IDEA move caching prep to postscript, and do first update here
+//      postscript: function() {
+//        this.inherited(arguments);
+//      },
 
       set: function(/*String*/ propName, value) {
         var self = this;
