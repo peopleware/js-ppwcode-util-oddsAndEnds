@@ -1,3 +1,19 @@
+/*
+Copyright 2012 - $Date $ by PeopleWare n.v.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/bindingChains", "module", "ppwcode-util-oddsAndEnds/log/logger!"],
   function (declare, Stateful, bindingChains, module, logger) {
 
@@ -74,11 +90,15 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
             var dependencies = base.prototype["-derived-"];
             if (dependencies) {
               for (var dependencyPropName in dependencies) {
+                //noinspection JSUnfilteredForInLoop
                 acc[dependencyPropName] = dependencies[dependencyPropName];
+                //noinspection JSUnfilteredForInLoop
                 acc[dependencyPropName].changed = dependentPropertyChanged(dependencyPropName);
+                //noinspection JSUnfilteredForInLoop
                 acc[dependencyPropName].chain = bindingChains(
                   self,
                   acc[dependencyPropName],
+                  //noinspection JSUnfilteredForInLoop
                   acc[dependencyPropName].changed
                 );
               }
@@ -93,9 +113,11 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
       stopDerivedEvents: function() {
         logger.debug("Stopping derived events");
         for (var dependencyPropName in this["-derived-"]) {
+          //noinspection JSUnfilteredForInLoop
           if (this["-derived-"][dependencyPropName].chain) {
-            // MUDO for some unclear reason, chain sometimes doesn't exist
+            // TODO for some unclear reason, chain sometimes doesn't exist
             //      this is a workaround, but it means that maybe the chain is added later? and the started?
+            //noinspection JSUnfilteredForInLoop
             this["-derived-"][dependencyPropName].chain.stop();
           }
         }
@@ -104,7 +126,9 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
       startDerivedEvents: function() {
         logger.debug("Starting derived events");
         for (var dependencyPropName in this["-derived-"]) {
+          //noinspection JSUnfilteredForInLoop
           this["-derived-"][dependencyPropName].changed();
+          //noinspection JSUnfilteredForInLoop
           this["-derived-"][dependencyPropName].chain.start();
         }
       },
@@ -114,7 +138,9 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
           this._destroyingDerivedEventListeners = true;
           this.stopDerivedEvents();
           for (var dependencyPropName in this["-derived-"]) {
+            //noinspection JSUnfilteredForInLoop
             delete this["-derived-"][dependencyPropName].chain;
+            //noinspection JSUnfilteredForInLoop
             delete this["-derived-"][dependencyPropName];
           }
           delete this["-derived-"];
