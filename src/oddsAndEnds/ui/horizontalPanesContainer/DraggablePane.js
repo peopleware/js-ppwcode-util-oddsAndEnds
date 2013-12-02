@@ -1,7 +1,7 @@
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "ppwcode-util-contracts/_Mixin",
         "dojo/dnd/move", "dijit/focus",
         "dojo/dom-class", "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-attr", "dojo/_base/fx", "dojo/fx",
-        "../log/logger!", "module",
+        "../../log/logger!", "module",
 
         "xstyle/css!./draggablePane.css"],
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _ContractMixin,
