@@ -286,13 +286,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       });
 
-      var DraggablePane = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _HasNext, _HasPrevious], {
+      var DraggablePane = declare([_WidgetBase, _HasNext, _HasPrevious], {
         // summary:
         //   A "window" inside a HorizontalPanesContainer.
         //   This type is only concerned with "being and behaving inside a HorizontalPanesContainer".
-        //   The only visualization this type offers, is that if presents a rectangular pane, with a "bar"
-        //   on top, by which it can be dragged.
-        //   Under the drag-bar, in the pane, the `contentWidget` is shown.
+        //   The only visualization this type offers, is that it presents a pane, with a "bar", by which it
+        //   can be dragged. This can be any DOMNode.
         // description:
         //   The width of a DraggablePane is not trivial. Without any explicit setting, the width
         //   would be 0. We do not want to define a width here, because different instances, with different
@@ -310,10 +309,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         invars: [
           function() {return this.isInList() === !!this.previous && !!this.next;}
         ],
-
-        // contentWidget: _Widget
-        //   The widget shown in this pane.
-        contentWidget: null,
 
         // _dragBarNode: DOMNode
         //   DOM Node that is provided in the template to drag the pane by.
@@ -333,16 +328,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           this.focusNode = this.domNode;
           domClass.add(this.domNode, "draggablePane");
           domAttr.set(this.domNode, "tabindex", 0); // tabindex 0 makes the div focusable, in DOM order
-        },
-
-        _setContentWidgetAttr: function(contentWidget) {
-          // summary:
-          //   Take contentWidget as our new contentWidget.
-          //   Note: the old widget is not destroyed by us! Caller beware!
-
-          this._set("contentWidget", contentWidget);
-          // TODO can we remove the older contentWidget from the DOM?
-          contentWidget.placeAt(this.domNode, "last");
         },
 
         isInList: function() {
@@ -623,13 +608,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             this._addToListAfter(this.get("container")._rightSentinel._getLastBeforeMouseAndThis(center));
             this.getFirst().reposition();
           }
-        },
-
-        _close: function() { // MUDO TO WEIRD: THE CONTENT WIDGET MUST HAVE A CLOSER??????
-          this._c_pre(function() {return this.contentWidget;});
-          this._c_pre(function() {return this.contentWidget.get("closer");});
-
-          this.get("contentWidget").get("closer")();
         }
 
       });
