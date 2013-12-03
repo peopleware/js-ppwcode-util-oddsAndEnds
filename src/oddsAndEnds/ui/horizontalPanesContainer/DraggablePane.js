@@ -1,12 +1,12 @@
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "ppwcode-util-contracts/_Mixin",
         "dojo/dnd/move", "dijit/focus",
-        "dojo/dom-class", "dojo/dom-style", "dojo/dom-geometry", "dojo/dom-attr", "dojo/_base/fx", "dojo/fx",
+        "dojo/dom-class", "dojo/dom-style", "dojo/dom-construct", "dojo/dom-geometry", "dojo/dom-attr", "dojo/_base/fx", "dojo/fx",
         "../../log/logger!", "module",
 
         "xstyle/css!./draggablePane.css"],
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _ContractMixin,
              move,  focus,
-             domClass, domStyle, domGeom, domAttr, baseFx, fx,
+             domClass, domStyle, domConstruct, domGeom, domAttr, baseFx, fx,
              logger, module) {
 
       // gap: Number
@@ -60,6 +60,15 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           //   This instance is in a list.
 
           this._c_ABSTRACT();
+        },
+
+        getIndexInContainer: function() {
+          // summary:
+          //  The index of this in the container, if it is not a sentinel.
+          //  Undefined for sentinels.
+          this._c_pre(function() {return this.container;});
+
+          return this._c_ABSTRACT();
         },
 
         getFirst: function() {
@@ -191,6 +200,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           return !!this.next;
         },
 
+        getIndexInContainer: function() {
+          return undefined;
+        },
+
         _focusChanged: function(oldFocusStack, newFocusStack) {
           return this.next._focusChanged(oldFocusStack, newFocusStack);
         },
@@ -272,6 +285,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           return !!this.previous;
         },
 
+        getIndexInContainer: function() {
+          return undefined;
+        },
+
         _focusChanged: function() {
           return undefined;
         },
@@ -344,6 +361,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           }
         },
 
+        getIndexInContainer: function() {
+          return this.container.getIndexOfChild(this);
+        },
+
         _addToListAfter: function(/*_HasNext*/ pane) {
           // summary:
           //   Adds this in the double-linked list after the given pane.
@@ -358,6 +379,14 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           this.previous = pane;
           this.next = oldNext;
           oldNext.previous = this;
+          // also keep it in the correct relative place in the dom
+          this.domNode.parentNode.removeChild(this.domNode);
+          if (pane.domNode) {
+            domConstruct.place(this.domNode, pane.domNode, "after");
+          }
+          else {
+            domConstruct.place(this.domNode, this.container.domNode, "first");
+          }
         },
 
         _removeFromList: function() {
@@ -388,7 +417,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           var container = pane.container;
           container._onTheMove = this;
           domStyle.set(self.domNode, "opacity", "0");
-          container.addChild(this); // puts it in the DOM; now this has an id  // TODO keep the DOM in sync with the list
+          container.addChild(this, pane.getIndexInContainer()); // puts it in the DOM; now this has an id
           //   Defines a limited constrained area where the draggable widgets can move within
           //   Widgets can only move for the width of all the widgets, not further off screen.
           //   After addChild (needs to be in the DOM)!
