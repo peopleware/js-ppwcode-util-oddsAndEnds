@@ -388,7 +388,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           var container = pane.container;
           container._onTheMove = this;
           domStyle.set(self.domNode, "opacity", "0");
-          container._content.addChild(this); // puts it in the DOM; now this has an id  // TODO keep the DOM in sync with the list
+          container.addChild(this); // puts it in the DOM; now this has an id  // TODO keep the DOM in sync with the list
           //   Defines a limited constrained area where the draggable widgets can move within
           //   Widgets can only move for the width of all the widgets, not further off screen.
           //   After addChild (needs to be in the DOM)!

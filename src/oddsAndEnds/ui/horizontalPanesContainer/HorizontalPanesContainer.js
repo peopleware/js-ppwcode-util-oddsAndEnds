@@ -1,21 +1,15 @@
-define(["dojo/_base/declare", "dijit/layout/LayoutContainer", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "ppwcode-util-contracts/_Mixin",
+define(["dojo/_base/declare", "dijit/layout/ContentPane", "ppwcode-util-contracts/_Mixin",
         "./DraggablePane", "dojo/dnd/move",
         "dojo/_base/fx", "dojo/dom-class", "dojo/dom-style", "dojo/_base/lang",
         "dijit/focus",
-        "dojo/text!./horizontalPanesContainer.html",
-        "require", "module",
-
-        "dijit/layout/ContentPane",
-
-        "xstyle/css!./horizontalPanesContainer.css"],
-    function(declare, LayoutContainer, _TemplatedMixin, _WidgetsInTemplateMixin, _ContractsMixin,
+        "module"],
+    function(declare, ContentPane, _ContractsMixin,
              DraggablePane, move,
              fx, domClass, domStyle, lang,
              focus,
-             template,
-             require, module) {
+             module) {
 
-      var HorizontalPanesContainer = declare([LayoutContainer, _TemplatedMixin, _WidgetsInTemplateMixin, _ContractsMixin], {
+      var HorizontalPanesContainer = declare([ContentPane, _ContractsMixin], {
         // summary:
         //   A HorizontalPanesContainer is a container for DraggablePanes.
         //   DraggablePanes are full height, and are visualized next to each other as a horizontal
@@ -28,12 +22,9 @@ define(["dojo/_base/declare", "dijit/layout/LayoutContainer", "dijit/_TemplatedM
         //   is created for the given object.A factory returns an appropriate instance of (a subtype of)
         //   DraggablePane. The instance returned by the factory must be prepared in full, with a target set.
 
-        templateString: template,
-        contextRequire: require,
+        doLayout: false,
 
-        design: "headline",
-
-        _content: null,
+        tabindex: 0,
 
         _leftSentinel: null,
         _rightSentinel: null,
@@ -57,7 +48,7 @@ define(["dojo/_base/declare", "dijit/layout/LayoutContainer", "dijit/_TemplatedM
         },
 
         postCreate: function() {
-          this.focusNode = this._content.domNode;
+          this.focusNode = this.domNode;
         },
 
         focus: function() {
