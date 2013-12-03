@@ -1,15 +1,15 @@
-define(["dojo/_base/declare", "dijit/layout/ContentPane", "ppwcode-util-contracts/_Mixin",
+define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/layout/_ContentPaneResizeMixin", "ppwcode-util-contracts/_Mixin",
         "./DraggablePane", "dojo/dnd/move",
         "dojo/_base/fx", "dojo/dom-class", "dojo/dom-style", "dojo/_base/lang",
         "dijit/focus",
         "module"],
-    function(declare, ContentPane, _ContractsMixin,
+    function(declare, _WidgetBase, _Container, _ContentPaneResizeMixin, _ContractsMixin,
              DraggablePane, move,
              fx, domClass, domStyle, lang,
              focus,
              module) {
 
-      var HorizontalPanesContainer = declare([ContentPane, _ContractsMixin], {
+      var HorizontalPanesContainer = declare([_WidgetBase, _Container, _ContentPaneResizeMixin, _ContractsMixin], {
         // summary:
         //   A HorizontalPanesContainer is a container for DraggablePanes.
         //   DraggablePanes are full height, and are visualized next to each other as a horizontal
