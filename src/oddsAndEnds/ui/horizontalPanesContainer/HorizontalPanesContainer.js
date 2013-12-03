@@ -93,7 +93,7 @@ define(["dojo/_base/declare", "dijit/layout/LayoutContainer", "dijit/_TemplatedM
           pane.focus();
           setTimeout(
             function() {
-              domStyle.set(widget.domNode, "opacity", "0.3");
+              domStyle.set(pane.domNode, "opacity", "0.3");
               // a flash
               fx.fadeIn({
                 node: pane.domNode,
