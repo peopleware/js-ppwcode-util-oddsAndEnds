@@ -431,7 +431,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             self.domNode,
             {
               handle: self._dragBarNode,
-              delay: 50,
+              delay: 50, // necessary to distinguish from button clicks
               constraints : function (e) {
                 return {
                   t: 10,
