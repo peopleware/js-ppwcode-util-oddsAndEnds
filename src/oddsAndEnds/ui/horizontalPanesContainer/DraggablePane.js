@@ -632,12 +632,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           if (this.container._onTheMove === this) {
             this.domNode.style.zIndex = 1;
             this.domNode.style.opacity = 1;
-            this.focus();
             var margins = domGeom.getMarginBox(this.domNode);
             var center = margins.l + (margins.w / 2);
             this.container._onTheMove = null;
             this._addToListAfter(this.get("container")._rightSentinel._getLastBeforeMouseAndThis(center));
             this.getFirst().reposition();
+            this.focus();
           }
         }
 
