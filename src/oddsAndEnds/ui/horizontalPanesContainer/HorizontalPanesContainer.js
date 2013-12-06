@@ -49,6 +49,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/la
 
         postCreate: function() {
           this.focusNode = this.domNode;
+          domStyle.set(this.domNode, "overflow-x", "auto");
         },
 
         focus: function() {
