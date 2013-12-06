@@ -5,6 +5,8 @@
   box-shadow: 3px 3px 10px rgba(131, 130, 143, 0.66);
 }
 
-.draggablePane.focused { /* 5 pixels "above" */
-  box-shadow: 7px 8px 10px rgba(48, 100, 196, 0.66);
+.draggablePane.focused { /* 3 pixels "above" */
+  top: 3px;
+  bottom: 13px;
+  box-shadow: 12px 14px 10px rgba(48, 100, 196, 0.66);
 }

@@ -578,8 +578,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
           var focused = this.get("focused");
           domClass.toggle(this.domNode, "focused", focused);
+          var top = 10;
           if (focused) {
             this.domNode.scrollIntoView();
+            top = 7;
           }
           var animations = this.next._repositionFromHereToRightAnimations(referencePosition);
           var margins = domGeom.getMarginBox(this.domNode);
@@ -590,7 +592,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           }
           var myAnimation = fx.slideTo({
             node: this.domNode,
-            top:  margins.t,
+            top:  top,
             left: this._getTargetLeftPosition(referencePosition),
             unit: "px",
             duration: (referencePosition || referencePosition === 0) ? dragAnimationDuration : moveAnimationDuration
