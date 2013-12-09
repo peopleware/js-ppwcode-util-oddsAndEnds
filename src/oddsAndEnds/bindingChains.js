@@ -66,8 +66,9 @@ define(["./js", "./log/logger!"],
       if (js.typeOf(contextExpression) !== "string") {
         throw "ERROR: contextExpression must be a string"
       }
-      if (!(isStateful(context) || isObservableStore(context) || (js.typeOf(context) === "object") || (js.typeOf(context) === "array"))) {
-        throw "ERROR: context must be Stateful, a regular object, an array, or an ObservableStore";
+      if (context === null || context === undefined) {
+        throw "ERROR: context must be something with properties (Stateful, a regular object, ...), an array, " +
+              "or an ObservableStore, and not null or undefined";
       }
       if (!((js.typeOf(chain) === "array") && chain.length > 0 && chain.every(function(pn) {return js.typeOf(pn) === "string";}))) {
         throw "ERROR: chain must be an array of Strings of length at least 1";
@@ -102,9 +103,11 @@ define(["./js", "./log/logger!"],
           throw "ERROR: the context of '#' must be an array or an Observable Store";
         }
         logger.debug("      Array is " + context + " (length: " + array.length + ")");
-        var stoppers = array.map(function(el) {
-          return _bChain(firstExpression, el, restChain, pingSomethingInThePathChanged);
-        });
+        var stoppers = array.
+          filter(function(el) {return el !== null && el !== undefined;}).
+          map(function(el) {
+            return _bChain(firstExpression, el, restChain, pingSomethingInThePathChanged);
+          });
         return function() {
           stoppers.forEach(function(stopper) {
             stopper();
@@ -257,8 +260,9 @@ define(["./js", "./log/logger!"],
       //   used. Otherwise, we try direct property access.
       // return:
       //   Returns a function that, when called, stops all watching.
-      if (!(isStateful(context) || isObservableStore(context) || (js.typeOf(context) === "object") || (js.typeOf(context) === "array"))) {
-        throw "ERROR: context must be Stateful, a regular object, an array, or an ObservableStore";
+      if (context === null || context === undefined) {
+        throw "ERROR: context must be something with properties (Stateful, a regular object, ...), an array, " +
+              "or an ObservableStore, and not null or undefined";
       }
       if (!((js.typeOf(dotExpressions) === "array") && dotExpressions.length > 0 && dotExpressions.every(function(pn) {return js.typeOf(pn) === "string";}))) {
         throw "ERROR: dotExpressions must be an array of Strings of length at least 1";
