@@ -1,0 +1,19 @@
+<div class="ppwCodeOnePropertyCrdList" data-dojo-type="dojox/mobile/Container">
+  <script type="dojo/require">at: "dojox/mvc/at", lang: "dojo/_base/lang"</script>
+  <div class="fields" data-dojo-attach-point="_addTextWrapperNode">
+   <input class="addEmergencyNumberField"
+              data-dojo-type="dijit/form/ValidationTextBox"
+              data-dojo-attach-point="_txtAdd"
+              data-dojo-props="disabled: at(this, 'disabled').direction(at.from)"/>
+    <button
+        class="rightAddButton"
+        data-dojo-type="dijit/form/Button"
+        data-dojo-props="iconClass: 'dijitIconNewTask',
+                         showLabel: false,
+                         onClick: lang.hitch(this, this.addClicked)">
+    </button>
+  </div>
+  <div class="listContainer" data-dojo-attach-point="_ulNodeWrapper">
+    <ul data-dojo-type="dojox/mobile/EdgeToEdgeList" data-dojo-props="select:''" data-dojo-attach-point="_ulNode" class="list"></ul>
+  </div>
+</div>

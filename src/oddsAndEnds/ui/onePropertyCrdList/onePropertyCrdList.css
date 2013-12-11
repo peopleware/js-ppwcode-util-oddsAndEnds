@@ -1,0 +1,41 @@
+.ppwCodeOnePropertyCrdList {
+    margin: 0;
+    padding: 0;
+}
+
+.ppwCodeOnePropertyCrdList .listContainer {
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #4C656B;
+}
+
+.ppwCodeOnePropertyCrdList .list {
+    background: transparent !important;
+}
+
+.ppwCodeOnePropertyCrdList .list li {
+    cursor: pointer;
+}
+
+.ppwCodeOnePropertyCrdList .list li.disabled {
+    color: #4C656B;
+    cursor: default;
+}
+
+.ppwCodeOnePropertyCrdList .list li:first-child {
+    border-top: none;
+}
+
+.ppwCodeOnePropertyCrdList .list li:last-child {
+    border-bottom: none;
+}
+
+.ppwCodeOnePropertyCrdList .fields {
+    padding: 4px 8px;
+    border-top: 1px solid #4C656B;
+    border-right: 1px solid #4C656B;
+    border-bottom: none;
+    border-left: 1px solid #4C656B;
+}

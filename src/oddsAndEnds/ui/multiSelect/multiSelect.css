@@ -3,7 +3,7 @@
     padding: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    border: 1px solid darkgray;
+    border: 1px solid #4C656B;
 }
 
 .ppwCodeMultiSelect .multiSelectList {
@@ -15,7 +15,8 @@
 }
 
 .ppwCodeMultiSelect .multiSelectList li.disabled {
-    color: darkgray;
+    color: #4C656B;
+    -webkit-appearance: 50%;-moz-appearance: 50%;appearance: 50%;
     cursor: default;
 }
 
