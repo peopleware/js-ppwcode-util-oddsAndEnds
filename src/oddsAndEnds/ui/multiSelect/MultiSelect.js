@@ -22,7 +22,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
   "xstyle/css!./multiSelect.css"],
   function (declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, _PropagationMixin, ListItem, domClass, Stateful) {
 
-    return declare([Stateful, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _PropagationMixin], {
+    return declare([Stateful, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
       // summary:
       //   Widget that is specially made to represent a multi select component.
 
@@ -33,10 +33,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       // value: Array
       value: [],
-      // options: Array
-      options: [],
       // disabled: Boolean
       disabled: null,
+
+      _getValueAttr: function () {
+        return this.value.slice();
+      },
 
       format: function (option) {
         return option ? option.toString() : "";

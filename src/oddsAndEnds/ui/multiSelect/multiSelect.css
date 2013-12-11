@@ -1,20 +1,16 @@
 .ppwCodeMultiSelect.multiSelectListContainer {
     margin: 0;
     padding: 0;
-    width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
+    border: 1px solid darkgray;
 }
 
 .ppwCodeMultiSelect .multiSelectList {
-    border-bottom: 1px solid darkgray;
-    border-top: 1px solid darkgray;
     background: transparent !important;
 }
 
 .ppwCodeMultiSelect .multiSelectList li {
-    border-left: 1px solid darkgray;
-    border-right: 1px solid darkgray;
     cursor: pointer;
 }
 
