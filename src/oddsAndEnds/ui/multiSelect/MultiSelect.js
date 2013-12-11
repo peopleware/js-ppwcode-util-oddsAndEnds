@@ -37,7 +37,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       disabled: null,
 
       _getValueAttr: function () {
-        return this.value.slice();
+        if (this.value) {
+          return this.value.slice();
+        } else {
+          return undefined;
+        }
       },
 
       format: function (option) {
