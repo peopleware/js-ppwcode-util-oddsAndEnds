@@ -15,13 +15,13 @@
  */
 
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dojo/text!./onePropertyCrdList.html",
-  "ppwcode-util-oddsAndEnds/_PropagationMixin", "dojox/mobile/ListItem", "dojo/dom-style", "dojo/dom-class", "dojo/Stateful", "dojo/dom-construct",
+  "ppwcode-util-oddsAndEnds/_PropagationMixin", "dojox/mobile/ListItem", "dojox/mobile/Icon", "dojo/dom-style", "dojo/dom-class", "dojo/Stateful", "dojo/dom-construct",
+  "dijit/form/Button", "dojo/i18n!./nls/labels",
 
-  "dijit/form/Button",
   "dojox/mobile/Container", "dojox/mobile/EdgeToEdgeList",
   "xstyle/css!dojox/mobile/themes/iphone/iphone.css",
   "xstyle/css!./onePropertyCrdList.css"],
-  function (declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, _PropagationMixin, ListItem, domStyle, domClass, Stateful, domConstruct) {
+  function (declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, _PropagationMixin, ListItem, Icon, domStyle, domClass, Stateful, domConstruct, Button, labels) {
 
     return declare([Stateful, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _PropagationMixin], {
       // summary:
@@ -29,6 +29,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       //   Elements can be added or removed.
 
       templateString: template,
+      labels: labels,
 
       // _ulNode: UL HTML element in template
       _ulNode: null,
@@ -58,25 +59,31 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           domConstruct.empty(self._ulNode.domNode);
           if (valueArray && valueArray.length > 0) {
             valueArray.forEach(function (element) {
-              var li = new ListItem({label: self.format(element), anchorLabel: true, deleteIcon: !!self.get("disabled") ? "" : "mblDomButtonRedCross"});
+              var li = new ListItem({label: self.format(element)});
+              if (!self.get("disabled")) {
+                var deleteIcon = new Button({showLabel: false, iconClass: "dijitIconDelete", class: "deleteIcon"});
+                li.own(deleteIcon.on("click", function() {
+                  if (!self.get("disabled")) {
+                    if (window.confirm(labels.confirmDelete1 + self.format(element) + labels.confirmDelete2)) {
+                      var arr = self.get("value");
+                      var newArr = [];
+                      arr.forEach(function (arrElement) {
+                        if (element !== arrElement) {
+                          newArr.push(arrElement);
+                        }
+                      });
+                      self.set("value", newArr);
+                    }
+                  }
+                }));
+                li.addChild(deleteIcon);
+              }
               if (!self.get("disabled")) {
                 domClass.remove(li.domNode, "disabled");
               }
               else {
                 domClass.add(li.domNode, "disabled");
               }
-              self.own(li.on("anchorLabelClicked", function () {
-                if (!self.get("disabled")) {
-                  var arr = self.get("value");
-                  var newArr = [];
-                  arr.forEach(function (arrElement) {
-                    if (element !== arrElement) {
-                      newArr.push(arrElement);
-                    }
-                  });
-                  self.set("value", newArr);
-                }
-              }));
               self._ulNode.addChild(li);
             });
           }

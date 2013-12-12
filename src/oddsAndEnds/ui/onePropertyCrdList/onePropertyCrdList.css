@@ -15,13 +15,23 @@
     background: transparent !important;
 }
 
-.ppwCodeOnePropertyCrdList .list li {
-    cursor: pointer;
-}
-
 .ppwCodeOnePropertyCrdList .list li.disabled {
     color: #4C656B;
-    cursor: default;
+}
+
+.ppwCodeOnePropertyCrdList .list li .mblListItemLabel {
+    float: left;
+}
+
+.ppwCodeOnePropertyCrdList .list li .deleteIcon {
+    margin: 8px 0px;
+    padding: 0;
+    float: right;
+    display: block;
+    width: 32px;
+    height: 26px;
+    line-height: 26px;
+    text-align: right;
 }
 
 .ppwCodeOnePropertyCrdList .list li:first-child {
