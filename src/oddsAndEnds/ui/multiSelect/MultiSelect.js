@@ -33,6 +33,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       // value: Array
       value: [],
+
       // disabled: Boolean
       disabled: null,
 
@@ -40,7 +41,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         if (this.value) {
           return this.value.slice();
         } else {
-          return undefined;
+          return this.value;
         }
       },
 
@@ -67,10 +68,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                     if (curValue.indexOf(element) < 0) {
                       changedArray = curValue;
                       changedArray.push(element);
-                    } else {
+                    }
+                    else {
                       changedArray = curValue;
                     }
-                  } else {
+                  }
+                  else {
                     changedArray = [element];
                   }
                 }
@@ -83,7 +86,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
               }
             }));
             self.own(self.watch("value", function (propName, oldIl, newIl) {
-              li.set("checked", newIl.indexOf(element) >= 0);
+              li.set("checked", !!(newIl && newIl.indexOf(element) >= 0));
             }));
             self.own(self.watch("disabled", function (propName, oldIl, newIl) {
               li.set("preventTouch", !!newIl);
