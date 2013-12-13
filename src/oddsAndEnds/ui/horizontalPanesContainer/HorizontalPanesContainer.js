@@ -68,7 +68,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/la
           // summary:
           //   Remove the widget from the linked list, reposition all the widgets and destroy it.
           this._c_pre(function() {return pane;});
-          this._c_pre(function() {return pane.isIn(this);});
 
           pane.removeFromContainer();
         },

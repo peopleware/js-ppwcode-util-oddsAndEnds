@@ -471,8 +471,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         removeFromContainer: function() {
           // summary:
           //   Removes the current pane from the double linked list it is in. This widget is destroyed.
-          this._c_pre(function() {return this.isInList();});
 
+          if (!this.isInList()) {
+            return;
+          }
           var self = this;
           var /*DraggablePane*/ nextFocus = ((self.previous !== self.getFirst()) ? self.previous :
                            ((self.next !== self.getLast()) ? self.next : self.container));
