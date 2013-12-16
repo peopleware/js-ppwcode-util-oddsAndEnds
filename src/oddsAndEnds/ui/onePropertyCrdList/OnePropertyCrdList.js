@@ -61,7 +61,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             valueArray.forEach(function (element) {
               var li = new ListItem({label: self.format(element)});
               if (!self.get("disabled")) {
-                var deleteIcon = new Button({showLabel: false, iconClass: "dijitIconDelete", class: "deleteIcon"});
+                var deleteIcon = new Button({showLabel: false, iconClass: "dijitIconDelete"});
+                domClass.add(deleteIcon.domNode, "deleteIcon");
                 li.own(deleteIcon.on("click", function() {
                   if (!self.get("disabled")) {
                     if (window.confirm(labels.confirmDelete1 + self.format(element) + labels.confirmDelete2)) {
