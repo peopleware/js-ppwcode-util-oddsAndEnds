@@ -25,6 +25,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
     return declare([Stateful, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
       // summary:
       //   Widget that is specially made to represent a multi select component.
+      //   If sorted is true, the options are sorted by label.
 
       templateString: template,
 
@@ -36,6 +37,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       // disabled: Boolean
       disabled: null,
+
+      // sorted: Boolean
+      //   If true, the options will be sorted by label.
+      sorted: false,
 
       _getValueAttr: function () {
         if (this.value) {
@@ -56,7 +61,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       _setOptionsAttr: function (options) {
         var self = this;
         if (self._ulNode && !self._ulNode.hasChildren() && options && options.length > 0) {
-          options.forEach(function (element) {
+          var listItems = options.map(function (element) {
             var li = new ListItem({label: self.format(element), icon: self.icon(), preventTouch: !!self.get("disabled")});
 
             self.own(li.watch("checked", function (propName, oldValue, newValue) {
@@ -91,6 +96,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             self.own(self.watch("disabled", function (propName, oldIl, newIl) {
               li.set("preventTouch", !!newIl);
             }));
+            return li;
+          });
+          if (self.get("sorted")) {
+            listItems.sort(function(one, other) {return one.label < other.label ? -1 : +1;}); // sort by label
+          }
+          listItems.forEach(function(li) {
             self._ulNode.addChild(li);
           });
         }
