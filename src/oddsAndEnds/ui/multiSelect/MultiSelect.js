@@ -15,14 +15,14 @@
  */
 
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dojo/text!./multiSelect.html",
-  "ppwcode-util-oddsAndEnds/_PropagationMixin", "dojox/mobile/ListItem", "dojo/dom-class", "dojo/Stateful",
+  "dojox/mobile/ListItem", "dojo/dom-construct",
 
   "dojox/mobile/Container", "dojox/mobile/EdgeToEdgeList",
   "xstyle/css!dojox/mobile/themes/iphone/iphone.css",
   "xstyle/css!./multiSelect.css"],
-  function (declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, _PropagationMixin, ListItem, domClass, Stateful) {
+  function (declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, ListItem, domConstruct) {
 
-    return declare([Stateful, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
       // summary:
       //   Widget that is specially made to represent a multi select component.
       //   If sorted is true, the options are sorted by label.
@@ -42,6 +42,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       //   If true, the options will be sorted by label.
       sorted: false,
 
+      // _getValueAttr: Function
+      //    Override of the 'value' getter. This getter returns a copy of the value array instead of the array itself.
       _getValueAttr: function () {
         if (this.value) {
           return this.value.slice();
@@ -50,21 +52,44 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         }
       },
 
-      format: function (option) {
+      // format: Function
+      //    Formats the option to a string that will be used in the label of the ListItem.
+      //    The default behaviour of this function is to do a toString on the option value.
+      //    Override this to add i18n or apply any formatting on the option value.
+      //    This function should return a String that should be used in the ListItem's label value.
+      format: function (/*String*/ option) {
         return option ? option.toString() : "";
       },
 
+      // icon: Function
+      //    Override this function if you want an icon to be displayed before every item in the list.
+      //    This function should return a valid icon value as explained in the dojox/mobile/ListItem API.
       icon: function () {
         return undefined;
       },
 
-      _setOptionsAttr: function (options) {
+      // _clearList: function
+      //    Clears all the list items from the UL list.
+      _clearList: function() {
         var self = this;
-        if (self._ulNode && !self._ulNode.hasChildren() && options && options.length > 0) {
+        if (self._ulNode) {
+          self._ulNode.destroyDescendants();
+          domConstruct.empty(self._ulNode.domNode);
+        }
+      },
+
+      // _setOptionsAttr: Function
+      //    Override of the setter of the 'options' property.
+      //    This function will clear the contents of the entire list and remove all watch-handles to free memory.
+      //    Then new ListItems will be created based on the incoming array of options.
+      //    The necessary watchers are added to the ListItems to add the desired behaviour.
+      _setOptionsAttr: function (/*Array of String*/ options) {
+        var self = this;
+        self._clearList();
+        if (self._ulNode && options && options.length > 0) {
           var listItems = options.map(function (element) {
             var li = new ListItem({label: self.format(element), icon: self.icon(), preventTouch: !!self.get("disabled")});
-
-            self.own(li.watch("checked", function (propName, oldValue, newValue) {
+            li.own(li.watch("checked", function (propName, oldValue, newValue) {
               if (oldValue !== newValue) {
                 var changedArray;
                 var curValue = self.get("value");
@@ -90,10 +115,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                 self.set("value", changedArray);
               }
             }));
-            self.own(self.watch("value", function (propName, oldIl, newIl) {
+            li.own(self.watch("value", function (propName, oldIl, newIl) {
               li.set("checked", !!(newIl && newIl.indexOf(element) >= 0));
             }));
-            self.own(self.watch("disabled", function (propName, oldIl, newIl) {
+            li.own(self.watch("disabled", function (propName, oldIl, newIl) {
               li.set("preventTouch", !!newIl);
             }));
             return li;
