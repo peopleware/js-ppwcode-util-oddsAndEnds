@@ -76,7 +76,7 @@ define(["dojo/_base/kernel", "dojo/Deferred", "../log/logger!", "module"],
             logger.debug("  continuation execution done; are there more?");
             // we start the next continuation now; this one might have returned a Promise, and its resolution might be relented too
             handleContinuations();
-            if (!result.then) { // not a Promise, we are done
+            if (!result || !result.then) { // not a Promise, we are done
               todo.deferred.resolve(result);
               return;
             }
