@@ -48,9 +48,9 @@ define(["dojo/_base/declare", "dojo/_base/config", "ppwcode-util-oddsAndEnds/log
 
         this[name] = func;
         logger.info("Page[" + window.name + "] registered function[" + name + "]");
-        proxies.forEach(function(proxy) {
+        for (var proxy in window.PAGE_PROXIES) {
           proxy._registerFunction(name);
-        });
+        }
       },
 
       loadError: function() {

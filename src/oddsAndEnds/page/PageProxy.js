@@ -36,6 +36,10 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "ppwcode-uti
         var windowProperties = config.pageDefinitions[this.windowId];
         this._windowName = windowProperties.name;
         this._windowLocation = toUrl("dojo/dojo") + "../../" + windowProperties.url;
+        if (!window.PAGE_PROXIES) {
+          window.PAGE_PROXIES = {};
+        }
+        window.PAGE_PROXIES[this._windowName] = this;
         logger.info("Window[" + this._windowName + "] Constructed with location  = " + this._windowLocation);
       },
 
