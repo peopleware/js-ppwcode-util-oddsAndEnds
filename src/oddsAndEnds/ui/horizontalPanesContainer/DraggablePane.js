@@ -1,11 +1,11 @@
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "ppwcode-util-contracts/_Mixin",
-        "dojo/dnd/move", "dijit/focus",
+        "dojo/dnd/move", "dijit/focus", "dojo/Deferred",
         "dojo/dom-class", "dojo/dom-style", "dojo/dom-construct", "dojo/dom-geometry", "dojo/dom-attr", "dojo/_base/fx", "dojo/fx",
         "../../log/logger!", "module",
 
         "xstyle/css!./draggablePane.css"],
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _ContractMixin,
-             move,  focus,
+             move,  focus, Deferred,
              domClass, domStyle, domConstruct, domGeom, domAttr, baseFx, fx,
              logger, module) {
 
@@ -497,13 +497,28 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             duration: 500
           }));
           anim = fx.combine(anim);
+          var deferred = new Deferred();
           anim.onEnd = function() {
-            self.destroyRecursive();
-            container.resize();
-            nextFocus.focusNode.scrollIntoView();
+            try {
+              self.destroyRecursive();
+              container.resize();
+              nextFocus.focusNode.scrollIntoView();
+              deferred.resolve();
+            }
+            catch (err) {
+              logger.error("Error on end of animation", err);
+              deferred.reject(err);
+            }
           };
           container._repositionAnimations = anim;
-          anim.play();
+          try {
+            anim.play();
+          }
+          catch (err) {
+            logger.error("Error during animation", err);
+            deferred.reject(err);
+          }
+          return deferred.promise;
         },
 
         isVisualizationOf: function(object) {
