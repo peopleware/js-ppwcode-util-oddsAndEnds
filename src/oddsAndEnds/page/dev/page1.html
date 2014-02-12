@@ -137,6 +137,8 @@
               else {
                 console.log("Window does have the correct location. NOP.");
               }
+
+
               setTimeout(
                 function() {
                   page2Window.addEventListener(MESSAGE_TYPE, messageReceived);
@@ -145,6 +147,7 @@
                      The page must have a location, and be loaded, before we can register a listener.
                      We MUST wait a while, which means we can be too late.
                      "0" is not enough.
+                     Registering for "load" doesn't help: that listener has the same problem.
                    */
                 },
                 2000
@@ -235,6 +238,10 @@
               console.log("doSomething result: " + result);
             });
 
+            window.page2loaded = function() {
+              console.log("Page 2 reports it is loaded.");
+            };
+
             /* Note: Conclusion
                - There is no way in Firefox/IE to bring a window or tab that isn't a frontmost tab to the front.
                - messaging doesn't work on IE: http://stackoverflow.com/questions/21070553/postmessage-still-broken-on-ie11
@@ -247,11 +254,14 @@
                   is set fails to register the listener. This goes for all browsers, except Firefox.
 
 
+               We want to use messaging to signal a page load of a second page complete, or stopped with errors.
+               If we need to wait a number of seconds, and can have no other signal, we might be too late in some conditions.
+               This will not do.
+
+               For the opener, we might agree on a callback.
+               For other pages, they will just have to poll for a "loaded" sentinel.
+
                The focus problem is a bore, but not fatal. Users just will have to select the other "tab".
-               A workaround mentioned on the web is to do an "alert" in the other window, so it will "flicker".
-               This is minor.
-               With an alert, FF DOES focus, but if the tab is detached, the next time we get an error.
-               IE "flickers", and the second time blocks for a minute or so.
              */
           }
         );
