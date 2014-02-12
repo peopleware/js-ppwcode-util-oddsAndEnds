@@ -106,6 +106,13 @@
               /* NOTE
                  This code does get called as expected, both in Chrome and Firefox and IE. */
               opener.addEventListener(MESSAGE_TYPE, messageReceived);
+
+//              window.focusOnMe = function() {
+//                registry.byId("focusBox").focus();
+//              }
+              /* NOTE
+                 Also doesn't help to get focus for trident of mozilla.
+               */
             }
           }
         );
@@ -116,6 +123,7 @@
 <body class="claro">
   <button id="sendEventToMeButton" data-dojo-type="dijit/form/Button">Send event to me</button>
   <button id="sendEventToOpenerButton" data-dojo-type="dijit/form/Button">Send event to opener</button>
+  <!--<input id="focusBox" data-dojo-type="dijit/form/TextBox" />-->
 </body>
 
 </html>

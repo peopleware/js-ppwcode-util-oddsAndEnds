@@ -47,8 +47,8 @@
      */
 
      require(
-      ["dojo/parser", "dijit/registry", "dojo/domReady!"],
-      function(parser, registry) {
+      ["dojo/parser", "dijit/registry", "dojo/sniff", "dojo/domReady!"],
+      function(parser, registry, has) {
         var page2Href = "page2.html";
         var MESSAGE_TYPE = "message";
         var MESSAGE_ORIGIN = window.location.protocol + "//" + window.location.host + "/"; // window.location.origin doesn't work in IE;
@@ -204,7 +204,15 @@
 //                },
 //                100
 //              );
-            });
+//              if (has("trident") || has("mozilla")) {
+//                page2Window.alert("This page was activated.");
+//              }
+              /* NOTE
+                 A workaround mentioned on the web is to do an "alert" in the other window, so it will "flicker".
+                 With an alert, FF DOES focus, but if the tab is detached, the next time we get an error.
+                 IE "flickers", and the second time blocks for a minute or so.
+                 In other words, this is not a solution.*/
+             });
 
             var doSomethingButton = registry.byId("doSomethingButton");
             doSomethingButton.set("disabled", true);
@@ -237,6 +245,13 @@
                -- When opening a window, and registering a listener there WE NEED TO WAIT UNTIL THE PAGE IS LOADED;
                   setting the listener on the window before, or immediately after, or too soon after the location
                   is set fails to register the listener. This goes for all browsers, except Firefox.
+
+
+               The focus problem is a bore, but not fatal. Users just will have to select the other "tab".
+               A workaround mentioned on the web is to do an "alert" in the other window, so it will "flicker".
+               This is minor.
+               With an alert, FF DOES focus, but if the tab is detached, the next time we get an error.
+               IE "flickers", and the second time blocks for a minute or so.
              */
           }
         );
