@@ -102,6 +102,15 @@
 
                 function messageReceived(message) {
                   console.log("Received message from opened window: " + messageToString(message));
+                  if (message.source !== page2Window) {
+                    console.log("The source is not what we expected.");
+                  }
+                  else {
+                    console.log("Source is as expected.");
+                  }
+                  console.log("Posting message back to source");
+                  message.source.postMessage("Back message", MESSAGE_ORIGIN);
+                  console.log("Posting message back to source DONE");
                 }
 
                 if (page2Window && !page2Window.closed && page2Window.removeEventListener) {
@@ -112,7 +121,7 @@
                 sendEventToOpenedButton.set("disabled", false);
                 focusButton.set("disabled", false);
                 doSomethingButton.set("disabled", false);
-                page2Window.addEventListener(MESSAGE_TYPE, messageReceived);
+//                page2Window.addEventListener(MESSAGE_TYPE, messageReceived);
                 /* NOTE
                    This code is never triggered in Chrome or Safari or IE.
                    It is in Firefox. The other way around does work!
@@ -128,6 +137,18 @@
               else {
                 console.log("Window does have the correct location. NOP.");
               }
+              setTimeout(
+                function() {
+                  page2Window.addEventListener(MESSAGE_TYPE, messageReceived);
+                  console.log("Listening to events on page2.");
+                  /* NOTE:
+                     The page must have a location, and be loaded, before we can register a listener.
+                     We MUST wait a while, which means we can be too late.
+                     "0" is not enough.
+                   */
+                },
+                2000
+              );
             });
 
             var sendEventToOpenedButton = registry.byId("sendEventToOpenedButton");
@@ -209,7 +230,13 @@
             /* Note: Conclusion
                - There is no way in Firefox/IE to bring a window or tab that isn't a frontmost tab to the front.
                - messaging doesn't work on IE: http://stackoverflow.com/questions/21070553/postmessage-still-broken-on-ie11
-                 (also, using "onmessage" instead of "message" doesn't work either)
+                 (also, using "onmessage" instead of "message" doesn't work either); well, half
+               -- IE cannot post a message to another window; period. No error, it just doesn't.
+                  It can only post messages to itself. I think I have also seen it working with the source
+                  of received messages, but can't reproduce.
+               -- When opening a window, and registering a listener there WE NEED TO WAIT UNTIL THE PAGE IS LOADED;
+                  setting the listener on the window before, or immediately after, or too soon after the location
+                  is set fails to register the listener. This goes for all browsers, except Firefox.
              */
           }
         );

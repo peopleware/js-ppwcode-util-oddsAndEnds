@@ -70,8 +70,9 @@
               console.log("sending message to me.");
               window.postMessage("Event sent to me", MESSAGE_ORIGIN);
               /* Note
-                 This works, sometimes, in all browsers, with a sensible ORIGIN.
-                 Probably we are registering the listener too soon.
+                 This works, sometimes, in all browsers, with a sensible ORIGIN,
+                 IF we register the listener "after 2 seconds".
+                 Earlier, we were registering the listener too soon.
                */
               console.log("message to me sent.");
             });
