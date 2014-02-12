@@ -14,18 +14,25 @@
  limitations under the License.
  */
 
-define(["./PageProxy", "ppwcode-util-oddsAndEnds/log/logger!", "module"],
-  function (PageProxy, logger, module) {
+define(["./_Page"],
+  function (_Page) {
 
-    var cache = {};
+    var currentPage;
 
     var loader = function (/*String*/ key, // the string to the right of the !;
                            require,      // AMD require; usually a context-sensitive require bound to the module making the plugin request
                            done) {       // the function the plugin should call with the return value once it is done
-      if (!cache[key]) {
-        cache[key] = new PageProxy(key);
+
+      if (currentPage) {
+        done(currentPage);
+        return;
       }
-      done(cache[key]);
+
+      require([key], function(definition) {
+        currentPage = new _Page(definition);
+        done(currentPage);
+      });
+
     };
 
     var plugin = {
@@ -34,7 +41,7 @@ define(["./PageProxy", "ppwcode-util-oddsAndEnds/log/logger!", "module"],
       // description:
       //    Instantiates a PageProxy for the given page.
 
-      dynamic: true,
+      dynamic: false,
       load: loader
     };
 
