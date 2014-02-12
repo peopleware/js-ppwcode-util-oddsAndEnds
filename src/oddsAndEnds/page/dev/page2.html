@@ -41,6 +41,8 @@
     require(
       ["dojo/parser", "dijit/registry", "dojo/domReady!"],
       function(parser, registry) {
+        var MESSAGE_TYPE = "message";
+        var MESSAGE_ORIGIN = window.location.protocol + "//" + window.location.host + "/"; // window.location.origin doesn't work in IE;
 
         function messageToString(event) {
           if (!event) {
@@ -59,16 +61,17 @@
         var parsed = parser.parse();
         parsed.then(
           function() {
-            window.addEventListener("message", function(message) {
+            window.addEventListener(MESSAGE_TYPE, function(message) {
               console.log("Received message: " + messageToString(message));
             });
 
             var sendEventToMeButton = registry.byId("sendEventToMeButton");
             sendEventToMeButton.on("click", function() {
               console.log("sending message to me.");
-              window.postMessage("Event sent to me", "*");
+              window.postMessage("Event sent to me", MESSAGE_ORIGIN);
               /* Note
-               Works in FF, Chrome, Safari. In IE, the listener in page 1 is not called.
+                 This works, sometimes, in all browsers, with a sensible ORIGIN.
+                 Probably we are registering the listener too soon.
                */
               console.log("message to me sent.");
             });
@@ -87,9 +90,9 @@
                 console.log("there is no opener; NOP");
                 return;
               }
-              opener.postMessage("Event sent to opener", "*");
+              opener.postMessage("Event sent to opener", MESSAGE_ORIGIN);
               /* Note
-                 Works in FF, Chrome, Safari, but not in IE.
+                 Works on Mac and Win, but not in IE. Never seen it work.
                */
               console.log("message to opener sent.");
             });
@@ -101,7 +104,7 @@
 
               /* NOTE
                  This code does get called as expected, both in Chrome and Firefox and IE. */
-              opener.addEventListener("message", messageReceived);
+              opener.addEventListener(MESSAGE_TYPE, messageReceived);
             }
           }
         );

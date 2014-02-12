@@ -50,6 +50,8 @@
       ["dojo/parser", "dijit/registry", "dojo/domReady!"],
       function(parser, registry) {
         var page2Href = "page2.html";
+        var MESSAGE_TYPE = "message";
+        var MESSAGE_ORIGIN = window.location.protocol + "//" + window.location.host + "/"; // window.location.origin doesn't work in IE;
 
         function messageToString(event) {
           if (!event) {
@@ -68,7 +70,7 @@
         var parsed = parser.parse();
         parsed.then(
           function() {
-            window.addEventListener("message", function(message) {
+            window.addEventListener(MESSAGE_TYPE, function(message) {
               console.log("Received message: " + messageToString(message));
             });
 
@@ -102,19 +104,19 @@
                   console.log("Received message from opened window: " + messageToString(message));
                 }
 
-                if (page2Window && page2Window.removeEventListener) {
-                  page2Window.removeEventListener("message", messageReceived);
+                if (page2Window && !page2Window.closed && page2Window.removeEventListener) {
+                  // above: IE is picky!
+                  page2Window.removeEventListener(MESSAGE_TYPE, messageReceived);
                 }
                 page2Window = windowReference;
                 sendEventToOpenedButton.set("disabled", false);
                 focusButton.set("disabled", false);
                 doSomethingButton.set("disabled", false);
-                page2Window.addEventListener("message", messageReceived);
+                page2Window.addEventListener(MESSAGE_TYPE, messageReceived);
                 /* NOTE
                    This code is never triggered in Chrome or Safari or IE.
                    It is in Firefox. The other way around does work!
-                   It seems you cannot listen to another window's events,
-                   you can only send events to it (and thus, by name). */
+                   Maybe this is added too early? */
               }
               var myLocation = window.location.href.split("/");
               myLocation.pop();
@@ -137,9 +139,9 @@
                 return;
               }
               console.log("sending message to page2.");
-              page2Window.postMessage("Event sent to page2", "*");
+              page2Window.postMessage("Event sent to page2", MESSAGE_ORIGIN);
               /* Note
-               Works in FF, Chrome, Safari, but not in IE.
+                 Works in FF, Chrome, Safari, but not in IE.
                */
               console.log("message to page2 sent.");
             });
@@ -147,7 +149,9 @@
             var sendEventToMeButton = registry.byId("sendEventToMeButton");
             sendEventToMeButton.on("click", function() {
               console.log("sending message to me.");
-              window.postMessage("Event sent to me", "*");
+              window.postMessage("Event sent to me", MESSAGE_ORIGIN);
+              /* NOTE
+                 This reaches the other side in all cases, even IE */
               console.log("message to me sent.");
             });
 
@@ -202,8 +206,10 @@
               console.log("doSomething result: " + result);
             });
 
-            /* Note:
-               There is no way in Firefox to bring a window or tab to the front that isn't visible.
+            /* Note: Conclusion
+               - There is no way in Firefox/IE to bring a window or tab that isn't a frontmost tab to the front.
+               - messaging doesn't work on IE: http://stackoverflow.com/questions/21070553/postmessage-still-broken-on-ie11
+                 (also, using "onmessage" instead of "message" doesn't work either)
              */
           }
         );
