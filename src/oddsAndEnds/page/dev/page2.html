@@ -115,7 +115,10 @@
                */
             }
 
-            opener.page2loaded();
+            if (opener && opener.page2loaded) {
+              opener.page2loaded();
+            }
+            window.name = "PAGE2";
           }
         );
       });
