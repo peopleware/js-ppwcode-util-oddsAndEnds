@@ -85,6 +85,8 @@
                    Whether the window already exists or not, is a tab or in a separate window,
                    has the correct location or not, it is brought to the front. If it was
                    minimized / in the dock, it reappears.
+                   HOWEVER, this only works it the window was created by a script IN THIS WINDOW
+                   in the first place. Otherwise, it is simply not found. A new one is created.
                  Firefox, IE
                    The first time the window is opened, it is brought to the front.
                    On later calls, it is not, also not when it is minimized. This is the window.open

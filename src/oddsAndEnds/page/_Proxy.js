@@ -14,9 +14,9 @@
  limitations under the License.
  */
 
-define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKeys",
+define(["dojo/_base/declare", "dojo/sniff", "dojo/Deferred", "./_sharedKeys",
         "ppwcode-util-oddsAndEnds/log/logger!", "module"],
-  function (declare, config, Deferred, _sharedKeys,
+  function (declare, has, Deferred, _sharedKeys,
             logger, module) {
 
     var LOAD_TIMEOUT = 30000;
@@ -27,6 +27,24 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
       // summary:
       //   Returns a random string, to be used as a random window name.
       return "random" + Date.now();
+    }
+
+    function isSecurityError(err) {
+      if (!err) {
+        return false;
+      }
+      if (has("webkit")) {
+        return err.name === "SecurityError";
+      }
+      else if (has("mozilla")) {
+        return err.message.indexOf("Permission denied to access property") === 0;
+      }
+      else if (has("trident")) {
+        return err.message.indexOf("Access is denied.") === 0;
+      }
+      else { // unknown browser; say yes (worst case)
+        return true;
+      }
     }
 
     var PageProxy = declare([], {
@@ -73,7 +91,7 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
           return noHashHrefCurrent === noHashHrefDefinition;
         }
         catch (err) {
-          if (err.name = "SecurityError") {
+          if (isSecurityError(err)) {
             // if the URL has changed to something we don't have access to
             return false;
           }
@@ -81,14 +99,15 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
         }
       },
 
-      _waitForPage: function waitForPage(/*Deferred*/ deferred, /*Number*/ counter) {
+      _waitForPage: function(/*Deferred*/ deferred, /*Number*/ counter) {
         // summary:
         //   When we have the correct window reference, it might still be loading.
         //   The only solution without a race condition is to poll now and again
         //   for the "sentinel": is the Page object there?
 
+        var self = this;
         logger.debug("Waiting for `" + [_sharedKeys.PAGE_PROPERTY_NAME] + "` to appear on proxied page ...");
-        var page = this._proxiedWindow[_sharedKeys.PAGE_PROPERTY_NAME];
+        var page = self._proxiedWindow[_sharedKeys.PAGE_PROPERTY_NAME];
         if (page) {
           logger.debug("`" + [_sharedKeys.PAGE_PROPERTY_NAME] + "` found on proxied page. Load complete.");
           deferred.resolve(page);
@@ -103,7 +122,7 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
         }
         setTimeout(
           function() {
-            waitForPage(deferred, counter + 1);
+            self._waitForPage(deferred, counter + 1);
           },
           POLL_INTERVAL
         );
@@ -218,7 +237,7 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
               self._proxiedWindow.name = randomName();
             }
             catch (err) {
-              if (err.name !== "SecurityError") {
+              if (isSecurityError(err)) {
                 throw err;
               }
               logger.debug("proxiedWindow has a new URL from another origin. Will re-appropriate.");
@@ -237,13 +256,38 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
 
         // The window we want might already be open. Lets see if we can find it by name.
         logger.debug("focus: Finding or opening new proxied window.");
-        self._proxiedWindow = window.open("", this._name);
-        /* Returns a reference to the existing window with name _name,
-           or opens a new one with that name if none exists yet.
-           The location of the window is empty for a new one, and does not change
-           for an existing one. Returns falsy if opening fails.
-           The window is not closed, but might still have the correct URL,
-           an different URL, or be blank. */
+        try {
+          self._proxiedWindow = window.open("", this._name);
+          /* Returns a reference to the existing window with name _name,
+             or opens a new one with that name if none exists yet.
+             The location of the window is empty for a new one, and does not change
+             for an existing one. Returns falsy if opening fails.
+             The window is not closed, but might still have the correct URL,
+             an different URL, or be blank.
+             At least, that this the theory.
+             - On Firefox, this seems to be correct.
+             - On Webkit, we only find an existing window if it was first created
+               FROM THIS WINDOW. Otherwise, it is as if the other window does not exist.
+               There seems to be NO WAY to retrieve a reference to a window that we
+               haven't first opened.
+             - On IE, it is as described EXCEPT when the URL changed to another origin.
+               Then this function returns an exception "Access is denied.".
+               We can never get a reference to that window.
+             In both of the exception cases, we will proceed as if the window was not found.
+             */
+        }
+        catch (err) { // only for IE
+          if (has("trident") && isSecurityError(err)) {
+            log.debug("Cannot use existing window with name " + this._name + " because of origin. " +
+                      "Creating a brand new window.");
+            prepareForLoad();
+            self._proxiedWindow = window.open(this._href, this._name);
+            return deferred.promise;
+          }
+          else {
+            throw err;
+          }
+        }
         if (!self._proxiedWindow) {
           logger.error("Window[" + self._name + "] failed to open");
           deferred.reject("WINDOW COULD NOT BE OPENED");
@@ -263,7 +307,7 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
             self._proxiedWindow.location.replace(this._href);
           }
           catch (err) {
-            if (err.name === "SecurityError") {
+            if (isSecurityError(err)) {
               log.debug("Cannot change the location of the found window with name " + this._name + " because of origin. " +
                         "Creating a brand new window or re-appropriating it.");
               self._proxiedWindow = window.open(this._href, this._name);
