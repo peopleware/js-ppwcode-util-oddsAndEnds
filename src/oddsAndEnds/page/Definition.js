@@ -31,6 +31,7 @@ define(["dojo/_base/declare", "require", "module"],
       getName: function() {
         // summary:
         //   Returns a unique name for the page being defined.
+        //   Should contain only alphanumeric characters and "_" (use removeDiacritics).
 
         // ABSTRACT
         return null;
@@ -43,6 +44,13 @@ define(["dojo/_base/declare", "require", "module"],
 
         // ABSTRACT
         return null;
+      },
+
+      removeDiacritics: function(text) {
+        // summary:
+        //   Diacritics are replaced by "_".
+
+        var result = text.replace(/[^A-Za-z0-9]/, "_");
       },
 
       toUrl: function(path) {

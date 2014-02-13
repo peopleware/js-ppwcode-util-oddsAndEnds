@@ -31,7 +31,7 @@ define(["dojo/_base/declare", "./Definition", "module"],
 
       constructor: function(kwargs) {
         if (kwargs) {
-          this.name = kwargs.name;
+          this.name = this.removeDiacritics(kwargs.name);
           this.href = kwargs.href;
         }
       },

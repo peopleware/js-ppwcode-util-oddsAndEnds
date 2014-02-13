@@ -18,8 +18,8 @@ define(["module"], function(module) {
 
   return {
     PAGE_PROPERTY_NAME: module.id + "_PAGE",
-    LOADED: module.id + "_LOADED",
-    LOAD_ERROR: module.id + "_LOAD_ERROR"
+    SUCCESS_CALLBACK_NAME: module.id + "_LOADED",
+    ERROR_CALLBACK_NAME: module.id + "_LOAD_ERROR"
   };
 
 });
