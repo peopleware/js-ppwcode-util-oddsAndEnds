@@ -50,7 +50,8 @@ define(["dojo/_base/declare", "require", "module"],
         // summary:
         //   Diacritics are replaced by "_".
 
-        var result = text.replace(/[^A-Za-z0-9]/, "_");
+        var result = text.replace(/[^A-Za-z0-9]/g, "_");
+        return result;
       },
 
       toUrl: function(path) {

@@ -63,19 +63,22 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
         logger.info("Window[" + this._name + "] constructed with location  = " + this._href);
       },
 
-      _proxyHasCorrectUrlAndName: function() {
-        if (!this._proxiedWindow || (this._proxiedWindow.name !== this._name)) {
-          return false;
+      _proxiedWindowHasCorrectUrlAndName: function() {
+        try {
+          if (!this._proxiedWindow || (this._proxiedWindow.name !== this._name)) {
+            return false;
+          }
+          var noHashHrefCurrent = this._proxiedWindow && this._proxiedWindow.location.href.split("#")[0];
+          var noHashHrefDefinition = this._href && this._href.split("#")[0];
+          return noHashHrefCurrent === noHashHrefDefinition;
         }
-        var noHashHrefCurrent = this._proxiedWindow && this._proxiedWindow.location.href.split("#")[0];
-        var noHashHrefDefinition = this._href && this._href.split("#")[0];
-        return noHashHrefCurrent === noHashHrefDefinition;
-      },
-
-      _proxyHasCorrectNameAndIsBlank: function() {
-        return this._proxiedWindow &&
-               (this._proxiedWindow.name === this._name) &&
-               this._proxiedWindow.location.href === "about:blank";
+        catch (err) {
+          if (err.name = "SecurityError") {
+            // if the URL has changed to something we don't have access to
+            return false;
+          }
+          throw err;
+        }
       },
 
       _waitForPage: function waitForPage(/*Deferred*/ deferred, /*Number*/ counter) {
@@ -84,12 +87,17 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
         //   The only solution without a race condition is to poll now and again
         //   for the "sentinel": is the Page object there?
 
-        var page = self._proxiedWindow[_sharedKeys.PAGE_PROPERTY_NAME];
+        logger.debug("Waiting for `" + [_sharedKeys.PAGE_PROPERTY_NAME] + "` to appear on proxied page ...");
+        var page = this._proxiedWindow[_sharedKeys.PAGE_PROPERTY_NAME];
         if (page) {
+          logger.debug("`" + [_sharedKeys.PAGE_PROPERTY_NAME] + "` found on proxied page. Load complete.");
           deferred.resolve(page);
           return;
         }
+        logger.debug("`" + [_sharedKeys.PAGE_PROPERTY_NAME] + "` not yet found ...");
         if (counter > MAX_POLLS) {
+          logger.debug("Been waiting too long for `" + [_sharedKeys.PAGE_PROPERTY_NAME] +
+                       "` to appear on proxied page. Giving up.");
           deferred.reject("LOAD DID NOT COMPLETE");
           return;
         }
@@ -121,7 +129,56 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
 
         var self = this;
         var deferred = new Deferred();
-        if (self._proxiedWindow) {
+
+        function prepareForLoad() {
+          /* ProxiedWindow now is blank and has the correct name;
+           Load it, and wait for it to finish initialization; then
+           report success or failure.
+           The Page in the window will call a success or failure callback in this window.
+           This is the only way that works in all browsers (postMessage cannot be used, because
+           listeners cannot reliably be registered before the page is loaded. This creates
+           a race condition. */
+
+          logger.debug("focus: Preparing for load.");
+          var timeout;
+
+          function removeCallBacks() {
+            if (timeout) {
+              clearTimeout(timeout);
+            }
+            delete window[_sharedKeys.SUCCESS_CALLBACK_NAME + "_" + self._name];
+            delete window[_sharedKeys.ERROR_CALLBACK_NAME + "_" + self._name];
+          }
+
+          function failure(msg, rejection) {
+            removeCallBacks();
+            logger.error("Window[" + self._name + "] " + msg);
+            deferred.reject(rejection);
+          }
+
+          window[_sharedKeys.SUCCESS_CALLBACK_NAME + "_" + self._name] = function(/*Page*/ page) {
+            removeCallBacks();
+            logger.info("Window[" + self._name + "] loaded");
+            deferred.resolve(page);
+          };
+
+          window[_sharedKeys.ERROR_CALLBACK_NAME + "_" + self._name] = function(errMsg) {
+            failure("failed to open", errMsg);
+          };
+
+          timeout = setTimeout(
+            function() {
+              failure("loading timed-out.", "LOADING WINDOW TIMED OUT");
+            },
+            LOAD_TIMEOUT
+          );
+        }
+
+        if (!self._proxiedWindow) {
+          logger.debug("focus: no proxiedWindow yet.");
+        }
+        else {
+          logger.debug("focus: there is a proxiedWindow reference.");
           /* We opened the window earlier. But,
              - it might be closed already;
              - it might have a different name now;
@@ -134,6 +191,8 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
              If it is closed already, we want to discard our old reference, open a new window,
              and load the correct URL in that window. It will be brought to the front.
 
+             When a SecurityError occurs when we access the name property, we know also
+             that the window has a different URL.
              If it is there still, but contains a different URL, we want to reload the correct
              URL. It would not be brought to the front.
              If it contains the correct URL but has a different name, we might re-appropriate it,
@@ -144,28 +203,40 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
              An "original" window cannot be changed like that. In that case, we might
              change the name of the original window, and still open a new one. The window
              is no longer "ours" anyway. And it can stay open. */
-          if (!self._proxiedWindow.closed && self._proxyHasCorrectUrlAndName()) {
+          if (!self._proxiedWindow.closed && self._proxiedWindowHasCorrectUrlAndName()) {
+            logger.debug("focus: proxiedWindow reference has correct name and url and is not closed. We are done.");
             self._proxiedWindow.focus(); // will not always work in FF and IE
             self._waitForPage(deferred, 0);
             return deferred.promise;
           }
           // closed or not the correct URL or wrong name
+          logger.debug("focus: proxiedWindow has wrong name or url, or is closed. Discarding it.");
           if (!self._proxiedWindow.closed) {
             // not the correct URL or wrong name
             // rename the window and discard the reference
-            self._proxiedWindow.name = randomName();
-            /* NOTE: This might not work if the URL is another origin.
-               If this fails silently, we will get a reference to the same
-               window again in 2 lines, and again after the check there.
-               We will then reload the correct URL in this window,
-               which might or might not work. Potentially, this results
-               in a time out.
-               There doesn't seem anything we can do about this case. */
+            try {
+              self._proxiedWindow.name = randomName();
+            }
+            catch (err) {
+              if (err.name !== "SecurityError") {
+                throw err;
+              }
+              logger.debug("proxiedWindow has a new URL from another origin. Will re-appropriate.");
+              /* If the URL is another origin, we will get a SecurityError.
+               We cannot change the name, and cannot gain control of that window.
+               The only thing we can do is regain control by "opening" the window
+               with the same name and a given URL directly. */
+              prepareForLoad();
+              self._proxiedWindow = window.open(this._href, this._name);
+              return deferred.promise;
+            }
           }
           // in any case, discard and load again now
           self._proxiedWindow = null;
         }
+
         // The window we want might already be open. Lets see if we can find it by name.
+        logger.debug("focus: Finding or opening new proxied window.");
         self._proxiedWindow = window.open("", this._name);
         /* Returns a reference to the existing window with name _name,
            or opens a new one with that name if none exists yet.
@@ -173,65 +244,32 @@ define(["dojo/_base/declare", "dojo/_base/config", "dojo/Deferred", "./_sharedKe
            for an existing one. Returns falsy if opening fails.
            The window is not closed, but might still have the correct URL,
            an different URL, or be blank. */
-        if (self._proxyHasCorrectUrlAndName()) {
-          self._proxiedWindow.focus(); // will not always work in FF and IE
-          self._waitForPage(deferred, 0);
-          return deferred.promise;
-        }
         if (!self._proxiedWindow) {
           logger.error("Window[" + self._name + "] failed to open");
           deferred.reject("WINDOW COULD NOT BE OPENED");
         }
-        // not the correct URL or blank, or wrong name; can also be blank with the wrong name
-        if (!self._proxyHasCorrectNameAndIsBlank()) {
-          // not the correct URL or wrong name
-          // rename the window and discard the reference
-          self._proxiedWindow.name = randomName();
-          self._proxiedWindow = window.open("", this._name);
+        else if (self._proxiedWindowHasCorrectUrlAndName()) { // name is guaranteed to be correct (barring race conditions)
+          logger.debug("focus: Found window with correct name and URL. We are done.");
+          self._proxiedWindow.focus(); // will not always work in FF and IE
+          self._waitForPage(deferred, 0);
         }
-        /* ProxiedWindow now is blank and has the correct name;
-           Load it, and wait for it to finish initialization; then
-           report success or failure.
-           The Page in the window will call a success or failure callback in this window.
-           This is the only way that works in all browsers (postMessage cannot be used, because
-           listeners cannot reliably be registered before the page is loaded. This creates
-           a race condition. */
-
-        var timeout;
-
-        function removeCallBacks() {
-          if (timeout) {
-            clearTimeout(timeout);
+        else {
+          // not the correct URL or blank; we need to reload in any case, re-appropriating it if it is not blank
+          logger.debug("focus: Found new window or window with wrong URL. (Re-)appropriating and loading.");
+          prepareForLoad();
+          // window.open(this._href, this._name); will create a new Window in Chrome, and not reuse the existing window.
+          // This is only a last resort.
+          try {
+            self._proxiedWindow.location.replace(this._href);
           }
-          delete window[_sharedKeys.SUCCESS_CALLBACK_NAME + "_" + self._name];
-          delete window[_sharedKeys.ERROR_CALLBACK_NAME + "_" + self._name];
+          catch (err) {
+            if (err.name === "SecurityError") {
+              log.debug("Cannot change the location of the found window with name " + this._name + " because of origin. " +
+                        "Creating a brand new window or re-appropriating it.");
+              self._proxiedWindow = window.open(this._href, this._name);
+            }
+          }
         }
-
-        function failure(msg, rejection) {
-          removeCallBacks();
-          logger.error("Window[" + self._name + "] " + msg);
-          deferred.reject(rejection);
-        }
-
-        window[_sharedKeys.SUCCESS_CALLBACK_NAME + "_" + self._name] = function(/*Page*/ page) {
-          removeCallBacks();
-          logger.info("Window[" + self._name + "] loaded");
-          deferred.resolve(page);
-        };
-
-        window[_sharedKeys.ERROR_CALLBACK_NAME + "_" + self._name] = function(errMsg) {
-          failure("failed to open", errMsg);
-        };
-
-        timeout = setTimeout(
-          function() {
-            failure("loading timed-out.", "LOADING WINDOW TIMED OUT");
-          },
-          LOAD_TIMEOUT
-        );
-        logger.info("Starting load into window");
-        self._proxiedWindow.location.replace(this._href);
-
         return deferred.promise;
       },
 
