@@ -45,12 +45,13 @@ define(["dojo/_base/declare", "dojo/Deferred", "dojo/_base/lang", "./_sharedKeys
       loadComplete: function() {
         window[_sharedKeys.PAGE_PROPERTY_NAME] = this;
         logger.info("Page[" + window.name + "] _loadComplete. Page object registered under '" + _sharedKeys.PAGE_PROPERTY_NAME + "'. Sending completion message.");
-        window.postMessage({key: _sharedKeys.LOADED}, "*"); // TODO expected origin
+        opener[_sharedKeys.SUCCESS_CALLBACK_NAME + "_" + window.name](this);
       },
 
       loadError: function(err) {
-        logger.error("Page[" + window.name + "] _loadError (sendin error message): ", err);
-        window.postMessage({key: _sharedKeys.LOAD_ERROR, exception: err.message || "UNKNOWN"}, "*"); // TODO expected origin
+        logger.error("Page[" + window.name + "] _loadError (sending error message): ", err);
+        var errText = typeof err === "string" ? err : (err.message || err.toString()); // Error objects cannot be copied to another window
+        opener[_sharedKeys.ERROR_CALLBACK_NAME + "_" + self._name](errText);
         return err;
       },
 
