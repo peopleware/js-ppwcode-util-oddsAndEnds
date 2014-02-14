@@ -93,7 +93,9 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
           logger.debug("Calling worker function (will return a Promise).");
 
           var newPromise = promiseFunction(arg);
-          var deferred = new Deferred();
+          var deferred = new Deferred(function(reason) {
+            return newPromise.cancel(reason);
+          });
           var cleanedUpPromise = deferred.promise;
 
           function createCleanerAndFulfillerPromise() {
