@@ -285,7 +285,7 @@ define(["dojo/_base/declare", "dojo/sniff", "dojo/Deferred", "./_sharedKeys",
             }
             catch (err) { // only for IE
               if (has("trident") && isSecurityError(err)) {
-                log.debug("Cannot use existing window with name " + self._name + " because of origin. " +
+                logger.debug("Cannot use existing window with name " + self._name + " because of origin. " +
                           "Creating a brand new window.");
                 prepareForLoad();
                 self._proxiedWindow = window.open(self._href, self._name);
@@ -315,7 +315,7 @@ define(["dojo/_base/declare", "dojo/sniff", "dojo/Deferred", "./_sharedKeys",
               }
               catch (err) {
                 if (isSecurityError(err)) {
-                  log.debug("Cannot change the location of the found window with name " + self._name + " because of origin. " +
+                  logger.debug("Cannot change the location of the found window with name " + self._name + " because of origin. " +
                             "Creating a brand new window or re-appropriating it.");
                   self._proxiedWindow = window.open(self._href, self._name);
                 }
