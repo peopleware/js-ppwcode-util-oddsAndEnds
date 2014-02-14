@@ -69,7 +69,7 @@ define(["dojo/_base/kernel", "dojo/Deferred", "../log/logger!", "module"],
               deferred.resolve just resolves its promise to the actual value passed in, also if it is a Promise.
               This is in contrast to the callbacks of Promise.then, which can be a Promise. The then.Promise
               is only fulfilled if the returned Promise is fulfilled too. With deferred.resolve, its Promise
-              is fulfilled immediately, even of the argument is a Promise.
+              is fulfilled immediately, even if the argument is a Promise.
               Therefor, we need to wait for result to complete before we resolve deferred. We cannot use
               when either, because it also returns a Promise.
              */
