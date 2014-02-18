@@ -74,7 +74,14 @@ define(["dojo/_base/declare", "dojo/Deferred", "dojo/_base/lang", "./_sharedKeys
         // `func` from other pages, and in interwindow-communication all arguments
         //  are passed by value (copied), this function should take that into account.
 
-        this.registeredFunctions[name] = func;
+        this.registeredFunctions[name] = logger.isDebugEnabled() ?
+          function() {
+            logger.debug("Function " + name + " called remotely");
+            var result = func.apply(null, arguments);
+            logger.debug("Function result is " + result + ". Returning to remote caller.");
+            return result;
+          } :
+          func;
         logger.info("Page[" + window.name + "] registered function " + name);
       }
 
