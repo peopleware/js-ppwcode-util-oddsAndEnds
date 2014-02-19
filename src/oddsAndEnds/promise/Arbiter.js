@@ -127,7 +127,7 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
           if (!originalPromise.total || originalPromise.total === 0) {
             return finalPromise;
           }
-          return lang.delegate(
+          var result = lang.delegate(
             finalPromise,
             {
               total: finalPromise.then(function() {
@@ -135,6 +135,7 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
               })
             }
           );
+          return result;
         }
 
         function newPromise() {
@@ -194,7 +195,8 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
             createCleanerAndFulfillerPromise();
           }
           logger.trace("Worker function done. Will doctor returned Promise with total if needed, and return.");
-          self.processingPromise = decorateWithTotal(newPromise, cleanedUpPromise);
+          cleanedUpPromise = decorateWithTotal(newPromise, cleanedUpPromise); // remember for promiseFulfilled
+          self.processingPromise = cleanedUpPromise;
         }
 
 
