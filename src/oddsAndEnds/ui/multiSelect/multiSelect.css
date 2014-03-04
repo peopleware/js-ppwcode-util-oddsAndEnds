@@ -23,3 +23,70 @@
 .ppwCodeMultiSelect .multiSelectList li:last-child {
     border-bottom: none;
 }
+
+.ppwCodeMultiSelect .mblEdgeToEdgeList {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+.ppwCodeMultiSelect .mblListItemLabel {
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: 100%;
+}
+
+.ppwCodeMultiSelect .mblListItemChecked {
+    color: #314e84;
+}
+
+.ppwCodeMultiSelect .mblListItem {
+    position: relative;
+    overflow: hidden;
+    padding: 0 8px;
+    height: 43px;
+    list-style-type: none;
+    line-height: 43px;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    border-bottom: 1px solid #adaaad;
+    font-weight: bold;
+    color: black;
+}
+
+.ppwCodeMultiSelect .mblListItemChecked .mblListItemRightIcon {
+    visibility: visible;
+}
+
+.ppwCodeMultiSelect .mblListItemUnchecked .mblListItemRightIcon {
+    visibility: hidden;
+}
+
+.ppwCodeMultiSelect .mblListItemRightIcon, .ppwCodeMultiSelect .mblListItemRightIcon2, .ppwCodeMultiSelect .mblListItemUncheckIcon {
+    position: relative;
+    float: right;
+    line-height: normal;
+    margin-top: 7px;
+    margin-bottom: -7px;
+}
+
+.ppwCodeMultiSelect .mblDomButtonDarkBlueCheck, .ppwCodeMultiSelect .mblDomButtonCheck {
+    position: relative;
+    width: 20px;
+    height: 29px;
+}
+
+.ppwCodeMultiSelect.mblDomButtonDarkBlueCheck > div, .ppwCodeMultiSelect .mblDomButtonCheck > div {
+    position: absolute;
+    left: 0px;
+    top: 8px;
+    width: 16px;
+    height: 6px;
+    font-size: 1px;
+    -webkit-transform: scaleX(0.7) rotate(135deg);
+    transform: scaleX(0.7) rotate(135deg);
+    border-width: 3px 4px 0px 0px;
+    border-style: solid;
+    border-color: #314e84;
+}

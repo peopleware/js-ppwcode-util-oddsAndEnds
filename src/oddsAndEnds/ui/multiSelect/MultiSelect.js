@@ -18,7 +18,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
   "dojox/mobile/ListItem", "dojo/dom-construct",
 
   "dojox/mobile/Container", "dojox/mobile/EdgeToEdgeList",
-  "xstyle/css!dojox/mobile/themes/iphone/iphone.css",
   "xstyle/css!./multiSelect.css"],
   function (declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, ListItem, domConstruct) {
 
