@@ -455,7 +455,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           var anim = container._leftSentinel._repositionFromHereToRightAnimations();
           anim.push(baseFx.fadeIn({
             node: self.domNode,
-            duration: 500
+            duration: 500,
+            stop: function() {
+              // don't stop
+              return this;
+            }
           }));
           anim = fx.combine(anim);
           anim.onEnd = function() {
@@ -494,7 +498,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           var anim = container._leftSentinel._repositionFromHereToRightAnimations();
           anim.push(baseFx.fadeOut({
             node: self.domNode,
-            duration: 500
+            duration: 500,
+            stop: function() {
+              // don't stop
+              return this;
+            }
           }));
           anim = fx.combine(anim);
           var deferred = new Deferred();
