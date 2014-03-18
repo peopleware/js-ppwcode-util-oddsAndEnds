@@ -320,6 +320,8 @@ define([],
       //   Normalizes a path.
       //   A '.' is removed from the path.
       //   '..' is optimized by removing the preceding part from the path.
+      //   If the path parameter goes up too many levels in the directory structure, this will be ignored.
+      //   It only goes up until the base path is reached.
 
       var result = [],
         segment, lastSegment;
