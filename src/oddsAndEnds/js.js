@@ -313,6 +313,29 @@ define([],
       );
     }
 
+    function compactPath(path){
+      // summary:
+      //   Function copied from require.compactPath. It is not available there after a build.
+      // Description:
+      //   Normalizes a path.
+      //   A '.' is removed from the path.
+      //   '..' is optimized by removing the preceding part from the path.
+
+      var result = [],
+        segment, lastSegment;
+      path = path.replace(/\\/g, '/').split('/');
+      while(path.length){
+        segment = path.shift();
+        if(segment==".." && result.length && lastSegment!=".."){
+          result.pop();
+          lastSegment = result[result.length - 1];
+        }else if(segment!="."){
+          result.push(lastSegment= segment);
+        } // else ignore "."
+      }
+      return result.join("/");
+    }
+
     var js = {
       // summary:
       //   Methods to aid with the JavaScript language.
@@ -332,7 +355,8 @@ define([],
       MIN_INT: MIN_INT,
       randomInt: randomInt,
       randomInts: randomInts,
-      haveSameElements: haveSameElements
+      haveSameElements: haveSameElements,
+      compactPath: compactPath
     };
 
     return js;

@@ -108,6 +108,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
               throw "ERROR: using a relative path to another bundle requires a this.constructor.mid";
             }
             nlsParentDir = parentDirFromMid(this.constructor.mid) + "/" + nlsParentDir;
+            nlsParentDir = js.compactPath(nlsParentDir);
           }
           if (!bundleName || !nlsParentDir) {
             throw "ERROR: trouble parsing otherBundleName '" + otherBundleName + "'";
