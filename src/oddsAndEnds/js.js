@@ -313,7 +313,7 @@ define([],
       );
     }
 
-    function compactPath(path){
+    function compactPath(path) {
       // summary:
       //   Function copied from require.compactPath. It is not available there after a build.
       // Description:
@@ -324,13 +324,13 @@ define([],
       var result = [],
         segment, lastSegment;
       path = path.replace(/\\/g, '/').split('/');
-      while(path.length){
+      while(path.length) {
         segment = path.shift();
-        if(segment==".." && result.length && lastSegment!=".."){
+        if(segment === ".." && result.length && lastSegment !== "..") {
           result.pop();
           lastSegment = result[result.length - 1];
-        }else if(segment!="."){
-          result.push(lastSegment= segment);
+        } else if(segment!=="." && segment !== "..") {
+          result.push(lastSegment = segment);
         } // else ignore "."
       }
       return result.join("/");
