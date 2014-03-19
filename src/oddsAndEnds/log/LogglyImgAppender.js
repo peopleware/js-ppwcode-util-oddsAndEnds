@@ -49,6 +49,7 @@ define(["dojo/_base/declare", "./Appender", "dojo/io-query", "../js"],
         default: // object, error
           result = message;
       }
+      //noinspection JSPotentiallyInvalidConstructorUsage
       result.DT = Date(); // without new, this return a String representation of now
       return result;
     }

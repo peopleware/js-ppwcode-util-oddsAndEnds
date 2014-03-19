@@ -12,19 +12,25 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       // gap: Number
       //   The gap, in pixels, to visualize between neighbouring instances.
       //   To be applied left.
+      //noinspection MagicNumberJS
       var gap = 12; // px
 
       // extraGapForFocused: Number
       //   The extra gap, in pixels, to visualize between neighbouring instances when the pane is focused.
       //   To be applied left and right.
+      //noinspection MagicNumberJS
       var extraGapForFocused = 40; // px
 
       // dropPositionGap: Number
       //   During a drag, the position where the dragged pane would be positioned when the mouse is released
       //   "now", is represented by this extra gap.
+      //noinspection MagicNumberJS
       var dropPositionGap = 75; // px
 
+      //noinspection MagicNumberJS
       var moveAnimationDuration = 500;
+
+      //noinspection MagicNumberJS
       var dragAnimationDuration = 100;
 
       var _AbstractDraggablePane = declare([_ContractMixin], {
@@ -426,7 +432,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             self._moveable.destroy();
             self._moveable = null;
           }
-          //noinspection JSPotentiallyInvalidConstructorUsage
+          //noinspection JSPotentiallyInvalidConstructorUsage,MagicNumberJS
           self._moveable = new move.constrainedMoveable(
             self.domNode,
             {
@@ -453,6 +459,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             container._repositionAnimations.stop(true);
           }
           var anim = container._leftSentinel._repositionFromHereToRightAnimations();
+          //noinspection MagicNumberJS
           anim.push(baseFx.fadeIn({
             node: self.domNode,
             duration: 500,
@@ -477,7 +484,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           //   Removes the current pane from the double linked list it is in. This widget is destroyed.
 
           if (!this.isInList()) {
-            return;
+            return null;
           }
           var self = this;
           var /*DraggablePane*/ nextFocus = ((self.previous !== self.getFirst()) ? self.previous :
@@ -496,6 +503,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             container._repositionAnimations.stop(true);
           }
           var anim = container._leftSentinel._repositionFromHereToRightAnimations();
+          //noinspection MagicNumberJS
           anim.push(baseFx.fadeOut({
             node: self.domNode,
             duration: 500,
@@ -632,7 +640,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           //   Only works for movable instances.
 
           if (!this.container._onTheMove) {
+            //noinspection MagicNumberJS
             this.domNode.style.zIndex = 999;
+            //noinspection MagicNumberJS
             this.domNode.style.opacity = 0.5;
             var next = this.get("next");
             this.container._onTheMove = this;

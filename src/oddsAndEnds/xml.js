@@ -38,12 +38,12 @@ define([],
         if (!str && str !== "0") { // 0 must pass
           return missing || "";
         }
-        str = "" + str; // coerce to string
-        str = str.replace(/&/gm, "&amp;").replace(/</gm, "&lt;").replace(/>/gm, "&gt;").replace(/"/gm, "&quot;");
+        var s = "" + str; // coerce to string
+        s = s.replace(/&/gm, "&amp;").replace(/</gm, "&lt;").replace(/>/gm, "&gt;").replace(/"/gm, "&quot;");
         if(!doNotEscapeSingleQuotes) {
-          str = str.replace(/'/gm, "&#39;");
+          s = s.replace(/'/gm, "&#39;");
         }
-        return str; // string
+        return s; // string
       }
 
     };
