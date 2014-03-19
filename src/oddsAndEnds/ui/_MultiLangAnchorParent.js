@@ -95,6 +95,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
         //   Optional. Use otherBundleName instead of this.nlsParentDirectory and this.bundleName if provided.
         //   This is the path to the bundle, without "nls" or the language directory, and can be relative.
 
+        if (logger.isDebugEnabled()) {
+          logger.debug("getLabel with parameters: [labelName="+labelName+"][lang="+lang+"][escapeXml="+escapeXml+"][otherContext="+!!otherContext+"][otherBundleName="+otherBundleName+"]");
+        }
         var render = "?" + labelName + "?";
         var nlsParentDir;
         var bundleName;
@@ -144,7 +147,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
           logger.warn("error while getting (" + nlsParentDir + "/nls/" + bundleName + ")." +
             labelName + " for locale '" + lang + "'-- rendering '" + render + "'", err);
         }
-        return (escapeXml !== false) ? xml.escape(render, false) : render;
+        var renderResult = (escapeXml !== false) ? xml.escape(render, false) : render;
+        if (logger.isDebugEnabled()) {
+          logger.debug("actualLang = " + actualLang + ", nlsParentDir = " + nlsParentDir + ", bundleName = " + bundleName + ", rendered[" + labelName + "] = " + renderResult);
+        }
+        return renderResult;
       }
 
     });
