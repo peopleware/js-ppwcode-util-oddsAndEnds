@@ -129,7 +129,8 @@ define([],
             value = executor.call(context);
           }
           catch (err) {
-            logger.error("Executing pattern substitution of ${" + pattern + "}$ in '" + str + "' with context " + context, err);
+            // IDEA: consider logger
+            console.error("Executing pattern substitution of ${" + pattern + "}$ in '" + str + "' with context " + context, err);
             return "?? ${" + pattern  + "}$ -- " + (err.message || err) + " ??";
           }
           return value || value === "" ? value.toString() : "?" + pattern  + "?";
@@ -212,8 +213,12 @@ define([],
         }
 
         if (zeroExtend) {
-          while (v1parts.length < v2parts.length) v1parts.push("0");
-          while (v2parts.length < v1parts.length) v2parts.push("0");
+          while (v1parts.length < v2parts.length) {
+            v1parts.push("0");
+          }
+          while (v2parts.length < v1parts.length) {
+            v2parts.push("0");
+          }
         }
 
         if (!lexicographical) {
@@ -266,13 +271,9 @@ define([],
     // Returns a random integer between min and max
     // Using Math.round() will give you a non-uniform distribution!
     function randomInt(min, max) {
-      if (!max && max !== 0) {
-        max = MAX_INT;
-      }
-      if (!min && min !== 0) {
-        min = MIN_INT;
-      }
-      return Math.floor(Math.random() * (max - min + 1)) + min;
+      var myMin = min || min === 0 ? min : MIN_INT;
+      var myMax = max || max === 0 ? max : MAX_INT;
+      return Math.floor(Math.random() * (myMax - myMin + 1)) + myMin;
     }
 
     function randomInts(min, max, nr) {
@@ -323,17 +324,21 @@ define([],
       //   If the path parameter goes up too many levels in the directory structure, this will be ignored.
       //   It only goes up until the base path is reached.
 
-      var result = [],
-        segment, lastSegment;
-      path = path.replace(/\\/g, '/').split('/');
-      while(path.length) {
-        segment = path.shift();
+      var result = [];
+      var segment;
+      var lastSegment;
+      var p = path.replace(/\\/g, '/').split('/');
+      while(p.length) {
+        segment = p.shift();
         if(segment === ".." && result.length && lastSegment !== "..") {
           result.pop();
           lastSegment = result[result.length - 1];
-        } else if(segment!=="." && segment !== "..") {
-          result.push(lastSegment = segment);
-        } // else ignore "."
+        }
+        else if (segment!=="." && segment !== "..") {
+          lastSegment = segment;
+          result.push(lastSegment);
+        }
+        // else ignore "."
       }
       return result.join("/");
     }

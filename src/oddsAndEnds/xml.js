@@ -35,7 +35,7 @@ define([],
         //   When str is undefined or null, return "".
         //   Actual non-string values are coerced to a string.
 
-        if (!str && str != 0) { // 0 must pass
+        if (!str && str !== "0") { // 0 must pass
           return missing || "";
         }
         str = "" + str; // coerce to string

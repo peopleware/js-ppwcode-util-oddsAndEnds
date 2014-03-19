@@ -93,8 +93,8 @@ define(["dojo/_base/declare",
       target: null,
 
       postMixInProperties: function() {
-        var labels = i18n.getLocalization("ppwcode-util-oddsAndEnds/test/changeLang", "labels", this.lang);
-        this.labels = labels; // cannot use set in postMixInProperties yet
+        // cannot use set in postMixInProperties yet
+        this.labels = i18n.getLocalization("ppwcode-util-oddsAndEnds/test/changeLang", "labels", this.lang);
       },
 
       _setLangAttr: function(value) {

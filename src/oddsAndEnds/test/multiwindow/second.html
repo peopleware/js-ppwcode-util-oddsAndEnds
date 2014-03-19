@@ -21,7 +21,9 @@
     window.secondData = "This is data from the second window";
 
     window.doSomething = function() {
-      document.writeln(new Date());
+      //noinspection DocumentWriteJS
+      document.writeln((new Date()).toString());
+      //noinspection MagicNumberJS
       window.doSomething.to = setTimeout(window.doSomething, 2000);
     };
 
@@ -35,6 +37,11 @@
   </script>
 </head>
 <body>
-  <p><script>document.writeln(window.name)</script></p>
+  <p>
+    <script>
+    //noinspection DocumentWriteJS
+    document.writeln(window.name);
+    </script>
+  </p>
 </body>
 </html>

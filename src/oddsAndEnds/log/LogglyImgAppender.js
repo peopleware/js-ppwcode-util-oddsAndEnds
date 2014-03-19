@@ -74,8 +74,6 @@ define(["dojo/_base/declare", "./Appender", "dojo/io-query", "../js"],
       append: function(/*log4javascript.LoggingEvent*/ loggingEvent) {
         var layout = this.getLayout();
         var formattedMessage = layout.format(loggingEvent);
-        var src = this._url + ioQuery.objectToQuery(messageToParams(formattedMessage));
-
         var img = document.createElement("img");
         img.src = this._url + ioQuery.objectToQuery(messageToParams(formattedMessage));
       }

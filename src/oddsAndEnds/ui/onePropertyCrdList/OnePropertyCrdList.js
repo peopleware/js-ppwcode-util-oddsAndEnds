@@ -53,7 +53,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         ]
       },
 
-      _propagateValue: function (/*Array*/ valueArray) {
+      _propagateValue: function(/*Array*/ valueArray) {
         var self = this;
         if (self._ulNode) {
           domConstruct.empty(self._ulNode.domNode);
@@ -91,7 +91,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         }
       },
 
-      _getValueAttr: function () {
+      _getValueAttr: function() {
         if (this.value) {
           return this.value.slice();
         } else {
@@ -99,31 +99,31 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         }
       },
 
-      _getDisabledAttr: function () {
+      _getDisabledAttr: function() {
         return !!this.disabled;
       },
 
-      format: function (val) {
+      format: function(val) {
         return val ? val.toString() : "";
       },
 
-      parse: function (formattedValue) {
+      parse: function(formattedValue) {
         return formattedValue ? formattedValue.toString() : "";
       },
 
-      _setHeightAttr: function (height) {
+      _setHeightAttr: function(height) {
         this.inherited(arguments);
         domStyle.set(this._ulNodeWrapper, "height", height);
       },
 
-      _setDisabledAttr: function (disabled) {
+      _setDisabledAttr: function(disabled) {
         this.inherited(arguments);
         this.disabled = disabled;
         domStyle.set(this._addTextWrapperNode, "display", (!!disabled ? "none" : "block"));
         this._propagateValue(this._getValueAttr());
       },
 
-      addClicked: function (e) {
+      addClicked: function() {
         var fieldValue = this._txtAdd.get("value");
         var valueToAdd = this.parse(fieldValue);
         if (valueToAdd && valueToAdd.trim() !== "") {

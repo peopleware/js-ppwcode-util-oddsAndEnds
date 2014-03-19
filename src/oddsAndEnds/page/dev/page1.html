@@ -47,8 +47,8 @@
      */
 
      require(
-      ["dojo/parser", "dijit/registry", "dojo/sniff", "dojo/domReady!"],
-      function(parser, registry, has) {
+      ["dojo/parser", "dijit/registry", "dojo/domReady!"],
+      function(parser, registry) {
         var page2Href = "page2.html";
         var MESSAGE_TYPE = "message";
         var MESSAGE_ORIGIN = window.location.protocol + "//" + window.location.host + "/"; // window.location.origin doesn't work in IE;
