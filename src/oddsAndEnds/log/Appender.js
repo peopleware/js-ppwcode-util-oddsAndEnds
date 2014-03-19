@@ -19,6 +19,7 @@ define(["dojo/_base/declare", "./main"],
 
     // runId: Number
     //   random number to identify a page app instance run
+    //noinspection MagicNumberJS
     var runId = Math.floor(Math.random() * 9007199254740992);
 
     var Appender = declare([log4javascript.Appender], {

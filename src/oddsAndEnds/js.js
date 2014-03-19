@@ -264,7 +264,9 @@ define([],
       return charCodes.map(function(charCode) {return String.fromCharCode(charCode);}).join("");
     }
 
+    //noinspection MagicNumberJS
     var MAX_INT = 9007199254740992;
+    //noinspection MagicNumberJS
     var MIN_INT = -9007199254740992;
 
     // From https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Math/random

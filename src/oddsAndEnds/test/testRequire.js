@@ -36,6 +36,7 @@ define(["ppwcode-util-contracts/doh", "require"],
       require.trace.on = false;
     }
 
+    //noinspection MagicNumberJS
     doh.register("test of require error handling", [
 
       {

@@ -35,11 +35,14 @@ define(["dojo/_base/declare",
       var registry;
       try{
         registry = require("dijit/registry");
-      }catch(e){
+      }
+      catch (ignore) {
         return null;
       }
-      var pn = w.domNode && w.domNode.parentNode, pw, pb;
-      while(pn){
+      var pn = w.domNode && w.domNode.parentNode;
+      var pw;
+      var pb;
+      while (pn){
         pw = registry.getEnclosingWidget(pn);
         if(pw){
           var relTargetProp = pw._relTargetProp || "target", pt = lang.isFunction(pw.get) ? pw.get(relTargetProp) : pw[relTargetProp];

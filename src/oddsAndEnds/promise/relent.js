@@ -38,6 +38,7 @@ define(["dojo/_base/kernel", "dojo/Deferred", "../log/logger!", "module"],
       if (continuations.length > maxContinuationsWaiting) {
         maxContinuationsWaiting = continuations.length;
       }
+      //noinspection MagicNumberJS
       if (continuations.length % 100 === 0) {
         logger.info("continuations waiting: " + continuations.length);
       }
@@ -55,6 +56,7 @@ define(["dojo/_base/kernel", "dojo/Deferred", "../log/logger!", "module"],
         function() {
           var todo = continuations.shift(); // FIFO
           if (!todo) {
+            //noinspection MagicNumberJS
             var millisElapsed = (Date.now() - burstStarted) / 1000;
             burstStarted = null;
             logger.debug("  no continuations left; burst done (burstStarted set to null)");
