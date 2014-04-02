@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-define(["dojo/dom", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", "dojo/dom-style", "dojo/dom-construct", "../log/logger!"],
-  function(dom, baseFx, fx, domClass, domStyle, domConstruct, logger) {
+define(["dojo/dom", "dojo/query", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", "dojo/dom-style", "dojo/dom-construct", "../log/logger!"],
+  function(dom, query, baseFx, fx, domClass, domStyle, domConstruct, logger) {
 
     var preloaderId = "preloader";
 
@@ -52,6 +52,7 @@ define(["dojo/dom", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", "dojo/dom-styl
 
       logger.debug("Roles set and most recent items loaded. Visualising.");
       var preloader = dom.byId(preloaderId);
+      var spinner = query(".progress", preloader)[0];
       domClass.add(preloader, "rightBorder");
       var realContent = dom.byId(realContentId);
       domStyle.set(realContent, "opacity", 0);
@@ -60,6 +61,13 @@ define(["dojo/dom", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", "dojo/dom-styl
       //noinspection MagicNumberJS
       var showAppAnimation = fx.combine([
         fx.chain([
+          baseFx.animateProperty({
+            node: spinner,
+            properties: {
+              opacity: 0
+            },
+            duration: 100
+          }),
           baseFx.animateProperty({
             node: preloader,
             properties: {
