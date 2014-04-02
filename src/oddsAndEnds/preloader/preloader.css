@@ -55,7 +55,7 @@ limitations under the License.
 
 #preloader div {
   z-index: 999;
-  /* no background-color: stays transparant */
+  /* no background-color: stays transparent */
   background-image: url("./loading.gif");
   background-repeat: no-repeat;
   background-attachment: scroll;
