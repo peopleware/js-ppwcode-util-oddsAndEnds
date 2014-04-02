@@ -18,7 +18,7 @@ limitations under the License.
   Include this css statically (not via xstyle/css), since we need it before dojo is loaded.
   The body of the page should contain:
 
-  <div id="preloader"><div></div></div>
+  <div id="preloader"><div class="progress"><div></div></div></div>
 
   An applicable logo can be added by extending the #preloader style with a background-image:
 
@@ -45,6 +45,9 @@ limitations under the License.
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: center center;
+  width: 100%;
+  height: 100%;
+  text-align: center;
 }
 
 #preloader .rightBorder {
@@ -53,12 +56,88 @@ limitations under the License.
   border-right-width: 2px;
 }
 
-#preloader div {
-  z-index: 999;
-  /* no background-color: stays transparent */
-  background-image: url("./loading.gif");
-  background-repeat: no-repeat;
-  background-attachment: scroll;
-  background-position: center center;
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(1turn); }
 }
 
+@-moz-keyframes spin {
+  to { -moz-transform: rotate(1turn); }
+}
+
+@-ms-keyframes spin {
+  to { -ms-transform: rotate(1turn); }
+}
+
+@-o-keyframes spin {
+  to { -o-transform: rotate(1turn); }
+}
+
+@keyframes spin {
+    to { transform: rotate(1turn); }
+}
+
+.progress {
+  position: relative;
+  display: inline-block;
+  width: 5em;
+  height: 5em;
+  margin: auto !important;
+  font-size: 8px; /* Adjust font size to resize the spinner */
+  text-indent: 999em;
+  overflow: hidden;
+  -webkit-animation: spin 1s infinite steps(8);
+  -moz-animation: spin 1s infinite steps(8);
+  -ms-animation: spin 1s infinite steps(8);
+  -o-animation: spin 1s infinite steps(8);
+  animation: spin 1s infinite steps(8);
+}
+
+.progress:before,
+.progress:after,
+.progress > div:before,
+.progress > div:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 2.25em; /* (container width - part width)/2  */
+  width: .5em;
+  height: 1.5em;
+  border-radius: .2em;
+  background: #eee;
+  box-shadow: 0 3.5em #eee; /* container height - part height */
+  transform-origin: 50% 2.5em; /* container height / 2 */
+  -ms-transform-origin: 50% 2.5em;
+  -webkit-transform-origin: 50% 2.5em;
+
+}
+
+.progress:before {
+    background: #555;
+}
+
+.progress:after {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  background: #777;
+}
+
+.progress > div:before {
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  background: #999;
+}
+
+.progress > div:after {
+  -webkit-transform: rotate(-135deg);
+  -moz-transform: rotate(-135deg);
+  -ms-transform: rotate(-135deg);
+  -o-transform: rotate(-135deg);
+  transform: rotate(-135deg);
+  background: #bbb;
+}
