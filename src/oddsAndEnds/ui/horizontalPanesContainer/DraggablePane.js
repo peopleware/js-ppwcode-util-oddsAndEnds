@@ -386,7 +386,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           this.next = oldNext;
           oldNext.previous = this;
           // also keep it in the correct relative place in the dom
-          this.domNode.parentNode.removeChild(this.domNode);
           if (pane.domNode) {
             domConstruct.place(this.domNode, pane.domNode, "after");
           }
