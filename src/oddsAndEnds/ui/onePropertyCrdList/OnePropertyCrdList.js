@@ -14,19 +14,22 @@
  limitations under the License.
  */
 
-define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dojo/text!./onePropertyCrdList.html",
+define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dojo/text!./onePropertyCrdList.html", "dojo/store/Memory",
   "ppwcode-util-oddsAndEnds/_PropagationMixin", "dojox/mobile/ListItem", "dojox/mobile/Icon", "dojo/dom-style", "dojo/dom-class", "dojo/Stateful", "dojo/dom-construct",
-  "dijit/form/Button", "dojo/i18n!./nls/labels",
+  "dijit/form/Button", "dojo/i18n!./nls/labels", "dijit/form/ComboBox", "../../log/logger!", "dojo/Deferred",
 
   "dojox/mobile/Container", "dojox/mobile/EdgeToEdgeList",
   "xstyle/css!dojox/mobile/themes/iphone/iphone.css",
   "xstyle/css!./onePropertyCrdList.css"],
-  function (declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, _PropagationMixin, ListItem, Icon, domStyle, domClass, Stateful, domConstruct, Button, labels) {
+  function (declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, Memory,
+            _PropagationMixin, ListItem, Icon, domStyle, domClass, Stateful, domConstruct,
+            Button, labels, ComboBox, logger, Deferred) {
 
     return declare([Stateful, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _PropagationMixin], {
       // summary:
       //   Widget that is specially made to represent a list with only 1 property per element.
       //   Elements can be added or removed.
+      //   When the getData() function is overridden, the input box will support auto-complete.
 
       templateString: template,
       labels: labels,
@@ -39,6 +42,16 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       _txtAdd: null,
 
       _addTextWrapperNode: null,
+
+      // getData: function
+      // summary:
+      //   Function that gets the data to use in the auto-complete.
+      // description:
+      //   This function should return an array with objects that have a displayValue.
+      //   This is a property that is used to search on when trying to auto-complete.
+      getData: function() {return new Deferred().resolve([]).promise},
+
+      placeHolder: "",
 
       height: null,
 
@@ -119,8 +132,53 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       _setDisabledAttr: function(disabled) {
         this.inherited(arguments);
         this.disabled = disabled;
+        if (!disabled) {
+          this._initAutoCompleteInputField();
+        }
+        else {
+          this._destroyAutoCompleteInputField();
+        }
         domStyle.set(this._addTextWrapperNode, "display", (!!disabled ? "none" : "block"));
         this._propagateValue(this._getValueAttr());
+      },
+
+      _initAutoCompleteInputField: function() {
+        var self = this;
+        var loaded = self.getData && self.getData();
+        if (loaded) {
+          loaded.then(
+            function (result) {
+              var myStore = new Memory({data: result});
+              self._txtAdd = new ComboBox({
+                  id: "propertyComboBox",
+                  store: myStore,
+                  autocomplete: result && result.length > 0,
+                  searchAttr: "displayValue",
+                  placeholder: self.placeHolder
+                },
+                "propertySelect");
+              self._txtAdd.startup();
+            },
+            function (err) {
+              logger.error("Error loading emergency numbers used");
+            }
+          );
+        }
+        else {
+          logger.error("No getData function specified");
+        }
+      },
+
+      // _destroyAutoCompleteInputField: function
+      // summary:
+      //   Destroys the auto-complete input box and re-creates the original DIV element that was replaced on creation.
+      _destroyAutoCompleteInputField: function() {
+        if (this._txtAdd) {
+          this._txtAdd.destroy();
+          this._txtAdd = null;
+          domConstruct.destroy("propertyComboBox");
+          domConstruct.create("div", {id: "propertySelect"}, this._addTextWrapperNode, "first");
+        }
       },
 
       addClicked: function() {
