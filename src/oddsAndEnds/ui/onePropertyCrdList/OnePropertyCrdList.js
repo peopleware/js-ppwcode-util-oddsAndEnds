@@ -43,6 +43,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       _addTextWrapperNode: null,
 
+      _propertySelect: null,
+
       // getData: function
       // summary:
       //   Function that gets the data to use in the auto-complete.
@@ -156,7 +158,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                   searchAttr: "displayValue",
                   placeholder: self.placeHolder
                 },
-                "propertySelect");
+                self._propertySelect);
               self._txtAdd.startup();
             },
             function (err) {
@@ -177,7 +179,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           this._txtAdd.destroy();
           this._txtAdd = null;
           domConstruct.destroy("propertyComboBox");
-          domConstruct.create("div", {id: "propertySelect"}, this._addTextWrapperNode, "first");
+          this._propertySelect = domConstruct.create("div", {}, this._addTextWrapperNode, "first");
         }
       },
 
