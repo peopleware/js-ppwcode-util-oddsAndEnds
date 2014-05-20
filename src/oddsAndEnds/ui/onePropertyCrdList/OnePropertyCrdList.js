@@ -14,14 +14,14 @@
  limitations under the License.
  */
 
-define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dojo/text!./onePropertyCrdList.html", "dojo/store/Memory",
+define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/array", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dojo/text!./onePropertyCrdList.html", "dojo/store/Memory",
   "ppwcode-util-oddsAndEnds/_PropagationMixin", "dojox/mobile/ListItem", "dojox/mobile/Icon", "dojo/dom-style", "dojo/dom-class", "dojo/Stateful", "dojo/dom-construct",
   "dijit/form/Button", "dojo/i18n!./nls/labels", "dijit/form/ComboBox", "../../log/logger!", "dojo/Deferred",
 
   "dojox/mobile/Container", "dojox/mobile/EdgeToEdgeList",
   "xstyle/css!dojox/mobile/themes/iphone/iphone.css",
   "xstyle/css!./onePropertyCrdList.css"],
-  function (declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, Memory,
+  function (declare, _WidgetBase, array, _TemplatedMixin, _WidgetsInTemplateMixin, template, Memory,
             _PropagationMixin, ListItem, Icon, domStyle, domClass, Stateful, domConstruct,
             Button, labels, ComboBox, logger, Deferred) {
 
@@ -188,8 +188,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         var valueToAdd = this.parse(fieldValue);
         if (valueToAdd && valueToAdd.trim() !== "") {
           var arr = this.get("value");
-          arr.push(valueToAdd);
-          this.set("value", arr);
+          if (array.indexOf(arr, valueToAdd) < 0) {
+            arr.push(valueToAdd);
+            this.set("value", arr);
+          }
           this._txtAdd.set("value", "");
         }
       }
