@@ -1,30 +1,36 @@
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "ppwcode-util-contracts/_Mixin",
-        "dojo/dnd/move", "dijit/focus",
+        "dojo/dnd/move", "dijit/focus", "dojo/Deferred",
         "dojo/dom-class", "dojo/dom-style", "dojo/dom-construct", "dojo/dom-geometry", "dojo/dom-attr", "dojo/_base/fx", "dojo/fx",
         "../../log/logger!", "module",
 
         "xstyle/css!./draggablePane.css"],
     function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _ContractMixin,
-             move,  focus,
+             move,  focus, Deferred,
              domClass, domStyle, domConstruct, domGeom, domAttr, baseFx, fx,
              logger, module) {
 
       // gap: Number
       //   The gap, in pixels, to visualize between neighbouring instances.
       //   To be applied left.
+      //noinspection MagicNumberJS
       var gap = 12; // px
 
       // extraGapForFocused: Number
       //   The extra gap, in pixels, to visualize between neighbouring instances when the pane is focused.
       //   To be applied left and right.
+      //noinspection MagicNumberJS
       var extraGapForFocused = 40; // px
 
       // dropPositionGap: Number
       //   During a drag, the position where the dragged pane would be positioned when the mouse is released
       //   "now", is represented by this extra gap.
+      //noinspection MagicNumberJS
       var dropPositionGap = 75; // px
 
+      //noinspection MagicNumberJS
       var moveAnimationDuration = 500;
+
+      //noinspection MagicNumberJS
       var dragAnimationDuration = 100;
 
       var _AbstractDraggablePane = declare([_ContractMixin], {
@@ -380,7 +386,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           this.next = oldNext;
           oldNext.previous = this;
           // also keep it in the correct relative place in the dom
-          this.domNode.parentNode.removeChild(this.domNode);
           if (pane.domNode) {
             domConstruct.place(this.domNode, pane.domNode, "after");
           }
@@ -426,7 +431,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             self._moveable.destroy();
             self._moveable = null;
           }
-          //noinspection JSPotentiallyInvalidConstructorUsage
+          //noinspection JSPotentiallyInvalidConstructorUsage,MagicNumberJS
           self._moveable = new move.constrainedMoveable(
             self.domNode,
             {
@@ -453,9 +458,14 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             container._repositionAnimations.stop(true);
           }
           var anim = container._leftSentinel._repositionFromHereToRightAnimations();
+          //noinspection MagicNumberJS
           anim.push(baseFx.fadeIn({
             node: self.domNode,
-            duration: 500
+            duration: 500,
+            stop: function() {
+              // don't stop
+              return this;
+            }
           }));
           anim = fx.combine(anim);
           anim.onEnd = function() {
@@ -473,7 +483,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           //   Removes the current pane from the double linked list it is in. This widget is destroyed.
 
           if (!this.isInList()) {
-            return;
+            return null;
           }
           var self = this;
           var /*DraggablePane*/ nextFocus = ((self.previous !== self.getFirst()) ? self.previous :
@@ -492,18 +502,38 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             container._repositionAnimations.stop(true);
           }
           var anim = container._leftSentinel._repositionFromHereToRightAnimations();
+          //noinspection MagicNumberJS
           anim.push(baseFx.fadeOut({
             node: self.domNode,
-            duration: 500
+            duration: 500,
+            stop: function() {
+              // don't stop
+              return this;
+            }
           }));
           anim = fx.combine(anim);
+          var deferred = new Deferred();
           anim.onEnd = function() {
-            self.destroyRecursive();
-            container.resize();
-            nextFocus.focusNode.scrollIntoView();
+            try {
+              self.destroyRecursive();
+              container.resize();
+              nextFocus.focusNode.scrollIntoView();
+              deferred.resolve();
+            }
+            catch (err) {
+              logger.error("Error on end of animation", err);
+              deferred.reject(err);
+            }
           };
           container._repositionAnimations = anim;
-          anim.play();
+          try {
+            anim.play();
+          }
+          catch (err) {
+            logger.error("Error during animation", err);
+            deferred.reject(err);
+          }
+          return deferred.promise;
         },
 
         isVisualizationOf: function(object) {
@@ -609,7 +639,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           //   Only works for movable instances.
 
           if (!this.container._onTheMove) {
+            //noinspection MagicNumberJS
             this.domNode.style.zIndex = 999;
+            //noinspection MagicNumberJS
             this.domNode.style.opacity = 0.5;
             var next = this.get("next");
             this.container._onTheMove = this;

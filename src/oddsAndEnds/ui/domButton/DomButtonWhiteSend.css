@@ -20,6 +20,7 @@ limitations under the License.
 	width: 29px;
 	height: 29px;
 }
+
 .mblDomButtonWhiteSend > div { /* box */
 	position: absolute;
 	top: 8px;
@@ -34,18 +35,21 @@ limitations under the License.
 	border-color: white;
   border-radius: 4px;
 }
+
 .mblDomButtonWhiteSend > div > div {
   position: absolute;
   -webkit-transform: rotate(50deg);
   left: 6px;
   top: -10px;
 }
+
 .mblDomButtonWhiteSend > div > div > div {
   position: absolute;
   top: -5px;
   left: 0;
   clip: rect(-5px, 35px, 13px, 0px);
 }
+
 .mblDomButtonWhiteSend > div > div > div > div {
   top: 0;
   left: 4px;

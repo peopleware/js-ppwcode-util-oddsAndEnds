@@ -30,6 +30,7 @@ define(["./main"],
     LogglyAppender.prototype = new log4javascript.Appender();
 
     LogglyAppender.prototype.setLayout = function(/*log4javascript.Layout*/ layout) {
+      //noinspection MagicNumberJS
       layout.setCustomField("run", Math.floor(Math.random() * 9007199254740992)); // random number to identify a page app instance run
       return log4javascript.Appender.prototype.setLayout.apply(this, arguments);
     };

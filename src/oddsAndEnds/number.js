@@ -1,20 +1,21 @@
 /*
-Copyright 2012 - $Date $ by PeopleWare n.v.
+ Copyright 2012 - $Date $ by PeopleWare n.v.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+ http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
-define(["dojo/number", "dojo/_base/lang", "dojo/i18n"],
+define(
+  ["dojo/number", "dojo/_base/lang", "dojo/i18n"],
   function(dojoNumber, lang, i18n) {
 
     /*=====
@@ -58,16 +59,18 @@ define(["dojo/number", "dojo/_base/lang", "dojo/i18n"],
         // value:
         //		the number to be formatted
 
-        options = lang.mixin({}, options || {});
-        var locale = i18n.normalizeLocale(options.locale),
-          bundle = i18n.getLocalization("dojo.cldr", "number", locale);
-        options.customs = bundle || {};
-        var pattern = options.pattern || bundle[(options.type || "decimal") + "Format"];
-        if (options.group) { // no sense to pass through the empty string, since _applyPattern doesn't work with the empty string either
-          options.customs.group = options.group;
+        var opt = lang.mixin({}, options || {});
+        var locale = i18n.normalizeLocale(opt.locale);
+        var bundle = i18n.getLocalization("dojo/cldr", "number", locale);
+        opt.customs = bundle || {};
+        var pattern = opt.pattern || bundle[(opt.type || "decimal") + "Format"];
+        if (opt.group) { // no sense to pass through the empty string, since _applyPattern doesn't work with the empty string either
+          opt.customs.group = opt.group;
         }
-        if(isNaN(value) || Math.abs(value) == Infinity){ return null; } // null
-        return this._applyPattern(value, pattern, options); // String
+        if (isNaN(value) || Math.abs(value) == Infinity) {
+          return null; // null
+        }
+        return this._applyPattern(value, pattern, opt); // String
       }
 
     });

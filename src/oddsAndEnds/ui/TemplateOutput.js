@@ -107,11 +107,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
 
         var outputNode = this.srcNodeRef || this.domNode;
         if (this.templateString) {
-          var result = self.templateString.replace(
+          outputNode.innerHTML = self.templateString.replace(
             new RegExp(regexp.escapeString(self.exprChar)+"(\{.*?\})","g"),
             transform
           );
-          outputNode.innerHTML = result;
         }
         else {
           var cleanValue = self.escapeXml ? xml.escape(self.value, false) : self.value;

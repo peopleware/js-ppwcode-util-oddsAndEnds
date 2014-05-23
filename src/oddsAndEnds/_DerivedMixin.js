@@ -110,6 +110,17 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
         logger.debug("derived properties initialized");
       },
 
+      getAllDerivedPropertyNames: function() {
+        // summary:
+        //   Gets a String[] containing all derived property names.
+        var self = this;
+        var result = [];
+        for (var dependencyPropName in this["-derived-"]) {
+          result.push(dependencyPropName);
+        }
+        return result;
+      },
+
       stopDerivedEvents: function() {
         logger.debug("Stopping derived events");
         for (var dependencyPropName in this["-derived-"]) {

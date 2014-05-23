@@ -82,10 +82,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/la
           this._c_pre(function() {return pane && pane.isIn(this);});
 
           pane.focus();
+          //noinspection MagicNumberJS
           setTimeout(
             function() {
               domStyle.set(pane.domNode, "opacity", "0.3");
               // a flash
+              //noinspection MagicNumberJS
               fx.fadeIn({
                 node: pane.domNode,
                 duration: 750

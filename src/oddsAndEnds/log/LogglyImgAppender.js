@@ -49,6 +49,7 @@ define(["dojo/_base/declare", "./Appender", "dojo/io-query", "../js"],
         default: // object, error
           result = message;
       }
+      //noinspection JSPotentiallyInvalidConstructorUsage
       result.DT = Date(); // without new, this return a String representation of now
       return result;
     }
@@ -74,8 +75,6 @@ define(["dojo/_base/declare", "./Appender", "dojo/io-query", "../js"],
       append: function(/*log4javascript.LoggingEvent*/ loggingEvent) {
         var layout = this.getLayout();
         var formattedMessage = layout.format(loggingEvent);
-        var src = this._url + ioQuery.objectToQuery(messageToParams(formattedMessage));
-
         var img = document.createElement("img");
         img.src = this._url + ioQuery.objectToQuery(messageToParams(formattedMessage));
       }

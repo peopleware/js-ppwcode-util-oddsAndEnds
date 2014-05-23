@@ -111,7 +111,8 @@ define(["ppwcode-util-contracts/doh", "../js"],
       },
 
       function testNumber3_typeOf() {
-        var test =  new Number() ;
+        //noinspection JSPrimitiveTypeWrapperUsage
+        var test =  new Number();
         var result = js.typeOf(test);
         doh.is("number", result);
         console.log("number: " + Object.prototype.toString.call(test));
@@ -132,7 +133,8 @@ define(["ppwcode-util-contracts/doh", "../js"],
       },
 
       function testString3_typeOf() {
-        var test =  new String() ;
+        //noinspection JSPrimitiveTypeWrapperUsage
+        var test =  new String();
         var result = js.typeOf(test);
         doh.is("string", result);
         console.log("string: " + Object.prototype.toString.call(test));
@@ -153,7 +155,8 @@ define(["ppwcode-util-contracts/doh", "../js"],
       },
 
       function testBoolean3_typeOf() {
-        var test =  new Boolean() ;
+        //noinspection JSPrimitiveTypeWrapperUsage
+        var test = new Boolean();
         var result = js.typeOf(test);
         doh.is("boolean", result);
         console.log("boolean: " + Object.prototype.toString.call(test));

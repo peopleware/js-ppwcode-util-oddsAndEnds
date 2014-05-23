@@ -17,6 +17,7 @@ limitations under the License.
 define(["./main"],
   function(log4javascript) {
 
+    //noinspection MagicNumberJS
     var sessionId = Math.floor(Math.random() * 9007199254740992); // random number to identify a page app instance run
 
     var layout = new log4javascript.JsonLayout(false, false);

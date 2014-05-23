@@ -129,7 +129,8 @@ define([],
             value = executor.call(context);
           }
           catch (err) {
-            logger.error("Executing pattern substitution of ${" + pattern + "}$ in '" + str + "' with context " + context, err);
+            // IDEA: consider logger
+            console.error("Executing pattern substitution of ${" + pattern + "}$ in '" + str + "' with context " + context, err);
             return "?? ${" + pattern  + "}$ -- " + (err.message || err) + " ??";
           }
           return value || value === "" ? value.toString() : "?" + pattern  + "?";
@@ -166,6 +167,89 @@ define([],
       }
     }
 
+    function sortVersionNumbers(/*Array*/ arrayToSort) {
+      /**
+       * Compares two software version numbers (e.g. "1.7.1" or "1.2b").
+       *
+       * This function was born in http://stackoverflow.com/a/6832721.
+       *
+       * @param {string} v1 The first version to be compared.
+       * @param {string} v2 The second version to be compared.
+       * @param {object} [options] Optional flags that affect comparison behavior:
+       * <ul>
+       *     <li>
+       *         <tt>lexicographical: true</tt> compares each part of the version strings lexicographically instead of
+       *         naturally; this allows suffixes such as "b" or "dev" but will cause "1.10" to be considered smaller than
+       *         "1.2".
+       *     </li>
+       *     <li>
+       *         <tt>zeroExtend: true</tt> changes the result if one version string has less parts than the other. In
+       *         this case the shorter string will be padded with "zero" parts instead of being considered smaller.
+       *     </li>
+       * </ul>
+       * @returns {number|NaN}
+       * <ul>
+       *    <li>0 if the versions are equal</li>
+       *    <li>a negative integer iff v1 < v2</li>
+       *    <li>a positive integer iff v1 > v2</li>
+       *    <li>NaN if either version string is in the wrong format</li>
+       * </ul>
+       *
+       * @copyright by Jon Papaioannou (["john", "papaioannou"].join(".") + "@gmail.com")
+       * @license This function is in the public domain. Do what you want with it, no strings attached.
+       */
+      arrayToSort.sort(function(/*String*/ v1, /*String*/ v2, /*Object*/ options) {
+        var lexicographical = options && options.lexicographical,
+          zeroExtend = options && options.zeroExtend,
+          v1parts = v1.split('.'),
+          v2parts = v2.split('.');
+
+        function isValidPart(x) {
+          return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
+        }
+
+        if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
+          return NaN;
+        }
+
+        if (zeroExtend) {
+          while (v1parts.length < v2parts.length) {
+            v1parts.push("0");
+          }
+          while (v2parts.length < v1parts.length) {
+            v2parts.push("0");
+          }
+        }
+
+        if (!lexicographical) {
+          v1parts = v1parts.map(Number);
+          v2parts = v2parts.map(Number);
+        }
+
+        for (var i = 0; i < v1parts.length; ++i) {
+          if (v2parts.length == i) {
+            return 1;
+          }
+
+          if (v1parts[i] == v2parts[i]) {
+            // continue; go to next loop cycle
+          }
+          else if (v1parts[i] > v2parts[i]) {
+            return 1;
+          }
+          else {
+            return -1;
+          }
+        }
+
+        if (v1parts.length != v2parts.length) {
+          return -1;
+        }
+
+        return 0;
+      });
+    }
+
     function string2CharCode(str) {
       // summary:
       //   Transform a string into an array of CharCodes.
@@ -180,20 +264,18 @@ define([],
       return charCodes.map(function(charCode) {return String.fromCharCode(charCode);}).join("");
     }
 
+    //noinspection MagicNumberJS
     var MAX_INT = 9007199254740992;
+    //noinspection MagicNumberJS
     var MIN_INT = -9007199254740992;
 
     // From https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Math/random
     // Returns a random integer between min and max
     // Using Math.round() will give you a non-uniform distribution!
     function randomInt(min, max) {
-      if (!max && max !== 0) {
-        max = MAX_INT;
-      }
-      if (!min && min !== 0) {
-        min = MIN_INT;
-      }
-      return Math.floor(Math.random() * (max - min + 1)) + min;
+      var myMin = min || min === 0 ? min : MIN_INT;
+      var myMax = max || max === 0 ? max : MAX_INT;
+      return Math.floor(Math.random() * (myMax - myMin + 1)) + myMin;
     }
 
     function randomInts(min, max, nr) {
@@ -234,6 +316,35 @@ define([],
       );
     }
 
+    function compactPath(path) {
+      // summary:
+      //   Function copied from require.compactPath. It is not available there after a build.
+      // Description:
+      //   Normalizes a path.
+      //   A '.' is removed from the path.
+      //   '..' is optimized by removing the preceding part from the path.
+      //   If the path parameter goes up too many levels in the directory structure, this will be ignored.
+      //   It only goes up until the base path is reached.
+
+      var result = [];
+      var segment;
+      var lastSegment;
+      var p = path.replace(/\\/g, '/').split('/');
+      while(p.length) {
+        segment = p.shift();
+        if(segment === ".." && result.length && lastSegment !== "..") {
+          result.pop();
+          lastSegment = result[result.length - 1];
+        }
+        else if (segment!=="." && segment !== "..") {
+          lastSegment = segment;
+          result.push(lastSegment);
+        }
+        // else ignore "."
+      }
+      return result.join("/");
+    }
+
     var js = {
       // summary:
       //   Methods to aid with the JavaScript language.
@@ -246,13 +357,15 @@ define([],
       substitute: substitute,
       sortComparable: sortComparable,
       sortReversed: sortReversed,
+      sortVersionNumbers: sortVersionNumbers,
       string2CharCode: string2CharCode,
       charCode2String: charCode2String,
       MAX_INT: MAX_INT,
       MIN_INT: MIN_INT,
       randomInt: randomInt,
       randomInts: randomInts,
-      haveSameElements: haveSameElements
+      haveSameElements: haveSameElements,
+      compactPath: compactPath
     };
 
     return js;

@@ -35,11 +35,14 @@ define(["dojo/_base/declare",
       var registry;
       try{
         registry = require("dijit/registry");
-      }catch(e){
+      }
+      catch (ignore) {
         return null;
       }
-      var pn = w.domNode && w.domNode.parentNode, pw, pb;
-      while(pn){
+      var pn = w.domNode && w.domNode.parentNode;
+      var pw;
+      var pb;
+      while (pn){
         pw = registry.getEnclosingWidget(pn);
         if(pw){
           var relTargetProp = pw._relTargetProp || "target", pt = lang.isFunction(pw.get) ? pw.get(relTargetProp) : pw[relTargetProp];
@@ -93,8 +96,8 @@ define(["dojo/_base/declare",
       target: null,
 
       postMixInProperties: function() {
-        var labels = i18n.getLocalization("ppwcode-util-oddsAndEnds/test/changeLang", "labels", this.lang);
-        this.labels = labels; // cannot use set in postMixInProperties yet
+        // cannot use set in postMixInProperties yet
+        this.labels = i18n.getLocalization("ppwcode-util-oddsAndEnds/test/changeLang", "labels", this.lang);
       },
 
       _setLangAttr: function(value) {

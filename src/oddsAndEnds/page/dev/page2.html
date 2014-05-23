@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+  <title>Page/Proxy dev PAGE 2</title>
+
+  <!-- required: the default dijit theme: -->
+  <link rel="stylesheet" href="../../../../../dojo/dojo/resources/dojo.css">
+  <link rel="stylesheet" href="../../../../../dojo/dijit/themes/claro/claro.css"/>
+
+  <!-- SCRIPT -->
+  <script>
+    var dojoConfig = {
+      basePath: "../../../../../dojo/dojo",
+      async: true,
+      parseOnLoad: false,
+      isDebug: true,
+      has: {
+        "dojo-firebug": false,
+        "dojo-debug-messages": true,
+        "mvc-bindings-log-api": false,
+        "ppwcode-contracts-precondition": true,
+
+        "logLevel-ppwcode-util-oddsAndEnds/page/_Page": "DEBUG",
+        "logLevel-ppwcode-util-oddsAndEnds/page/_Proxy": "DEBUG"
+      },
+      packages: [
+        // dojo, dgrid, dojox are siblings
+        {name: "dijit", location: "../dijit"},
+        {name: "ppwcode-util-contracts", location: "../../ppwcode/util/contracts"},
+        {name: "ppwcode-util-oddsAndEnds", location: "../../ppwcode/util/oddsAndEnds"}
+      ]
+    };
+  </script>
+  <script src="../../../../../dojo/dojo/dojo.js"></script>
+
+  <script type="text/javascript">
+    // using auto-require
+    require(
+      ["dojo/parser", "dijit/registry", "dojo/domReady!"],
+      function(parser, registry) {
+        var MESSAGE_TYPE = "message";
+        var MESSAGE_ORIGIN = window.location.protocol + "//" + window.location.host + "/"; // window.location.origin doesn't work in IE;
+
+        function messageToString(event) {
+          if (!event) {
+            return "" + event;
+          }
+          var result = "{origin: ";
+          result += event.origin;
+          result += ", source: ";
+          result += event.source;
+          result += ", data: ";
+          result += event.data;
+          result += "}";
+          return result;
+        }
+
+        var parsed = parser.parse();
+        parsed.then(
+          function() {
+            window.addEventListener(MESSAGE_TYPE, function(message) {
+              console.log("Received message: " + messageToString(message));
+            });
+
+            var sendEventToMeButton = registry.byId("sendEventToMeButton");
+            sendEventToMeButton.on("click", function() {
+              console.log("sending message to me.");
+              window.postMessage("Event sent to me", MESSAGE_ORIGIN);
+              /* Note
+                 This works, sometimes, in all browsers, with a sensible ORIGIN,
+                 IF we register the listener "after 2 seconds".
+                 Earlier, we were registering the listener too soon.
+               */
+              console.log("message to me sent.");
+            });
+
+            window.FUNCTION_OBJECT = {
+              doSomething: function(text) {
+                console.log("doSomething called: " + text);
+                return "Echo \"" + text + "\"";
+              }
+            };
+
+            var sendEventToOpenerButton = registry.byId("sendEventToOpenerButton");
+            sendEventToOpenerButton.on("click", function() {
+              console.log("sending message to opener.");
+              if (!opener) {
+                console.log("there is no opener; NOP");
+                return;
+              }
+              opener.postMessage("Event sent to opener", MESSAGE_ORIGIN);
+              /* Note
+                 Works on Mac and Win, but not in IE. Never seen it work.
+               */
+              console.log("message to opener sent.");
+            });
+
+            if (opener) {
+              function messageReceived(message) {
+                console.log("Received message from opener: " + messageToString(message));
+              }
+
+              /* NOTE
+                 This code does get called as expected, both in Chrome and Firefox and IE. */
+              opener.addEventListener(MESSAGE_TYPE, messageReceived);
+
+//              window.focusOnMe = function() {
+//                registry.byId("focusBox").focus();
+//              }
+              /* NOTE
+                 Also doesn't help to get focus for trident of mozilla.
+               */
+            }
+
+            if (opener && opener.page2loaded) {
+              opener.page2loaded();
+            }
+            window.name = "PAGE2";
+          }
+        );
+      });
+  </script>
+</head>
+
+<body class="claro">
+  <button id="sendEventToMeButton" data-dojo-type="dijit/form/Button">Send event to me</button>
+  <button id="sendEventToOpenerButton" data-dojo-type="dijit/form/Button">Send event to opener</button>
+  <!--<input id="focusBox" data-dojo-type="dijit/form/TextBox" />-->
+</body>
+
+</html>

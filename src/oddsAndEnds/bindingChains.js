@@ -126,7 +126,7 @@ define(["./js", "./log/logger!"],
             }
             else {
               logger.debug("Store is Stateful, and lastReloaded is not set. Watching lastReloaded, and not going deeper yet.");
-              firstWatcher = context.watch("lastReloaded", function(propName, oldValue, newValue) {
+              firstWatcher = context.watch("lastReloaded", function() {
                 logger.debug("lastReloaded on Store changed. Stop watching it, watch the Store, and send an event.");
                 firstWatcher.remove();
                 watchFirst();

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+  <title>Page/Proxy dev PAGE 1</title>
+
+  <!-- required: the default dijit theme: -->
+  <link rel="stylesheet" href="../../../../../dojo/dojo/resources/dojo.css">
+  <link rel="stylesheet" href="../../../../../dojo/dijit/themes/claro/claro.css"/>
+
+  <!-- SCRIPT -->
+  <script>
+    var dojoConfig = {
+      basePath: "../../../../../dojo/dojo",
+      async: true,
+      parseOnLoad: false,
+      isDebug: true,
+      has: {
+        "dojo-firebug": false,
+        "dojo-debug-messages": true,
+        "mvc-bindings-log-api": false,
+        "ppwcode-contracts-precondition": true,
+
+        "logLevel-ppwcode-util-oddsAndEnds/page/_Page": "DEBUG",
+        "logLevel-ppwcode-util-oddsAndEnds/page/_Proxy": "DEBUG"
+      },
+      packages: [
+        // dojo, dgrid, dojox are siblings
+        {name: "dijit", location: "../dijit"},
+        {name: "ppwcode-util-contracts", location: "../../ppwcode/util/contracts"},
+        {name: "ppwcode-util-oddsAndEnds", location: "../../ppwcode/util/oddsAndEnds"}
+      ]
+    };
+  </script>
+  <script src="../../../../../dojo/dojo/dojo.js"></script>
+
+  <script type="text/javascript">
+    // using auto-require
+
+    /* NOTE
+       Chrome: Mac 32.0.1700.107 / Win 32.0.1700.107 m:
+       Firefox: Mac 27.0 / Win 27.0
+       Safari: 7.0.1 (9537.73.11)
+       Internet Explorer: 11.0.9600.16518 / 11.0.3
+     */
+
+     require(
+      ["dojo/parser", "dijit/registry", "dojo/domReady!"],
+      function(parser, registry) {
+        var page2Href = "page2.html";
+        var MESSAGE_TYPE = "message";
+        var MESSAGE_ORIGIN = window.location.protocol + "//" + window.location.host + "/"; // window.location.origin doesn't work in IE;
+
+        function messageToString(event) {
+          if (!event) {
+            return "" + event;
+          }
+          var result = "{origin: ";
+          result += event.origin;
+          result += ", source: ";
+          result += event.source;
+          result += ", data: ";
+          result += event.data;
+          result += "}";
+          return result;
+        }
+
+        var parsed = parser.parse();
+        parsed.then(
+          function() {
+            window.addEventListener(MESSAGE_TYPE, function(message) {
+              console.log("Received message: " + messageToString(message));
+            });
+
+            var page2Window = null;
+
+            var open2Button = registry.byId("open2Button");
+            open2Button.on("click", function() {
+              console.log("Opening page2, or getting reference.");
+              var windowReference = window.open("", "PAGE2");
+              /* NOTE
+                 Chrome, Safari
+                   Whether the window already exists or not, is a tab or in a separate window,
+                   has the correct location or not, it is brought to the front. If it was
+                   minimized / in the dock, it reappears.
+                   HOWEVER, this only works it the window was created by a script IN THIS WINDOW
+                   in the first place. Otherwise, it is simply not found. A new one is created.
+                 Firefox, IE
+                   The first time the window is opened, it is brought to the front.
+                   On later calls, it is not, also not when it is minimized. This is the window.open
+                   call, not the location change below. */
+
+              if (!windowReference) {
+                console.error("WINDOW DID NOT OPEN");
+                page2Window = null;
+                return;
+              }
+              console.log("Page2 reference acquired.");
+              if (windowReference !== page2Window) {
+
+                console.log("Page2 is new to me.");
+
+                function messageReceived(message) {
+                  console.log("Received message from opened window: " + messageToString(message));
+                  if (message.source !== page2Window) {
+                    console.log("The source is not what we expected.");
+                  }
+                  else {
+                    console.log("Source is as expected.");
+                  }
+                  console.log("Posting message back to source");
+                  message.source.postMessage("Back message", MESSAGE_ORIGIN);
+                  console.log("Posting message back to source DONE");
+                }
+
+                if (page2Window && !page2Window.closed && page2Window.removeEventListener) {
+                  // above: IE is picky!
+                  page2Window.removeEventListener(MESSAGE_TYPE, messageReceived);
+                }
+                page2Window = windowReference;
+                sendEventToOpenedButton.set("disabled", false);
+                focusButton.set("disabled", false);
+                doSomethingButton.set("disabled", false);
+//                page2Window.addEventListener(MESSAGE_TYPE, messageReceived);
+                /* NOTE
+                   This code is never triggered in Chrome or Safari or IE.
+                   It is in Firefox. The other way around does work!
+                   Maybe this is added too early? */
+              }
+              var myLocation = window.location.href.split("/");
+              myLocation.pop();
+              var absolutePage2Location = myLocation.join("/") + "/" + page2Href;
+              if (page2Window.location.href !== absolutePage2Location) {
+                console.log("Window does not have the correct location. Setting.");
+                page2Window.location = page2Href;
+              }
+              else {
+                console.log("Window does have the correct location. NOP.");
+              }
+
+
+              //noinspection MagicNumberJS
+              setTimeout(
+                function() {
+                  page2Window.addEventListener(MESSAGE_TYPE, messageReceived);
+                  console.log("Listening to events on page2.");
+                  /* NOTE:
+                     The page must have a location, and be loaded, before we can register a listener.
+                     We MUST wait a while, which means we can be too late.
+                     "0" is not enough.
+                     Registering for "load" doesn't help: that listener has the same problem.
+                   */
+                },
+                2000
+              );
+            });
+
+            var sendEventToOpenedButton = registry.byId("sendEventToOpenedButton");
+            sendEventToOpenedButton.set("disabled", true);
+            sendEventToOpenedButton.on("click", function() {
+              if (!page2Window || page2Window.closed) {
+                console.log("Page2 window not open");
+                sendEventToOpenedButton.set("disabled", true);
+                return;
+              }
+              console.log("sending message to page2.");
+              page2Window.postMessage("Event sent to page2", MESSAGE_ORIGIN);
+              /* Note
+                 Works in FF, Chrome, Safari, but not in IE.
+               */
+              console.log("message to page2 sent.");
+            });
+
+            var sendEventToMeButton = registry.byId("sendEventToMeButton");
+            sendEventToMeButton.on("click", function() {
+              console.log("sending message to me.");
+              window.postMessage("Event sent to me", MESSAGE_ORIGIN);
+              /* NOTE
+                 This reaches the other side in all cases, even IE */
+              console.log("message to me sent.");
+            });
+
+            var focusButton = registry.byId("focusButton");
+            focusButton.set("disabled", true);
+            focusButton.on("click", function() {
+              if (!page2Window || page2Window.closed) {
+                console.log("Page2 window not open");
+                sendEventToOpenedButton.set("disabled", true);
+                return;
+              }
+              console.log("Calling focus on page 2");
+              page2Window.focus();
+              /* NOTE
+                 Chrome, Safari:
+                   Brings to page to the front in all circumstances.
+                 Firefox, IE:
+                   Brings WINDOW to the front, if the "window" we are addressing is the front-most tab
+                   in that WINDOW. Also if it is in the Dock / minimized. If the page 2 is in a tab, in this WINDOW
+                   or another, that is not frontmost, nothing happens.
+
+                 The below solution for Firefox was hinted to by
+                 https://support.mozilla.org/en-US/questions/965890.
+                 However, it doesn't change the issue. */
+//              setTimeout(
+//                function() {
+//                  console.log("Calling focus on page 2");
+//                  page2Window.focus();
+//                },
+//                100
+//              );
+//              if (has("trident") || has("mozilla")) {
+//                page2Window.alert("This page was activated.");
+//              }
+              /* NOTE
+                 A workaround mentioned on the web is to do an "alert" in the other window, so it will "flicker".
+                 With an alert, FF DOES focus, but if the tab is detached, the next time we get an error.
+                 IE "flickers", and the second time blocks for a minute or so.
+                 In other words, this is not a solution.*/
+             });
+
+            var doSomethingButton = registry.byId("doSomethingButton");
+            doSomethingButton.set("disabled", true);
+            doSomethingButton.on("click", function() {
+              if (!page2Window || page2Window.closed) {
+                console.log("Page2 window not open");
+                doSomethingButton.set("disabled", true);
+                return;
+              }
+              if (!page2Window.FUNCTION_OBJECT) {
+                console.error("FUNCTION_OBJECT doesn't exist in page2");
+                return;
+              }
+              if (!page2Window.FUNCTION_OBJECT.doSomething) {
+                console.error("FUNCTION_OBJECT.doSomething doesn't exist in page2");
+                return;
+              }
+              console.log("Calling doSomething on page 2");
+              var result = page2Window.FUNCTION_OBJECT.doSomething("Text from page 1");
+              console.log("doSomething result: " + result);
+            });
+
+            window.page2loaded = function() {
+              console.log("Page 2 reports it is loaded.");
+            };
+
+            /* Note: Conclusion
+               - There is no way in Firefox/IE to bring a window or tab that isn't a frontmost tab to the front.
+               - messaging doesn't work on IE: http://stackoverflow.com/questions/21070553/postmessage-still-broken-on-ie11
+                 (also, using "onmessage" instead of "message" doesn't work either); well, half
+               -- IE cannot post a message to another window; period. No error, it just doesn't.
+                  It can only post messages to itself. I think I have also seen it working with the source
+                  of received messages, but can't reproduce.
+               -- When opening a window, and registering a listener there WE NEED TO WAIT UNTIL THE PAGE IS LOADED;
+                  setting the listener on the window before, or immediately after, or too soon after the location
+                  is set fails to register the listener. This goes for all browsers, except Firefox.
+
+
+               We want to use messaging to signal a page load of a second page complete, or stopped with errors.
+               If we need to wait a number of seconds, and can have no other signal, we might be too late in some conditions.
+               This will not do.
+
+               For the opener, we might agree on a callback.
+               For other pages, they will just have to poll for a "loaded" sentinel.
+
+               The focus problem is a bore, but not fatal. Users just will have to select the other "tab".
+               I cannot find any relevant workaround.
+             */
+          }
+        );
+      });
+  </script>
+</head>
+
+<body class="claro">
+  <button id="open2Button" data-dojo-type="dijit/form/Button">Open Page 2</button>
+  <button id="sendEventToOpenedButton" data-dojo-type="dijit/form/Button">Send event to Page 2</button>
+  <button id="sendEventToMeButton" data-dojo-type="dijit/form/Button">Send event to me</button>
+  <button id="focusButton" data-dojo-type="dijit/form/Button">Focus Page 2</button>
+  <button id="doSomethingButton" data-dojo-type="dijit/form/Button">Do Something in Page 2</button>
+</body>
+
+</html>
