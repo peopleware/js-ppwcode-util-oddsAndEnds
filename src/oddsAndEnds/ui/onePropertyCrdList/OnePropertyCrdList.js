@@ -14,15 +14,16 @@
  limitations under the License.
  */
 
-define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/array", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dojo/text!./onePropertyCrdList.html", "dojo/store/Memory",
-  "ppwcode-util-oddsAndEnds/_PropagationMixin", "dojox/mobile/ListItem", "dojox/mobile/Icon", "dojo/dom-style", "dojo/dom-class", "dojo/Stateful", "dojo/dom-construct",
-  "dijit/form/Button", "dojo/i18n!./nls/labels", "dijit/form/ComboBox", "../../log/logger!", "dojo/Deferred",
+define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dojo/text!./onePropertyCrdList.html", "dojo/store/Memory",
+        "ppwcode-util-oddsAndEnds/_PropagationMixin", "dojox/mobile/ListItem",
+        "dojo/dom-style", "dojo/dom-class", "dojo/Stateful", "dojo/dom-construct",
+        "dijit/form/Button", "dojo/i18n!./nls/labels", "dijit/form/ComboBox", "../../log/logger!", "dojo/Deferred",
 
-  "dojox/mobile/Container", "dojox/mobile/EdgeToEdgeList",
-  "xstyle/css!dojox/mobile/themes/iphone/iphone.css",
-  "xstyle/css!./onePropertyCrdList.css"],
-  function (declare, _WidgetBase, array, _TemplatedMixin, _WidgetsInTemplateMixin, template, Memory,
-            _PropagationMixin, ListItem, Icon, domStyle, domClass, Stateful, domConstruct,
+        "dojox/mobile/Container", "dojox/mobile/EdgeToEdgeList",
+        "xstyle/css!dojox/mobile/themes/iphone/iphone.css",
+        "xstyle/css!./onePropertyCrdList.css"],
+  function (declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, Memory,
+            _PropagationMixin, ListItem, domStyle, domClass, Stateful, domConstruct,
             Button, labels, ComboBox, logger, Deferred) {
 
     return declare([Stateful, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _PropagationMixin], {
@@ -51,7 +52,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/array", "dijit/_T
       // description:
       //   This function should return an array with objects that have a displayValue.
       //   This is a property that is used to search on when trying to auto-complete.
-      getData: function() {return new Deferred().resolve([]).promise},
+      getData: function() {
+        var deferred = new Deferred();
+        deferred.resolve([]);
+        return deferred.promise;
+      },
 
       placeHolder: "",
 
@@ -161,7 +166,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/array", "dijit/_T
                 self._propertySelect);
               self._txtAdd.startup();
             },
-            function (err) {
+            function (ignore) {
               logger.error("Error loading emergency numbers used");
             }
           );
@@ -188,7 +193,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/array", "dijit/_T
         var valueToAdd = this.parse(fieldValue);
         if (valueToAdd && valueToAdd.trim() !== "") {
           var arr = this.get("value");
-          if (array.indexOf(arr, valueToAdd) < 0) {
+          if (arr.indexOf(valueToAdd) < 0) {
             arr.push(valueToAdd);
             this.set("value", arr);
           }
