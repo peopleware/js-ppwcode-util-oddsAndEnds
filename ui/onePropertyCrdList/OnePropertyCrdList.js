@@ -85,13 +85,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                   if (!self.get("disabled")) {
                     if (confirm(labels.confirmDelete1 + self.format(element) + labels.confirmDelete2)) {
                       var arr = self.get("value");
-                      var newArr = [];
-                      arr.forEach(function (arrElement) {
-                        if (element !== arrElement) {
-                          newArr.push(arrElement);
-                        }
-                      });
-                      self.set("value", newArr);
+                      var idx = arr.indexOf(element);
+                      arr.splice(idx, 1);
+                      // Set the array to null before setting de real value to force events being fired.
+                      self.set("value", null);
+                      self.set("value", arr);
                     }
                   }
                 }));
