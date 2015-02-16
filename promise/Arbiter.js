@@ -154,7 +154,7 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
           return result;
         }
 
-        function newPromise() {
+        function newProcessingPromise() {
           self.numberOfCallers = 0;
           logger.debug("  Calling worker function (will return a Promise). numberOfCallers reset.");
           var newPromise = promiseFunction(arg);
@@ -224,7 +224,7 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
           }
           else if (reprocess) {
             logger.debug("    Not currently processing arg. Starting reprocessing and returning reprocess Promise.");
-            newPromise();
+            newProcessingPromise();
           }
           else {
             logger.debug("    Not currently processing arg. No reprocessing requested. Returning null (" + self.numberOfCallers + ").");
@@ -237,10 +237,10 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
           if (self.processingPromise) {
             logger.debug("  There is a pending Promise. Cancelling.");
             self.processingPromise.cancel(new CancelError("USER CANCELLED"));
-            // self.processingPromise and self.numberOfCallers will be overridden by newPromise()
+            // self.processingPromise and self.numberOfCallers will be overridden by newProcessingPromise()
           }
           logger.debug("  Starting processing and returning process Promise.");
-          newPromise();
+          newProcessingPromise();
         }
         self.numberOfCallers++;
         var uniqueCallerDeferred = new Deferred(function(reason) {
