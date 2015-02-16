@@ -171,11 +171,11 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
 
               logger.debug(arg + " +++ Promise fulfilled. Forgetting the Promise.");
               if (self.processingPromise === cleanedUpPromise) {
-                logger.debug("  -- The fullfilled promise is the one in memory. Forgetting it.");
+                logger.debug("  -- The fulfilled promise is the one in memory. Forgetting it.");
                 self.processingPromise = null;
               }
               else {
-                logger.debug("  -- The fullfiled promise is an old one. We forgot it already.");
+                logger.debug("  -- The fulfilled promise is an old one. We forgot it already.");
               }
             }
 
