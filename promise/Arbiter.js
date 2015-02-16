@@ -111,30 +111,46 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
 
         var self = this;
 
-        function decorateWithTotal(/*Promise*/ originalPromise, /*Promise*/ finalPromise) {
+        function decorateWithExtraProperties(/*Promise*/ originalPromise, /*Promise*/ finalPromise) {
           // summary:
-          //   Workaround for strange Store / QueryResult behavior.
-          //   The query from a paging should add a "total" property to the result passed to QueryResult.
-          //   In an async store, this is a promise for an array. If `promiseFunction` delivers such a Promise,
-          //   it might have an added "total" property, which is also a Promise.
-          //   By wrapping the Promise returned by `promiseFunction` in another Promise with `then` above, we hide
-          //   that "total" property from the recipient.
-          //   The code below makes it visible again.
+          //   In some cases, Promises have extra properties. The returned Promise needs these properties too.
           //
-          //   Furthermore, a Promise returned by `then` is frozen, so we cannot add it to the object directly.
+          //   A Promise returned by `then` is frozen, so we cannot add it to the object directly.
           //   With a delegate, we can do this.
 
-          if (!originalPromise.total || originalPromise.total === 0) {
-            return finalPromise;
+          /*   Originally this was a workaround for strange Store / QueryResult behavior.
+               The query from a paging should add a "total" property to the result passed to QueryResult.
+               In an async store, this is a promise for an array. If `promiseFunction` delivers such a Promise,
+               it might have an added "total" property, which is also a Promise.
+               By wrapping the Promise returned by `promiseFunction` in another Promise with `then` above, we hide
+               that "total" property from the recipient.
+               The code below makes it visible again.
+
+               With dstore, it turns out that xhr.request Promises have extra properties we need too.
+               The properties we need to copy are all the properties the finalPromise doesn't have yet. */
+
+          function resolver(propertyName) {
+            return function() {
+              return originalPromise[propertyName]; // which might be a Promise
+            };
           }
-          var result = lang.delegate(
-            finalPromise,
-            {
-              total: finalPromise.then(function() {
-                return originalPromise.total; // which might be a Promise
-              })
+
+          var decorate = false;
+          var delegate = {};
+          for (var propertyName in originalPromise) {
+            if (!(propertyName in finalPromise)) {
+              decorate = true;
+              if (originalPromise[propertyName].then) {
+                // it's a Promise itself
+                delegate[propertyName] = finalPromise.then(resolver(propertyName)); // bind propertyName in closure
+              }
+              else {
+                // it's not a Promise
+                delegate[propertyName] = originalPromise[propertyName];
+              }
             }
-          );
+          }
+          var result = decorate ? lang.delegate(finalPromise, delegate) : finalPromise;
           return result;
         }
 
@@ -195,7 +211,7 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
             createCleanerAndFulfillerPromise();
           }
           logger.trace("Worker function done. Will doctor returned Promise with total if needed, and return.");
-          cleanedUpPromise = decorateWithTotal(newPromise, cleanedUpPromise); // remember for promiseFulfilled
+          cleanedUpPromise = decorateWithExtraProperties(newPromise, cleanedUpPromise); // remember for promiseFulfilled
           self.processingPromise = cleanedUpPromise;
         }
 
@@ -244,7 +260,7 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
           function(update) {uniqueCallerDeferred.progress(update);}
         );
         logger.debug(arg + " +++ Returning promise. numberOfCallers: " + self.numberOfCallers);
-        return decorateWithTotal(self.processingPromise, uniqueCallerDeferred.promise);
+        return decorateWithExtraProperties(self.processingPromise, uniqueCallerDeferred.promise);
       }
 
     });
