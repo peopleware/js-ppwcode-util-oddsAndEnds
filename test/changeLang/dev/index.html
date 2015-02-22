@@ -22,7 +22,7 @@
   <title>PictoPerfect - Medical Sheet</title>
 
   <!-- STYLE -->
-  <link id="themeStyles" rel="stylesheet" href="../../../../../../dojo/dijit/themes/claro/claro.css"/>
+  <link id="themeStyles" rel="stylesheet" href="../../../../../../dojo/dijit/themes/claro/claro.css" />
   <style>
     html, body {
       margin: 0;
@@ -56,12 +56,14 @@
         parsePromise.then(
           function() {
             var widget = registry.byId("widget");
+
             function buttonClick(locale) {
               var buttonWidget = registry.byId(locale + "Button");
               buttonWidget.on("click", function() {
                 widget.set("lang", locale);
               });
             }
+
             buttonClick("nl");
             buttonClick("en");
             buttonClick("fr");

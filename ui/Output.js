@@ -57,7 +57,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "../xml"],
         }
       },
 
-      _output: function(){
+      _output: function() {
         // summary:
         //		Produce the data-bound output, xml-escaped.
         // tags:

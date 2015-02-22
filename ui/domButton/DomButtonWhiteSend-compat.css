@@ -16,10 +16,10 @@ limitations under the License.
 
 /* === White Send Button ==*/
 .mblDomButtonWhiteSend {
-	background-image: url(mblDomButtonWhiteSend.png);
-	background-repeat: no-repeat;
+  background-image: url(mblDomButtonWhiteSend.png);
+  background-repeat: no-repeat;
 }
 
 .mblDomButtonWhiteSend > div {
-	display: none;
+  display: none;
 }

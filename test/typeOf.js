@@ -27,7 +27,7 @@ define(["ppwcode-util-contracts/doh", "../typeOf"],
       },
 
       function testUndefined2() {
-        var test = {someProperty : "a value"}["anotherProperty"];
+        var test = {someProperty: "a value"}["anotherProperty"];
         var result = typeOf(test);
         doh.is("undefined", result);
         console.log("undefined: " + Object.prototype.toString.call(test));
@@ -41,7 +41,7 @@ define(["ppwcode-util-contracts/doh", "../typeOf"],
       },
 
       function testObject() {
-        var test = {someProperty : "a value"};
+        var test = {someProperty: "a value"};
         var result = typeOf(test);
         doh.is("object", result);
         console.log("object: " + Object.prototype.toString.call(test));
@@ -55,42 +55,42 @@ define(["ppwcode-util-contracts/doh", "../typeOf"],
       },
 
       function testArray() {
-        var test = (function() { return arguments; })() ;
+        var test = (function() { return arguments; })();
         var result = typeOf(test);
         doh.is("arguments", result);
         console.log("arguments: " + Object.prototype.toString.call(test));
       },
 
       function testError() {
-        var test = new ReferenceError() ;
+        var test = new ReferenceError();
         var result = typeOf(test);
         doh.is("error", result);
         console.log("error: " + Object.prototype.toString.call(test));
       },
 
       function testDate() {
-        var test =  new Date() ;
+        var test = new Date();
         var result = typeOf(test);
         doh.is("date", result);
         console.log("date: " + Object.prototype.toString.call(test));
       },
 
       function testRegExp() {
-        var test = /123/g ;
+        var test = /123/g;
         var result = typeOf(test);
         doh.is("regexp", result);
         console.log("regexp: " + Object.prototype.toString.call(test));
       },
 
       function testMath() {
-        var test = Math ;
+        var test = Math;
         var result = typeOf(test);
         doh.is("math", result);
         console.log("math: " + Object.prototype.toString.call(test));
       },
 
       function testJSON() {
-        var test = JSON ;
+        var test = JSON;
         var result = typeOf(test);
         doh.is("json", result);
         console.log("json: " + Object.prototype.toString.call(test));
@@ -119,7 +119,7 @@ define(["ppwcode-util-contracts/doh", "../typeOf"],
       },
 
       function testString1() {
-        var test = "lknl vpwjg" ;
+        var test = "lknl vpwjg";
         var result = typeOf(test);
         doh.is("string", result);
         console.log("string: " + Object.prototype.toString.call(test));
@@ -141,7 +141,7 @@ define(["ppwcode-util-contracts/doh", "../typeOf"],
       },
 
       function testBoolean1() {
-        var test = true ;
+        var test = true;
         var result = typeOf(test);
         doh.is("boolean", result);
         console.log("boolean: " + Object.prototype.toString.call(test));

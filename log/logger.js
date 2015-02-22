@@ -35,7 +35,8 @@ define(["./main", "module"],
       dynamic: true,
 
       load: function(/*String*/ id,       // the string to the right of the !; not used
-                     require,             // AMD require; usually a context-sensitive require bound to the module making the plugin request
+                     require, // AMD require; usually a context-sensitive require bound to the module
+                              // making the plugin request
                      /*Function*/ done) { // the function the plugin should call with the return value once it is done
         var mid = require.module.mid; // the mid of the calling module
         var logger = log4javascript.getLogger(log4javascript.mid2LoggerName(mid));

@@ -25,7 +25,7 @@ define(["dojo/_base/declare",
            number, lang, resolve, aspect,
            template, i18n, require) {
 
-    function getParent(/*dijit/_WidgetBase*/ w){
+    function getParent(/*dijit/_WidgetBase*/ w) {
       // summary:
       //		Returns parent widget having data binding target for relative data binding.
       // w: dijit/_WidgetBase
@@ -33,7 +33,7 @@ define(["dojo/_base/declare",
 
       // Usage of dijit/registry module is optional. Return null if it's not already loaded.
       var registry;
-      try{
+      try {
         registry = require("dijit/registry");
       }
       catch (ignore) {
@@ -42,11 +42,13 @@ define(["dojo/_base/declare",
       var pn = w.domNode && w.domNode.parentNode;
       var pw;
       var pb;
-      while (pn){
+      while (pn) {
         pw = registry.getEnclosingWidget(pn);
-        if(pw){
-          var relTargetProp = pw._relTargetProp || "target", pt = lang.isFunction(pw.get) ? pw.get(relTargetProp) : pw[relTargetProp];
-          if(pt || relTargetProp in pw.constructor.prototype){
+        if (pw) {
+          var relTargetProp = pw._relTargetProp || "target", pt = lang.isFunction(pw.get)
+            ? pw.get(relTargetProp)
+            : pw[relTargetProp];
+          if (pt || relTargetProp in pw.constructor.prototype) {
             return pw; // dijit/_WidgetBase
           }
         }
@@ -154,7 +156,8 @@ define(["dojo/_base/declare",
             return null;
           }
           else {
-            // with options.places, we need to supply str with this exact decimal places!!! 0's aren't added, number isn't truncated
+            // with options.places, we need to supply str with this exact decimal places!!! 0's aren't added, number
+            // isn't truncated
             var opt = lang.clone(options);
             delete opt.places;
             opt.locale = this.target.lang;

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-var profile = (function () {
+var profile = (function() {
   function isTest(filename, mid) {
     return filename.indexOf("test/") >= 0;
   }
@@ -29,15 +29,15 @@ var profile = (function () {
 
   return {
     resourceTags: {
-      test: function (filename, mid) {
+      test: function(filename, mid) {
         return isTest(filename, mid);
       },
 
-      copyOnly: function (filename, mid) {
+      copyOnly: function(filename, mid) {
         return isCopyOnly(filename, mid);
       },
 
-      amd: function (filename, mid) {
+      amd: function(filename, mid) {
         return !isCopyOnly(filename, mid) && !isTest(filename, mid) && isAmd(filename, mid);
       }
     }

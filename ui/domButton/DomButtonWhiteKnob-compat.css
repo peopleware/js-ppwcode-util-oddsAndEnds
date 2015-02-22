@@ -16,10 +16,10 @@ limitations under the License.
 
 /* === White Knob Button ==*/
 .mblDomButtonWhiteKnob {
-	background-image: url(mblDomButtonWhiteKnob.png);
-	background-repeat: no-repeat;
+  background-image: url(mblDomButtonWhiteKnob.png);
+  background-repeat: no-repeat;
 }
 
 .mblDomButtonWhiteKnob > div {
-	display: none;
+  display: none;
 }

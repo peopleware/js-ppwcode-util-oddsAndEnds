@@ -17,9 +17,9 @@
 define(["module"], function(module) {
 
   return {
-    PAGE_PROPERTY_NAME: module.id + "_PAGE",
+    PAGE_PROPERTY_NAME:    module.id + "_PAGE",
     SUCCESS_CALLBACK_NAME: module.id + "_LOADED",
-    ERROR_CALLBACK_NAME: module.id + "_LOAD_ERROR"
+    ERROR_CALLBACK_NAME:   module.id + "_LOAD_ERROR"
   };
 
 });

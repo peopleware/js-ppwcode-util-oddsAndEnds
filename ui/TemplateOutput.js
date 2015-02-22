@@ -43,14 +43,14 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
 
       // templateString: [private] String
       //		The template or data-bound output content.
-      templateString : "",
+      templateString: "",
 
-      postscript: function(params, srcNodeRef){
+      postscript: function(params, srcNodeRef) {
         // summary:
         //		Override and save template from body.
 
         this.srcNodeRef = dom.byId(srcNodeRef);
-        if(this.srcNodeRef){
+        if (this.srcNodeRef) {
           this.templateString = this.srcNodeRef.innerHTML;
           this.srcNodeRef.innerHTML = "";
         }
@@ -62,7 +62,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         this._output();
       },
 
-      set: function(name, value){
+      set: function(name, value) {
         // summary:
         //		Override and refresh output on value change.
         // name:
@@ -75,7 +75,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         }
       },
 
-      _output: function(){
+      _output: function() {
         // summary:
         //		Produce the data-bound output, xml-escaped.
         // tags:
@@ -83,8 +83,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
 
         var self = this;
 
-        function transform(value){
-          if(!value) {
+        function transform(value) {
+          if (!value) {
             return "";
           }
           var exp = value.substr(2);
@@ -99,7 +99,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
           catch (err) {
             // on error, we give info, and then treat it as missing data
             console.info("INFO error parsing Output template '" + exp + "': " +
-              err.message + " -- using string for missing data");
+                         err.message + " -- using string for missing data");
           }
           val = self.escapeXml ? xml.escape(val) : val;
           return (val || val === 0 || val === "0") ? val : self.missing;
@@ -108,7 +108,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         var outputNode = this.srcNodeRef || this.domNode;
         if (this.templateString) {
           outputNode.innerHTML = self.templateString.replace(
-            new RegExp(regexp.escapeString(self.exprChar)+"(\{.*?\})","g"),
+            new RegExp(regexp.escapeString(self.exprChar) + "(\{.*?\})", "g"),
             transform
           );
         }

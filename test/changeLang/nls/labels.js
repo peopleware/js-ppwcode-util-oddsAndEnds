@@ -15,10 +15,10 @@ limitations under the License.
 */
 
 define({
-  root:{
+  root: {
     aLabel: "Het default label in het Nederlands"
   },
 
-  en:true,
-  fr:true
+  en: true,
+  fr: true
 });

@@ -16,23 +16,24 @@ limitations under the License.
 
 /* === White Send Button ==*/
 .mblDomButtonWhiteSend {
-	position: relative;
-	width: 29px;
-	height: 29px;
+  position: relative;
+  width: 29px;
+  height: 29px;
 }
 
-.mblDomButtonWhiteSend > div { /* box */
-	position: absolute;
-	top: 8px;
-	left: 4px;
+.mblDomButtonWhiteSend > div {
+  /* box */
+  position: absolute;
+  top: 8px;
+  left: 4px;
   right: 4px;
   bottom: 6px;
-	margin: 0;
-	font-size: 1px;
+  margin: 0;
+  font-size: 1px;
   background-color: transparent;
-	border-width: 2px;
-	border-style: solid;
-	border-color: white;
+  border-width: 2px;
+  border-style: solid;
+  border-color: white;
   border-radius: 4px;
 }
 

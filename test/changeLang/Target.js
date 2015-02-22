@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 define(["dojo/_base/declare", "dojo/Stateful"],
-  function (declare, Stateful) {
+  function(declare, Stateful) {
 
     var Target = declare([Stateful], {
 

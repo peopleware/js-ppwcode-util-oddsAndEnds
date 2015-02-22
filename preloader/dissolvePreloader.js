@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-define(["dojo/dom", "dojo/query", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", "dojo/dom-style", "dojo/dom-construct", "../log/logger!"],
+define(["dojo/dom", "dojo/query", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", "dojo/dom-style", "dojo/dom-construct",
+        "../log/logger!"],
   function(dom, query, baseFx, fx, domClass, domStyle, domConstruct, logger) {
 
     var preloaderId = "preloader";
@@ -91,7 +92,7 @@ define(["dojo/dom", "dojo/query", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", 
           duration: 2000
         })
       ]);
-      showAppAnimation.onEnd = function () {
+      showAppAnimation.onEnd = function() {
         logger.debug("transition done; destroying preloader");
         domConstruct.destroy("preloader");
         logger.debug("Preloader gone. Ready for operation.");

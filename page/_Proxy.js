@@ -17,9 +17,9 @@
 define(["dojo/_base/declare", "dojo/sniff", "dojo/Deferred", "./_sharedKeys",
         "ppwcode-util-oddsAndEnds/promise/Arbiter",
         "ppwcode-util-oddsAndEnds/log/logger!", "module"],
-  function (declare, has, Deferred, _sharedKeys,
-            Arbiter,
-            logger, module) {
+  function(declare, has, Deferred, _sharedKeys,
+           Arbiter,
+           logger, module) {
 
     //noinspection MagicNumberJS
     var LOAD_TIMEOUT = 30000;
@@ -135,7 +135,7 @@ define(["dojo/_base/declare", "dojo/sniff", "dojo/Deferred", "./_sharedKeys",
         );
       },
 
-      focus: function () {
+      focus: function() {
         // summary:
         //   Finds or creates the proxied window, and try to bring it to the front.
         //   Returns a Promise for the proxied Page object. If the window is not yet open,
@@ -289,7 +289,7 @@ define(["dojo/_base/declare", "dojo/sniff", "dojo/Deferred", "./_sharedKeys",
             catch (err) { // only for IE
               if (has("trident") && isSecurityError(err)) {
                 logger.debug("Cannot use existing window with name " + self._name + " because of origin. " +
-                          "Creating a brand new window.");
+                             "Creating a brand new window.");
                 prepareForLoad();
                 self._proxiedWindow = window.open(self._href, self._name);
                 return deferred.promise;
@@ -311,15 +311,15 @@ define(["dojo/_base/declare", "dojo/sniff", "dojo/Deferred", "./_sharedKeys",
               // not the correct URL or blank; we need to reload in any case, re-appropriating it if it is not blank
               logger.debug("focus: Found new window or window with wrong URL. (Re-)appropriating and loading.");
               prepareForLoad();
-              // window.open(this._href, this._name); will create a new Window in Chrome, and not reuse the existing window.
-              // This is only a last resort.
+              // window.open(this._href, this._name); will create a new Window in Chrome, and not reuse the existing
+              // window. This is only a last resort.
               try {
                 self._proxiedWindow.location.replace(self._href);
               }
               catch (err) {
                 if (isSecurityError(err)) {
-                  logger.debug("Cannot change the location of the found window with name " + self._name + " because of origin. " +
-                            "Creating a brand new window or re-appropriating it.");
+                  logger.debug("Cannot change the location of the found window with name " + self._name +
+                               " because of origin. Creating a brand new window or re-appropriating it.");
                   self._proxiedWindow = window.open(self._href, self._name);
                 }
               }

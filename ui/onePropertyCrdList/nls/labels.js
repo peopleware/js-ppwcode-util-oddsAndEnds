@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 define({
-  root:{
+  root: {
     confirmDelete1: "Bent u zeker dat u ",
     confirmDelete2: " wil verwijderen?"
   }

@@ -8,7 +8,7 @@
 
   <!-- required: the default dijit theme: -->
   <link rel="stylesheet" href="../../../../../dojo/dojo/resources/dojo.css">
-  <link rel="stylesheet" href="../../../../../dojo/dijit/themes/claro/claro.css"/>
+  <link rel="stylesheet" href="../../../../../dojo/dijit/themes/claro/claro.css" />
 
   <!-- SCRIPT -->
   <script>
@@ -46,7 +46,7 @@
        Internet Explorer: 11.0.9600.16518 / 11.0.3
      */
 
-     require(
+    require(
       ["dojo/parser", "dijit/registry", "dojo/domReady!"],
       function(parser, registry) {
         var page2Href = "page2.html";
@@ -123,7 +123,7 @@
                 sendEventToOpenedButton.set("disabled", false);
                 focusButton.set("disabled", false);
                 doSomethingButton.set("disabled", false);
-//                page2Window.addEventListener(MESSAGE_TYPE, messageReceived);
+                //                page2Window.addEventListener(MESSAGE_TYPE, messageReceived);
                 /* NOTE
                    This code is never triggered in Chrome or Safari or IE.
                    It is in Firefox. The other way around does work!
@@ -203,22 +203,22 @@
                  The below solution for Firefox was hinted to by
                  https://support.mozilla.org/en-US/questions/965890.
                  However, it doesn't change the issue. */
-//              setTimeout(
-//                function() {
-//                  console.log("Calling focus on page 2");
-//                  page2Window.focus();
-//                },
-//                100
-//              );
-//              if (has("trident") || has("mozilla")) {
-//                page2Window.alert("This page was activated.");
-//              }
+              //              setTimeout(
+              //                function() {
+              //                  console.log("Calling focus on page 2");
+              //                  page2Window.focus();
+              //                },
+              //                100
+              //              );
+              //              if (has("trident") || has("mozilla")) {
+              //                page2Window.alert("This page was activated.");
+              //              }
               /* NOTE
                  A workaround mentioned on the web is to do an "alert" in the other window, so it will "flicker".
                  With an alert, FF DOES focus, but if the tab is detached, the next time we get an error.
                  IE "flickers", and the second time blocks for a minute or so.
                  In other words, this is not a solution.*/
-             });
+            });
 
             var doSomethingButton = registry.byId("doSomethingButton");
             doSomethingButton.set("disabled", true);

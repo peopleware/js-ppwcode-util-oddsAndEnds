@@ -21,13 +21,13 @@ define(["ppwcode-util-contracts/doh", "require"],
 
     function startTrace() {
       require.trace.set({
-        "loader-inject":1,
-        "loader-define":1,
-        "loader-exec-module":1,
-        "loader-run-factory":1,
-        "loader-finish-exec":1,
-        "loader-define-module":1,
-        "loader-circular-dependency":1
+        "loader-inject": 1,
+        "loader-define": 1,
+        "loader-exec-module": 1,
+        "loader-run-factory": 1,
+        "loader-finish-exec": 1,
+        "loader-define-module": 1,
+        "loader-circular-dependency": 1
       });
       require.trace.on = false; // SWITCH TO TRUE TO SEE TRACING
     }
@@ -54,7 +54,7 @@ define(["ppwcode-util-contracts/doh", "require"],
               console.log(result);
               deferred.callback(result);
             }
-            catch(e) {
+            catch (e) {
               deferred.errback(e);
             }
           });
@@ -66,34 +66,34 @@ define(["ppwcode-util-contracts/doh", "require"],
       },
 
       // TEST FAILS: THERE IS NO ERRBACK IN DOJO
-//      {
-//        name: "require errback",
-//        /*
-//         http://requirejs.org/docs/api.html#errbacks
-//         require should have an errback
-//         */
-//        timeout: 2000,
-//        runTest: function() {
-//          var deferred = new doh.Deferred();
-//          require(
-//            [nonExistingMid],
-//            function(doesNotExist) {
-//              deferred.errback(nonExistingMid + " SHOULD NOT BE FOUND (" + doesNotExist + ")");
-//            },
-//            function(error) {
-//              try {
-//                doh.t(error);
-//                console.log(error);
-//                deferred.callback(error);
-//              }
-//              catch (e) {
-//                deferred.errback(e);
-//              }
-//            }
-//          );
-//          return deferred;
-//        }
-//      },
+      //      {
+      //        name: "require errback",
+      //        /*
+      //         http://requirejs.org/docs/api.html#errbacks
+      //         require should have an errback
+      //         */
+      //        timeout: 2000,
+      //        runTest: function() {
+      //          var deferred = new doh.Deferred();
+      //          require(
+      //            [nonExistingMid],
+      //            function(doesNotExist) {
+      //              deferred.errback(nonExistingMid + " SHOULD NOT BE FOUND (" + doesNotExist + ")");
+      //            },
+      //            function(error) {
+      //              try {
+      //                doh.t(error);
+      //                console.log(error);
+      //                deferred.callback(error);
+      //              }
+      //              catch (e) {
+      //                deferred.errback(e);
+      //              }
+      //            }
+      //          );
+      //          return deferred;
+      //        }
+      //      },
 
       {
         name: "require error listener",
@@ -108,21 +108,22 @@ define(["ppwcode-util-contracts/doh", "require"],
         runTest: function() {
           var thisTest = this;
 
-          function handleError(error){
+          function handleError(error) {
             try {
               doh.t(error);
               console.log("error: " + error.toString());
-// What is documented doesn't work
-//              doh.t(error.src);
-//              doh.t(error.id);
-//              console.log(error.src, error.id);
+              // What is documented doesn't work
+              //              doh.t(error.src);
+              //              doh.t(error.id);
+              //              console.log(error.src, error.id);
               console.log("error.src: " + error.src);
               console.log("error.info: " + error.info);
               console.log("error.info[0]: " + error.info[0]);
               console.log("error.info[1] (the error, irrelevant): " + error.info[1]);
               thisTest.errorHandle.remove();
               delete thisTest.errorHandle;
-              deferred.callback(true); // don't callback with an error, even if it is expected; doh still sees it as an error
+              deferred.callback(true); // don't callback with an error, even if it is expected; doh still sees it as an
+                                       // error
             }
             catch (e) {
               deferred.errback(e);

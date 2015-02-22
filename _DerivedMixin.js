@@ -14,8 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/bindingChains", "module", "ppwcode-util-oddsAndEnds/log/logger!"],
-  function (declare, Stateful, bindingChains, module, logger) {
+define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/bindingChains", "module",
+        "ppwcode-util-oddsAndEnds/log/logger!"],
+  function(declare, Stateful, bindingChains, module, logger) {
 
     // IDEA note that derivation, delegation and propagation turn out to be 3 separate mechanisms
 
@@ -75,7 +76,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
            be bad code.
            */
           return function() {
-            if(self._watchCallbacks) {
+            if (self._watchCallbacks) {
               var newValue = self.get(dependentPropertyName);
               if (newValue !== previousValue) { // IDEA compare?
                 self._watchCallbacks(dependentPropertyName, previousValue, newValue);

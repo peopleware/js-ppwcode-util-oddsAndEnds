@@ -16,8 +16,8 @@
 
 define(["dojo/_base/declare", "dojo/Deferred", "dojo/_base/lang", "./_sharedKeys",
         "ppwcode-util-oddsAndEnds/log/logger!", "module"],
-  function (declare, Deferred, lang, _sharedKeys,
-            logger, module) {
+  function(declare, Deferred, lang, _sharedKeys,
+           logger, module) {
 
     var Page = declare([], {
       // summary:
@@ -44,7 +44,8 @@ define(["dojo/_base/declare", "dojo/Deferred", "dojo/_base/lang", "./_sharedKeys
 
       loadComplete: function() {
         window[_sharedKeys.PAGE_PROPERTY_NAME] = this;
-        logger.info("Page[" + window.name + "] _loadComplete. Page object registered under '" + _sharedKeys.PAGE_PROPERTY_NAME + "'.");
+        logger.info("Page[" + window.name + "] _loadComplete. Page object registered under '" +
+                    _sharedKeys.PAGE_PROPERTY_NAME + "'.");
         if (opener && opener[_sharedKeys.SUCCESS_CALLBACK_NAME + "_" + window.name]) {
           logger.debug("Sending completion message.");
           opener[_sharedKeys.SUCCESS_CALLBACK_NAME + "_" + window.name](this);
@@ -55,11 +56,16 @@ define(["dojo/_base/declare", "dojo/Deferred", "dojo/_base/lang", "./_sharedKeys
         logger.error("Page[" + window.name + "] _loadError: ", err);
         if (opener && opener[_sharedKeys.ERROR_CALLBACK_NAME + "_" + window._name]) {
           logger.info("Sending error message to opener.");
-          var errText = typeof err === "string" ? err : (err.message || err.toString()); // Error objects cannot be copied to another window
+          var errText = typeof err === "string" ? err : (err.message || err.toString()); // Error objects cannot be
+                                                                                         // copied to another window
           opener[_sharedKeys.ERROR_CALLBACK_NAME + "_" + window._name](errText);
         }
         else if (opener) {
-          logger.warn("Opener doesn't have the method `" + _sharedKeys.ERROR_CALLBACK_NAME + "_" + window._name + "` to send error message to.");
+          logger.warn("Opener doesn't have the method `" +
+                      _sharedKeys.ERROR_CALLBACK_NAME +
+                      "_" +
+                      window._name +
+                      "` to send error message to.");
         }
         return err;
       },
@@ -75,13 +81,15 @@ define(["dojo/_base/declare", "dojo/Deferred", "dojo/_base/lang", "./_sharedKeys
         //  are passed by value (copied), this function should take that into account.
 
         this.registeredFunctions[name] = logger.isDebugEnabled() ?
-          function() {
-            logger.debug("Function " + name + " called remotely");
-            var result = func.apply(null, arguments);
-            logger.debug("Function result is " + result + ". Returning to remote caller.");
-            return result;
-          } :
-          func;
+                                         function() {
+                                           logger.debug("Function " + name + " called remotely");
+                                           var result = func.apply(null, arguments);
+                                           logger.debug("Function result is " +
+                                                        result +
+                                                        ". Returning to remote caller.");
+                                           return result;
+                                         } :
+                                         func;
         logger.info("Page[" + window.name + "] registered function " + name);
       }
 

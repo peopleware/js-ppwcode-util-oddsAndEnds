@@ -15,7 +15,7 @@
  */
 
 define(["dojo/_base/declare", "./Definition", "module"],
-  function (declare, Definition, module) {
+  function(declare, Definition, module) {
 
     var SimpleDefinition = declare([Definition], {
       // summary:

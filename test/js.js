@@ -27,7 +27,7 @@ define(["ppwcode-util-contracts/doh", "../js"],
       },
 
       function testUndefined2_typeOf() {
-        var test = { someProperty : "a value"}["anotherProperty"];
+        var test = {someProperty: "a value"}["anotherProperty"];
         var result = js.typeOf(test);
         doh.is("undefined", result);
         console.log("undefined: " + Object.prototype.toString.call(test));
@@ -41,7 +41,7 @@ define(["ppwcode-util-contracts/doh", "../js"],
       },
 
       function testObject_typeOf() {
-        var test = { someProperty : "a value"};
+        var test = {someProperty: "a value"};
         var result = js.typeOf(test);
         doh.is("object", result);
         console.log("object: " + Object.prototype.toString.call(test));
@@ -55,42 +55,42 @@ define(["ppwcode-util-contracts/doh", "../js"],
       },
 
       function testArray_typeOf() {
-        var test =  (function() { return arguments; })() ;
+        var test = (function() { return arguments; })();
         var result = js.typeOf(test);
         doh.is("arguments", result);
         console.log("arguments: " + Object.prototype.toString.call(test));
       },
 
       function testError_typeOf() {
-        var test =  new ReferenceError() ;
+        var test = new ReferenceError();
         var result = js.typeOf(test);
         doh.is("error", result);
         console.log("error: " + Object.prototype.toString.call(test));
       },
 
       function testDate_typeOf() {
-        var test =  new Date() ;
+        var test = new Date();
         var result = js.typeOf(test);
         doh.is("date", result);
         console.log("date: " + Object.prototype.toString.call(test));
       },
 
       function testRegExp_typeOf() {
-        var test =  /123/g ;
+        var test = /123/g;
         var result = js.typeOf(test);
         doh.is("regexp", result);
         console.log("regexp: " + Object.prototype.toString.call(test));
       },
 
       function testMath_typeOf() {
-        var test =  Math ;
+        var test = Math;
         var result = js.typeOf(test);
         doh.is("math", result);
         console.log("math: " + Object.prototype.toString.call(test));
       },
 
       function testJSON_typeOf() {
-        var test =  JSON ;
+        var test = JSON;
         var result = js.typeOf(test);
         doh.is("json", result);
         console.log("json: " + Object.prototype.toString.call(test));
@@ -112,21 +112,21 @@ define(["ppwcode-util-contracts/doh", "../js"],
 
       function testNumber3_typeOf() {
         //noinspection JSPrimitiveTypeWrapperUsage
-        var test =  new Number();
+        var test = new Number();
         var result = js.typeOf(test);
         doh.is("number", result);
         console.log("number: " + Object.prototype.toString.call(test));
       },
 
       function testString1_typeOf() {
-        var test =  "lknl vpwjg" ;
+        var test = "lknl vpwjg";
         var result = js.typeOf(test);
         doh.is("string", result);
         console.log("string: " + Object.prototype.toString.call(test));
       },
 
       function testString2_typeOf() {
-        var test =  "" ;
+        var test = "";
         var result = js.typeOf(test);
         doh.is("string", result);
         console.log("string: " + Object.prototype.toString.call(test));
@@ -134,21 +134,21 @@ define(["ppwcode-util-contracts/doh", "../js"],
 
       function testString3_typeOf() {
         //noinspection JSPrimitiveTypeWrapperUsage
-        var test =  new String();
+        var test = new String();
         var result = js.typeOf(test);
         doh.is("string", result);
         console.log("string: " + Object.prototype.toString.call(test));
       },
 
       function testBoolean1_typeOf() {
-        var test =  true ;
+        var test = true;
         var result = js.typeOf(test);
         doh.is("boolean", result);
         console.log("boolean: " + Object.prototype.toString.call(test));
       },
 
       function testBoolean2_typeOf() {
-        var test =  false ;
+        var test = false;
         var result = js.typeOf(test);
         doh.is("boolean", result);
         console.log("boolean: " + Object.prototype.toString.call(test));
@@ -163,7 +163,7 @@ define(["ppwcode-util-contracts/doh", "../js"],
       },
 
       function testFunction_typeOf() {
-        var test =  function() {} ;
+        var test = function() {};
         var result = js.typeOf(test);
         doh.is("function", result);
         console.log("function: " + Object.prototype.toString.call(test));

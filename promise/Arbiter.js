@@ -220,14 +220,16 @@ define(["dojo/_base/declare", "dojo/errors/CancelError", "dojo/Deferred", "dojo/
         if (arg === self.currentArg) {
           logger.debug("  Requested arg is current arg.");
           if (self.processingPromise) {
-            logger.debug("    Currently processing arg. Returning current processing Promise (" + self.numberOfCallers + ").");
+            logger.debug("    Currently processing arg. Returning current processing Promise (" +
+                         self.numberOfCallers + ").");
           }
           else if (reprocess) {
             logger.debug("    Not currently processing arg. Starting reprocessing and returning reprocess Promise.");
             newProcessingPromise();
           }
           else {
-            logger.debug("    Not currently processing arg. No reprocessing requested. Returning null (" + self.numberOfCallers + ").");
+            logger.debug("    Not currently processing arg. No reprocessing requested. Returning null (" +
+                         self.numberOfCallers + ").");
             return null;
           }
         }

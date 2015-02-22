@@ -15,13 +15,14 @@
  */
 
 define(["./_Proxy"],
-  function (_Proxy) {
+  function(_Proxy) {
 
     var cache = {};
 
-    var loader = function (/*String*/ key, // the string to the right of the !;
-                           require,      // AMD require; usually a context-sensitive require bound to the module making the plugin request
-                           done) {       // the function the plugin should call with the return value once it is done
+    var loader = function(/*String*/ key, // the string to the right of the !;
+                          require, // AMD require; usually a context-sensitive require bound to the module making
+                                   // the plugin request
+                          done) { // the function the plugin should call with the return value once it is done
       if (cache[key]) {
         done(cache[key]);
         return;

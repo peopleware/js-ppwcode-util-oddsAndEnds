@@ -34,7 +34,8 @@ define(["dojo/_base/kernel", "dojo/Deferred", "../log/logger!", "module"],
       // description:
       //   This code is based on http://dbaron.org/log/20100309-faster-timeouts
 
-      logger.debug("Call for relented execution. Storing with id " + counter + ". (stored continuations: " + continuations.length + ")");
+      logger.debug("Call for relented execution. Storing with id " + counter + ". (stored continuations: " +
+                   continuations.length + ")");
       var deferred = new Deferred();
       continuations.push({id: counter, continuation: continuation, deferred: deferred});
       counter++;
@@ -44,7 +45,8 @@ define(["dojo/_base/kernel", "dojo/Deferred", "../log/logger!", "module"],
       if (!burstStarted) {
         burstStarted = Date.now();
         lastReportingTime = burstStarted;
-        logger.debug("burstStarted now true; starting continuations of relented executions (" + continuations.length + ")");
+        logger.debug("burstStarted now true; starting continuations of relented executions (" +
+                     continuations.length + ")");
         handleContinuations();
       }
       return deferred.promise;
@@ -67,7 +69,8 @@ define(["dojo/_base/kernel", "dojo/Deferred", "../log/logger!", "module"],
             burstStarted = null;
             lastReportingTime = null;
             logger.debug("  no continuations left; burst done (burstStarted set to null)");
-            logger.info("max continuations waiting during this burst: " + maxContinuationsWaiting + ", duration of burst: " + secondsElapsed + "s");
+            logger.info("max continuations waiting during this burst: " + maxContinuationsWaiting +
+                        ", duration of burst: " + secondsElapsed + "s");
             maxContinuationsWaiting = 0;
             return;
           }
@@ -84,7 +87,8 @@ define(["dojo/_base/kernel", "dojo/Deferred", "../log/logger!", "module"],
               when either, because it also returns a Promise.
              */
             logger.debug("  continuation " + todo.id + " execution done; are there more?");
-            // we start the next continuation now; this one might have returned a Promise, and its resolution might be relented too
+            // we start the next continuation now; this one might have returned a Promise, and its resolution might be
+            // relented too
             handleContinuations();
             if (!result || !result.then) { // not a Promise, we are done
               todo.deferred.resolve(result);
@@ -93,7 +97,8 @@ define(["dojo/_base/kernel", "dojo/Deferred", "../log/logger!", "module"],
             logger.debug("  result of continuation " + todo.id + " is a Promise; waiting for resolution");
             result.then(
               function(resultResult) {
-                logger.debug("  resultPromise of continuation " + todo.id + " resolved; resolving relented execution (" + resultResult + ")");
+                logger.debug("  resultPromise of continuation " + todo.id +
+                             " resolved; resolving relented execution (" + resultResult + ")");
                 todo.deferred.resolve(resultResult);
               },
               function(resultErr) {

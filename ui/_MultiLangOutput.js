@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-define(["dojo/_base/declare",  "./_MultiLangWidget"],
+define(["dojo/_base/declare", "./_MultiLangWidget"],
   function(declare, _MultiLangWidget) {
 
     return declare([_MultiLangWidget], {
@@ -39,7 +39,7 @@ define(["dojo/_base/declare",  "./_MultiLangWidget"],
       //   `getLabel` must be able to find the label.
       missingLabel: null,
 
-      set: function(name, value){
+      set: function(name, value) {
         // summary:
         //		Override and refresh output on value change.
         // name:
@@ -54,11 +54,11 @@ define(["dojo/_base/declare",  "./_MultiLangWidget"],
 
       _getMissingAttr: function() {
         return this.missingLabel ?
-          this.getLabel(this.missingLabel) :
-          (this.missing || this.missing === "") ? this.missing : 'N/A';
+               this.getLabel(this.missingLabel) :
+               (this.missing || this.missing === "") ? this.missing : 'N/A';
       },
 
-      _output: function(){
+      _output: function() {
         // summary:
         //		Produce the value-bound output.
         // tags:

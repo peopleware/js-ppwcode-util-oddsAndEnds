@@ -50,7 +50,8 @@ define(["dojo/_base/kernel", "dojo/has", "dojo/io-query", "module", "./log4javas
       //   The URL query parameters have precedence over the has-setting.
 
       var paramName = "logLevel-" + mid;
-      var searchArguments = ioQuery.queryToObject(window.location.search.substring(1)); // window.location.search contains "?"
+      var searchArguments = ioQuery.queryToObject(window.location.search.substring(1)); // window.location.search
+                                                                                        // contains "?"
       var levelName = searchArguments[paramName] || has(paramName);
       var level = levelName ? (log4javascript.Level[levelName] || "OFF") : null;
       return level;
@@ -75,4 +76,5 @@ define(["dojo/_base/kernel", "dojo/has", "dojo/io-query", "module", "./log4javas
     rootLogger.setLevel(log4javascript.Level.INFO);
 
     return log4javascript;
-});
+  }
+);

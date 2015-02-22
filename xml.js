@@ -21,7 +21,7 @@ define([],
       // summary:
       //   Methods to aid with XML.
 
-      escape: function(/*String*/ str, /*Boolean?*/ doNotEscapeSingleQuotes, /*String?*/ missing){
+      escape: function(/*String*/ str, /*Boolean?*/ doNotEscapeSingleQuotes, /*String?*/ missing) {
         // summary:
         //	 Adds escape sequences for special characters in XML: `&<>"'`.
         //	 Optionally skips escapes for single quotes.
@@ -40,7 +40,7 @@ define([],
         }
         var s = "" + str; // coerce to string
         s = s.replace(/&/gm, "&amp;").replace(/</gm, "&lt;").replace(/>/gm, "&gt;").replace(/"/gm, "&quot;");
-        if(!doNotEscapeSingleQuotes) {
+        if (!doNotEscapeSingleQuotes) {
           s = s.replace(/'/gm, "&#39;");
         }
         return s; // string

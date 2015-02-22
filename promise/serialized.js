@@ -44,11 +44,13 @@ define(["dojo/Deferred", "dojo/when", "../log/logger!"],
       return when(
         firstPromise,
         function(firstResult) {
-          logger.debug("Promise for " + array[0] + " resolved with result " + firstResult + ". Going to next element in array ...");
+          logger.debug("Promise for " + array[0] + " resolved with result " + firstResult +
+                       ". Going to next element in array ...");
           var restPromise = serialized(array.slice(1), mapper);
           return restPromise.then(
             function(restResult) {
-              logger.debug("Promise for rest resolved with result " + restResult + ". Done for " + array[0] + " and rest.");
+              logger.debug("Promise for rest resolved with result " + restResult + ". Done for " + array[0] +
+                           " and rest.");
               restResult.unshift(firstResult); // add firstResult to the start of the array
               return restResult;
             }

@@ -37,7 +37,7 @@ define(["./LogglyAppender", "dojo/_base/kernel", "./main",
       this.castor = new loggly.castor({url: "https://http-logs.loggly.com/inputs/" + this.key, level: "log"});
     };
 
-//    https://http-logs.loggly.com/inputs/<guid>.gif?key=value&anotherkey=anothervalue
+    //    https://http-logs.loggly.com/inputs/<guid>.gif?key=value&anotherkey=anothervalue
 
     LogglyImgAppender.prototype = new LogglyAppender();
 
