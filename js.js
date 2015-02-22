@@ -168,6 +168,7 @@ define([],
     }
 
     function sortVersionNumbers(/*Array*/ arrayToSort) {
+      //noinspection OverlyComplexFunctionJS
       /**
        * Compares two software version numbers (e.g. "1.7.1" or "1.2b").
        *
@@ -332,6 +333,7 @@ define([],
       var p = path.replace(/\\/g, '/').split('/');
       while(p.length) {
         segment = p.shift();
+        //noinspection JSUnusedAssignment
         if(segment === ".." && result.length && lastSegment !== "..") {
           result.pop();
           lastSegment = result[result.length - 1];
