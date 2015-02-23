@@ -106,7 +106,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "ppwcode-util-contracts/_Mixi
         //   Who is the left-most draggable that gained or lost focus in the list? Call from left sentinel.
         // description:
         //   Returns the first pane from the left that gained or lost focus, which might be undefined.
-        this._c_pre(function() {return pane.isInList();});
+        this._c_pre(function() {return this.isInList();});
 
         return this._c_ABSTRACT(oldFocusStack, newFocusStack);
       },

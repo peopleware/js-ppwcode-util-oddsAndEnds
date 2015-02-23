@@ -89,6 +89,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                 li.own(deleteIcon.on("click", function() {
                   if (!self.get("disabled")) {
                     if (confirm(labels.confirmDelete1 + self.format(element) + labels.confirmDelete2)) {
+
+                      // MUDO confirm call is a bug? there is no confirm in scope!
+
                       var arr = self.get("value");
                       var idx = arr.indexOf(element);
                       arr.splice(idx, 1);

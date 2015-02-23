@@ -67,7 +67,7 @@ define(
         if (opt.group) { // no sense to pass through the empty string, since _applyPattern doesn't work with the empty string either
           opt.customs.group = opt.group;
         }
-        if (isNaN(value) || Math.abs(value) == Infinity) {
+        if (isNaN(value) || Math.abs(value) === Infinity) {
           return null; // null
         }
         //noinspection JSCheckFunctionSignatures
