@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-oddsAndEnds/log/logger!"],
-  function (declare, Stateful, js, module, logger) {
+  function(declare, Stateful, js, module, logger) {
 
     // IDEA note that derivation, delegation and propagation turn out to be 3 separate mechanisms
 
@@ -82,7 +82,8 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       propagate: function(/*Stateful*/ from, /*String*/ propName) {
         var lastContext = getProp(from, this.lastContext);
         if (!lastContext) {
-          logger.debug("Could not propagate '" + this + "' for '" + propName + "', since '" + this.lastContext + "' doesn't exist");
+          logger.debug("Could not propagate '" + this + "' for '" + propName + "', since '" +
+                       this.lastContext + "' doesn't exist");
           return;
         }
         if (lastContext === from && this.lastName === propName) {
@@ -90,7 +91,8 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
         }
         var baseValue = from.get(propName);
         var propagationValue = this.map.call(from, baseValue);
-        logger.debug("Propagating value '" + propagationValue + "' for '" + propName + "' to " + lastContext + "[" + this + "] from " + from);
+        logger.debug("Propagating value '" + propagationValue + "' for '" + propName + "' to " + lastContext +
+                     "[" + this + "] from " + from);
         if (this.exec) {
           lastContext[this.lastName].call(lastContext, propagationValue, from);
         }
@@ -115,20 +117,24 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
         Constructor["-propagateCache-"] = {};
       }
       if (!Constructor["-propagateCache-"][propName] && Constructor["-propagateCache-"][propName] !== null) {
-        logger.trace("getPropagateEntries - no entry in cache of " + Constructor.mid + " for '" + propName + "' yet - creating");
+        logger.trace("getPropagateEntries - no entry in cache of " + Constructor.mid + " for '" + propName +
+                     "' yet - creating");
         var bases = Constructor._meta.bases;
         var propagationStrings = bases.reduce(
           function(acc, base) {
-            return (base.prototype.hasOwnProperty("-propagate-") && base.prototype["-propagate-"] && base.prototype["-propagate-"][propName]) ?
-              acc.concat(base.prototype["-propagate-"][propName]) :
-              acc;
+            return (base.prototype.hasOwnProperty("-propagate-") &&
+                    base.prototype["-propagate-"] &&
+                    base.prototype["-propagate-"][propName])
+              ? acc.concat(base.prototype["-propagate-"][propName])
+              : acc;
           },
           []
         );
-        logger.trace("getPropagateEntries - propagation entries for '" + propName + "' to be cached are [" + propagationStrings + "]");
-        Constructor["-propagateCache-"][propName] = propagationStrings.length <= 0 ?
-          null :
-          propagationStrings.map(function(pStr) {return new PropagateEntry(pStr);});
+        logger.trace("getPropagateEntries - propagation entries for '" + propName + "' to be cached are [" +
+                     propagationStrings + "]");
+        Constructor["-propagateCache-"][propName] = propagationStrings.length <= 0
+          ? null
+          : propagationStrings.map(function(pStr) {return new PropagateEntry(pStr);});
       }
       var result = Constructor["-propagateCache-"][propName];
       logger.trace("getPropagateEntries - returning propagation entries for '" + propName + "': [" + result + "]");
@@ -207,10 +213,10 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       //   As a performance measure, the consolidated declarative definition is cached in a Constructor
       //   property `"-propagateCache-"`. This property is to be considered private for this implementation.
 
-// IDEA move caching prep to postscript, and do first update here
-//      postscript: function() {
-//        this.inherited(arguments);
-//      },
+      // IDEA move caching prep to postscript, and do first update here
+      //      postscript: function() {
+      //        this.inherited(arguments);
+      //      },
 
       set: function(/*String*/ propName, value) {
         var self = this;

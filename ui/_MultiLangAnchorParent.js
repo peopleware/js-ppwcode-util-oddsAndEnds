@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i18n", "../js", "../xml", "../log/logger!"],
+define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i18n", "../js", "../xml",
+        "../log/logger!"],
   function(declare, _WidgetBase, kernel, i18n, js, xml, logger) {
 
     function parentDirFromMid(mid) {
@@ -77,7 +78,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
         return handle;
       },
 
-      getLabel: function(/*String*/ labelName, /*String?*/ lang, /*Boolean?*/ escapeXml, /*Object?*/ otherContext, /*String?*/ otherBundleName) {
+      getLabel: function(/*String*/ labelName,
+                         /*String?*/ lang,
+                         /*Boolean?*/ escapeXml,
+                         /*Object?*/ otherContext,
+                         /*String?*/ otherBundleName) {
         // summary:
         //   Return the string for `labelName` from the standard bundle referred to by this (or another)
         //   in the language `this.lang` (or another), escaped for XML (or not).
@@ -97,7 +102,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
         //   This is the path to the bundle, without "nls" or the language directory, and can be relative.
 
         if (logger.isDebugEnabled()) {
-          logger.debug("getLabel with parameters: [labelName="+labelName+"][lang="+lang+"][escapeXml="+escapeXml+"][otherContext="+!!otherContext+"][otherBundleName="+otherBundleName+"]");
+          logger.debug("getLabel with parameters: [labelName=" + labelName + "][lang=" + lang + "][escapeXml=" +
+                       escapeXml + "][otherContext=" + !!otherContext + "][otherBundleName=" + otherBundleName +
+                       "]");
         }
         var render = "?" + labelName + "?";
         var nlsParentDir;
@@ -139,18 +146,19 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
             }
             catch (err) {
               logger.warn("${}$-replacement failed on '" + render + "' while getting (" +
-                nlsParentDir + "/nls/" + bundleName + ")." + labelName + " for locale '" + lang +
-                "'-- rendering '" + render + "'", err);
+                          nlsParentDir + "/nls/" + bundleName + ")." + labelName + " for locale '" + lang +
+                          "'-- rendering '" + render + "'", err);
             }
           }
         }
         catch (err) {
           logger.warn("error while getting (" + nlsParentDir + "/nls/" + bundleName + ")." +
-            labelName + " for locale '" + lang + "'-- rendering '" + render + "'", err);
+                      labelName + " for locale '" + lang + "'-- rendering '" + render + "'", err);
         }
         var renderResult = (escapeXml !== false) ? xml.escape(render, false) : render;
         if (logger.isDebugEnabled()) {
-          logger.debug("actualLang = " + actualLang + ", nlsParentDir = " + nlsParentDir + ", bundleName = " + bundleName + ", rendered[" + labelName + "] = " + renderResult);
+          logger.debug("actualLang = " + actualLang + ", nlsParentDir = " + nlsParentDir + ", bundleName = " +
+                       bundleName + ", rendered[" + labelName + "] = " + renderResult);
         }
         return renderResult;
       }
@@ -164,7 +172,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
       //   If no such parent widget is found, null is returned.
 
       var parent = w && w.getParent();
-      return parent && parent.isInstanceOf(_MultiLangAnchorParent) ? parent : _MultiLangAnchorParent.findEnclosing(parent);
+      return parent &&
+             parent.isInstanceOf(_MultiLangAnchorParent)
+        ? parent
+        : _MultiLangAnchorParent.findEnclosing(parent);
     };
 
     return _MultiLangAnchorParent;

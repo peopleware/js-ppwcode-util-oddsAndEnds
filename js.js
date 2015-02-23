@@ -130,10 +130,11 @@ define([],
           }
           catch (err) {
             // IDEA: consider logger
-            console.error("Executing pattern substitution of ${" + pattern + "}$ in '" + str + "' with context " + context, err);
-            return "?? ${" + pattern  + "}$ -- " + (err.message || err) + " ??";
+            console.error("Executing pattern substitution of ${" + pattern + "}$ in '" + str +
+                          "' with context " + context, err);
+            return "?? ${" + pattern + "}$ -- " + (err.message || err) + " ??";
           }
-          return value || value === "" ? value.toString() : "?" + pattern  + "?";
+          return value || value === "" ? value.toString() : "?" + pattern + "?";
         }
       );
     }
@@ -143,19 +144,9 @@ define([],
       //   A sort function for objects that have a compare function.
       //   undefined < null < the compare function of the objects
 
-      return c1 === undefined ? (
-               c2 === undefined ? 0 : -1
-             )
-             : (
-               c1 === null ? (
-                 c2 === undefined ?
-                   +1 :
-                   c2 === null ? 0 : -1
-               )
-               : (
-                 !c2 ? +1 : c1.compare(c2)
-               )
-             );
+      return c1 === undefined
+        ? (c2 === undefined ? 0 : -1)
+        : (c1 === null ? (c2 === undefined ? +1 : c2 === null ? 0 : -1) : (!c2 ? +1 : c1.compare(c2)));
     }
 
     function sortReversed(/*Function*/ sort) {
@@ -180,8 +171,8 @@ define([],
        * <ul>
        *     <li>
        *         <tt>lexicographical: true</tt> compares each part of the version strings lexicographically instead of
-       *         naturally; this allows suffixes such as "b" or "dev" but will cause "1.10" to be considered smaller than
-       *         "1.2".
+       *         naturally; this allows suffixes such as "b" or "dev" but will cause "1.10" to be considered smaller
+       *         than "1.2".
        *     </li>
        *     <li>
        *         <tt>zeroExtend: true</tt> changes the result if one version string has less parts than the other. In
@@ -201,9 +192,9 @@ define([],
        */
       arrayToSort.sort(function(/*String*/ v1, /*String*/ v2, /*Object*/ options) {
         var lexicographical = options && options.lexicographical,
-          zeroExtend = options && options.zeroExtend,
-          v1parts = v1.split('.'),
-          v2parts = v2.split('.');
+            zeroExtend = options && options.zeroExtend,
+            v1parts = v1.split('.'), // jshint ignore:line
+            v2parts = v2.split('.'); // jshint ignore:line
 
         function isValidPart(x) {
           return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
@@ -300,7 +291,7 @@ define([],
       //   Duplicates are allowed.
 
       return a1.every(function(a1i) {return a2.indexOf(a1i) >= 0;}) &&
-        a2.every(function(a2i) {return a1.indexOf(a2i) >= 0;});
+             a2.every(function(a2i) {return a1.indexOf(a2i) >= 0;});
     }
 
     function flatten(/*Array*/ arr) {
@@ -331,15 +322,15 @@ define([],
       var result = [];
       var segment;
       var lastSegment;
-      var p = path.replace(/\\/g, '/').split('/');
-      while(p.length) {
+      var p = path.replace(/\\/g, "/").split("/");
+      while (p.length) {
         segment = p.shift();
         //noinspection JSUnusedAssignment
-        if(segment === ".." && result.length && lastSegment !== "..") {
+        if (segment === ".." && result.length && lastSegment !== "..") {
           result.pop();
           lastSegment = result[result.length - 1];
         }
-        else if (segment!=="." && segment !== "..") {
+        else if (segment !== "." && segment !== "..") {
           lastSegment = segment;
           result.push(lastSegment);
         }

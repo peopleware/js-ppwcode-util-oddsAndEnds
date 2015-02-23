@@ -18,7 +18,8 @@ define(["./js", "./log/logger!"],
   function(js, logger) {
 
     function isStateful(/*Stateful*/ s) {
-      return s && s.get && s.watch && js.typeOf(s.get) === "function" && js.typeOf(s.watch) === "function" && s.watch !== Object.prototype.watch;
+      return s && s.get && s.watch && js.typeOf(s.get) === "function" && js.typeOf(s.watch) === "function" &&
+             s.watch !== Object.prototype.watch;
       // the last check protects against FF, where everything has a watch method
     }
 
@@ -67,13 +68,14 @@ define(["./js", "./log/logger!"],
       //   is applied to all its values. If a value is a Store, and the next element in the chain is
       //   not "#", it is used as an id in get().
       if (js.typeOf(contextExpression) !== "string") {
-        throw "ERROR: contextExpression must be a string"
+        throw "ERROR: contextExpression must be a string";
       }
       if (context === null || context === undefined) {
         throw "ERROR: context must be something with properties (Stateful, a regular object, ...), an array, " +
               "or an ObservableStore, and not null or undefined";
       }
-      if (!((js.typeOf(chain) === "array") && chain.length > 0 && chain.every(function(pn) {return js.typeOf(pn) === "string";}))) {
+      if (!((js.typeOf(chain) === "array") && chain.length > 0 &&
+            chain.every(function(pn) {return js.typeOf(pn) === "string";}))) {
         throw "ERROR: chain must be an array of Strings of length at least 1";
       }
       if (js.typeOf(pingSomethingInThePathChanged) !== "function") {
@@ -88,7 +90,8 @@ define(["./js", "./log/logger!"],
       }
       var firstWatcher;
       var firstExpression = contextExpression ? contextExpression + "." + first : first;
-      var stopDeeperWatchers; /*Function*/
+      var /*Function*/ stopDeeperWatchers;
+
 
       function passThroughCollection() {
         // we are asked to handle all elements of a store or array
@@ -128,7 +131,8 @@ define(["./js", "./log/logger!"],
               firstWatcher = queryResult.observe(pingFirstChanged, first !== "@^");
             }
             else {
-              logger.debug("Store is Stateful, and lastReloaded is not set. Watching lastReloaded, and not going deeper yet.");
+              logger.debug("Store is Stateful, and lastReloaded is not set. Watching lastReloaded, " +
+                           "and not going deeper yet.");
               firstWatcher = context.watch("lastReloaded", function() {
                 logger.debug("lastReloaded on Store changed. Stop watching it, watch the Store, and send an event.");
                 firstWatcher.remove();
@@ -162,7 +166,8 @@ define(["./js", "./log/logger!"],
       }
 
       function watchDeeper() {
-        logger.trace("  Considering to watch deeper (restChain is '" + restChain + "', currentFirstValue is '" + currentFirstValue + "')");
+        logger.trace("  Considering to watch deeper (restChain is '" + restChain + "', currentFirstValue is '" +
+                     currentFirstValue + "')");
         if ((restChain.length > 0) && currentFirstValue) {
           // there is more; we aren't really looking for context[first], but context[first][myChain];
           // context[first] is just a stepping stone;
@@ -212,7 +217,8 @@ define(["./js", "./log/logger!"],
         watchDeeper();
         if (firstCallback) {
           logger.trace("Executing callback for " + firstExpression);
-          pingSomethingInThePathChanged(firstExpression, oldValue, currentFirstValue); // different semantics from regular callback!
+          pingSomethingInThePathChanged(firstExpression, oldValue, currentFirstValue); // different semantics from
+                                                                                       // regular callback!
         }
         else {
           logger.debug("Found '!'; not executing callback for " + firstExpression);
@@ -237,7 +243,9 @@ define(["./js", "./log/logger!"],
       return stopMe;
     }
 
-    function bindingChains(/*Stateful|Object|Array|Observable*/ context, /*Array*/ dotExpressions, /*Function*/ pingSomethingInThePathChanged) {
+    function bindingChains(/*Stateful|Object|Array|Observable*/ context,
+                           /*Array*/ dotExpressions,
+                           /*Function*/ pingSomethingInThePathChanged) {
       // summary:
       //   Call callback when anything in chains changes.
       // context: Stateful|Object|Array|Observable
@@ -267,7 +275,8 @@ define(["./js", "./log/logger!"],
         throw "ERROR: context must be something with properties (Stateful, a regular object, ...), an array, " +
               "or an ObservableStore, and not null or undefined";
       }
-      if (!((js.typeOf(dotExpressions) === "array") && dotExpressions.length > 0 && dotExpressions.every(function(pn) {return js.typeOf(pn) === "string";}))) {
+      if (!((js.typeOf(dotExpressions) === "array") && dotExpressions.length > 0 &&
+            dotExpressions.every(function(pn) {return js.typeOf(pn) === "string";}))) {
         throw "ERROR: dotExpressions must be an array of Strings of length at least 1";
       }
       if (js.typeOf(pingSomethingInThePathChanged) !== "function") {
