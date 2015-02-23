@@ -42,7 +42,7 @@ define(["dojo/_base/declare", "ppwcode-util-oddsAndEnds/ui/_MultiLangOutput", "d
       //   Passed as options when formatting `value`.
       formatOptions: null,
 
-      _extraFormatOption: function(/*Object*/ options) {
+      _extraFormatOption: function(/*Object*/ options) { // jshint ignore:line
         // summary:
         //   Subclasses can enforce extra properties on the options object
         //   passed to this.value.constructor.format.

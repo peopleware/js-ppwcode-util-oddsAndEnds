@@ -41,7 +41,6 @@ define(["dojo/_base/declare",
       }
       var pn = w.domNode && w.domNode.parentNode;
       var pw;
-      var pb;
       while (pn) {
         pw = registry.getEnclosingWidget(pn);
         if (pw) {
@@ -61,7 +60,7 @@ define(["dojo/_base/declare",
     aspect.after(WidgetBase.prototype, "_setLangAttr", function(result) {
       if (this._refs) {
         for (var prop in this._refs) {
-          if (prop != "lang") {
+          if (prop !== "lang") {
             //noinspection JSUnfilteredForInLoop
             var binding = this._refs[prop];
             var converter = binding.converter;
@@ -143,7 +142,7 @@ define(["dojo/_base/declare",
 
         format: function(d, options) {
           if (!d && (d !== 0)) {
-            return (options && (options.na || options.na === "")) ? options.na : 'N/A';
+            return (options && (options.na || options.na === "")) ? options.na : "N/A";
           }
           else {
             var opt = lang.clone(options);
@@ -152,7 +151,7 @@ define(["dojo/_base/declare",
           }
         },
         parse: function(str, options) {
-          if (!str || str === (options && options.na ? options.na : 'N/A')) {
+          if (!str || str === (options && options.na ? options.na : "N/A")) {
             return null;
           }
           else {

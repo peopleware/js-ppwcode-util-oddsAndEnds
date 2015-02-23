@@ -1,12 +1,14 @@
-define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "ppwcode-util-contracts/_Mixin",
+define(["dojo/_base/declare", "dijit/_WidgetBase", "ppwcode-util-contracts/_Mixin",
         "dojo/dnd/move", "dijit/focus", "dojo/Deferred",
-        "dojo/dom-class", "dojo/dom-style", "dojo/dom-construct", "dojo/dom-geometry", "dojo/dom-attr", "dojo/_base/fx", "dojo/fx",
+        "dojo/dom-class", "dojo/dom-style", "dojo/dom-construct", "dojo/dom-geometry", "dojo/dom-attr",
+        "dojo/_base/fx", "dojo/fx",
         "../../log/logger!", "module",
 
         "xstyle/css!./draggablePane.css"],
-    function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _ContractMixin,
+    function(declare, _WidgetBase, _ContractMixin,
              move,  focus, Deferred,
-             domClass, domStyle, domConstruct, domGeom, domAttr, baseFx, fx,
+             domClass, domStyle, domConstruct, domGeom, domAttr,
+             baseFx, fx,
              logger, module) {
 
       // gap: Number
@@ -33,7 +35,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       //noinspection MagicNumberJS
       var dragAnimationDuration = 100;
 
-      var _AbstractDraggablePane = declare([_ContractMixin], {
+      var AbstractDraggablePane = declare([_ContractMixin], {
         // summary:
         //   Supertype for DraggablePane and left and right sentinels.
         // description:
@@ -159,7 +161,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       });
 
-      var _HasNext = declare([_AbstractDraggablePane], {
+      var HasNext = declare([AbstractDraggablePane], {
 
         invars: [
           function() {return !this.isInList() || this.next;},
@@ -168,7 +170,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           function() {return !this.isInList() || this._getTargetRightPosition() <= this.next._getTargetRightPosition();}
         ],
 
-        // next: _HasPrevious
+        // next: HasPrevious
         //   The next DraggablePane in the HorizontalPanesContainer we are in.
         //   Not null if container is not null. Consider this read-only.
         next: null,
@@ -188,10 +190,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       });
 
-      var LeftSentinel = declare([_HasNext], {
+      var LeftSentinel = declare([HasNext], {
 
         invars: [
-          function() {return this.isInList() === !!this.next;}
+          function() {return this.isInList() === !!this.next;} // jshint ignore:line
         ],
 
         constructor: function(container) {
@@ -228,7 +230,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       });
 
-      var _HasPrevious = declare([_AbstractDraggablePane], {
+      var HasPrevious = declare([AbstractDraggablePane], {
 
         invars: [
           function() {return !this.isInList() || this.previous;},
@@ -237,7 +239,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           function() {return !this.isInList() || this.previous._getTargetLeftPosition() <= this._getTargetLeftPosition();}
         ],
 
-        // previous: _HasNext
+        // previous: HasNext
         //   The previous DraggablePane in the HorizontalPanesContainer we are in.
         //   Not null if container is not null. Consider this read-only.
         previous: null,
@@ -273,10 +275,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       });
 
-      var RightSentinel = declare([_HasPrevious], {
+      var RightSentinel = declare([HasPrevious], {
 
         invars: [
-          function() {return this.isInList() === !!this.previous;}
+          function() {return this.isInList() === !!this.previous;} // jshint ignore:line
         ],
 
         constructor: function(container) {
@@ -309,7 +311,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       });
 
-      var DraggablePane = declare([_WidgetBase, _HasNext, _HasPrevious], {
+      var DraggablePane = declare([_WidgetBase, HasNext, HasPrevious], {
         // summary:
         //   A "window" inside a HorizontalPanesContainer.
         //   This type is only concerned with "being and behaving inside a HorizontalPanesContainer".
@@ -330,7 +332,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         //   During the drag of a pane, it is removed from the double-linked-list, and inserted again on drop.
 
         invars: [
-          function() {return this.isInList() === !!this.previous && !!this.next;}
+          function() {return this.isInList() === !!this.previous && !!this.next;} // jshint ignore:line
         ],
 
         // _dragBarNode: DOMNode
@@ -368,10 +370,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         },
 
         getIndexInContainer: function() {
+          //noinspection JSCheckFunctionSignatures
           return this.container.getIndexOfChild(this);
         },
 
-        _addToListAfter: function(/*_HasNext*/ pane) {
+        _addToListAfter: function(/*HasNext*/ pane) {
           // summary:
           //   Adds this in the double-linked list after the given pane.
           //   This method does not reposition or animate.
@@ -408,7 +411,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           this.previous = null;
         },
 
-        addToContainerAfter: function(/*_HasNext*/ pane) {
+        addToContainerAfter: function(/*HasNext*/ pane) {
           // summary:
           //   Adds this in the double-linked list after the given pane, or last, and adds this
           //   to the DOM.
@@ -458,7 +461,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             container._repositionAnimations.stop(true);
           }
           var anim = container._leftSentinel._repositionFromHereToRightAnimations();
-          //noinspection MagicNumberJS
+          //noinspection MagicNumberJS,JSCheckFunctionSignatures
           anim.push(baseFx.fadeIn({
             node: self.domNode,
             duration: 500,
@@ -502,7 +505,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             container._repositionAnimations.stop(true);
           }
           var anim = container._leftSentinel._repositionFromHereToRightAnimations();
-          //noinspection MagicNumberJS
+          //noinspection MagicNumberJS,JSCheckFunctionSignatures
           anim.push(baseFx.fadeOut({
             node: self.domNode,
             duration: 500,
@@ -643,7 +646,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             this.domNode.style.zIndex = 999;
             //noinspection MagicNumberJS
             this.domNode.style.opacity = 0.5;
-            var next = this.get("next");
             this.container._onTheMove = this;
             this._removeFromList();
             this.focus();

@@ -21,11 +21,11 @@ define(["dojo/_base/declare", "dojo/sniff", "dojo/Deferred", "./_sharedKeys",
            Arbiter,
            logger, module) {
 
-    //noinspection MagicNumberJS
+    //noinspection MagicNumberJS,LocalVariableNamingConventionJS
     var LOAD_TIMEOUT = 30000;
-    //noinspection MagicNumberJS
+    //noinspection MagicNumberJS,LocalVariableNamingConventionJS
     var POLL_INTERVAL = 200;
-    //noinspection MagicNumberJS
+    //noinspection MagicNumberJS,LocalVariableNamingConventionJS
     var MAX_POLLS = 150; // 30 seconds at least
 
     var loadArbiter = new Arbiter();

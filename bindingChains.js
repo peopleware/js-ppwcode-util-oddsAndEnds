@@ -26,7 +26,7 @@ define(["./js", "./log/logger!"],
       return s && s.get && s.query && js.typeOf(s.get) === "function" && js.typeOf(s.query) === "function";
     }
 
-    function _getValue(context, propertyName) {
+    function getValue(context, propertyName) {
       logger.trace("    getting value '" + propertyName + "' from " + context);
       var result;
       if (propertyName === "@" || propertyName === "@^") {
@@ -55,7 +55,10 @@ define(["./js", "./log/logger!"],
       return result;
     }
 
-    function _bChain(/*String*/ contextExpression, /*Stateful|Object|Array|Observable*/ context, /*Array*/ chain, /*Function*/ pingSomethingInThePathChanged) {
+    function bChain(/*String*/ contextExpression,
+                    /*Stateful|Object|Array|Observable*/ context,
+                    /*Array*/ chain,
+                    /*Function*/ pingSomethingInThePathChanged) {
       // summary:
       //   Call callback when anything in chain changes
       //   (context[chain[0]], context[chain[0]][chain[1]], context[chain[0]][chain[1]][chain[2]], ...
@@ -106,13 +109,13 @@ define(["./js", "./log/logger!"],
         var stoppers = array.
           filter(function(el) {return el !== null && el !== undefined;}).
           map(function(el) {
-            return _bChain(firstExpression, el, restChain, pingSomethingInThePathChanged);
+            return bChain(firstExpression, el, restChain, pingSomethingInThePathChanged);
           });
         return function() {
           stoppers.forEach(function(stopper) {
             stopper();
           });
-        }
+        };
       }
 
       function watchFirst() {
@@ -165,7 +168,7 @@ define(["./js", "./log/logger!"],
           // context[first] is just a stepping stone;
           // but if it is null, we cannot go deeper now
           logger.trace("    Going deeper.");
-          stopDeeperWatchers = _bChain(firstExpression, currentFirstValue, restChain, pingSomethingInThePathChanged);
+          stopDeeperWatchers = bChain(firstExpression, currentFirstValue, restChain, pingSomethingInThePathChanged);
         }
         else {
           logger.trace("    Not going deeper.");
@@ -202,7 +205,7 @@ define(["./js", "./log/logger!"],
 
         logger.debug("Callback from " + firstExpression);
         var oldValue = currentFirstValue;
-        currentFirstValue = _getValue(context, first);
+        currentFirstValue = getValue(context, first);
         if (stopDeeperWatchers) {
           stopDeeperWatchers();
         }
@@ -229,7 +232,7 @@ define(["./js", "./log/logger!"],
         throw "ERROR: an array must be followed by '#', to apply a selector to all its elements";
       }
       watchFirst();
-      var currentFirstValue = _getValue(context, first);
+      var currentFirstValue = getValue(context, first);
       watchDeeper();
       return stopMe;
     }
@@ -278,7 +281,7 @@ define(["./js", "./log/logger!"],
           if (!this._stoppers) { // we were inactive, and are asked to resume
             this._stoppers = dotExpressions.map(function(expression) {
               var chain = expression.split(".");
-              return _bChain("", context, chain, pingSomethingInThePathChanged);
+              return bChain("", context, chain, pingSomethingInThePathChanged);
             });
           }
           // else, no change

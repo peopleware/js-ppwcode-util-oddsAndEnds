@@ -24,7 +24,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       return nameChain.reduce(
         function(acc, name) {return acc ? (acc.get ? acc.get(name) : acc[name]) : undefined;},
         context
-      )
+      );
     }
 
     /* =====
@@ -108,6 +108,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
 
     });
 
+    //noinspection ParameterNamingConventionJS
     function getPropagateEntries(Constructor, /*String*/ propName) {
       if (!Constructor["-propagateCache-"]) {
         logger.trace("getPropagateEntries - no cache yet - creating cache for " + Constructor.mid);
@@ -134,6 +135,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       return result; // return PropagateEntry[]
     }
 
+    //noinspection LocalVariableNamingConventionJS
     var _PropagationMixin = declare([Stateful], {
       // summary:
       //   Mixin that provides declarative propagation to Stateful objects.

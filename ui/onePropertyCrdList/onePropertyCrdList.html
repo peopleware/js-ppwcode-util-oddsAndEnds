@@ -3,14 +3,17 @@
   <div class="fields" data-dojo-attach-point="_addTextWrapperNode">
     <div data-dojo-attach-point="_propertySelect"></div>
     <button
-        class="rightAddButton"
-        data-dojo-type="dijit/form/Button"
-        data-dojo-props="iconClass: 'dijitIconNewTask',
+      class="rightAddButton"
+      data-dojo-type="dijit/form/Button"
+      data-dojo-props="iconClass: 'dijitIconNewTask',
                          showLabel: false,
                          onClick: lang.hitch(this, this.addClicked)">
     </button>
   </div>
   <div class="listContainer" data-dojo-attach-point="_ulNodeWrapper">
-    <ul data-dojo-type="dojox/mobile/EdgeToEdgeList" data-dojo-props="select:''" data-dojo-attach-point="_ulNode" class="list"></ul>
+    <ul data-dojo-type="dojox/mobile/EdgeToEdgeList"
+        data-dojo-props="select:''"
+        data-dojo-attach-point="_ulNode"
+        class="list"></ul>
   </div>
 </div>

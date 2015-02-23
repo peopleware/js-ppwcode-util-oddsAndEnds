@@ -17,7 +17,7 @@
 define(["dojo/_base/declare", "require", "module"],
   function(declare, require, module) {
 
-    var dotdotPattern = /[^\.\/]+?\/\.\.\//;
+    var dotDotPattern = /[^\.\/]+?\/\.\.\//;
 
     var Definition = declare([], {
       // summary:
@@ -65,8 +65,8 @@ define(["dojo/_base/declare", "require", "module"],
         //   Helper function. Remove "./" and "../" in the middle of the URL
 
         var result = url.replace(/\.\/g/, "");
-        while (dotdotPattern.test(result)) {
-          result = result.replace(dotdotPattern, "");
+        while (dotDotPattern.test(result)) {
+          result = result.replace(dotDotPattern, "");
         }
         return result;
       },

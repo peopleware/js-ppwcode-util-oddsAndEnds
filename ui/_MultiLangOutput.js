@@ -39,7 +39,7 @@ define(["dojo/_base/declare", "./_MultiLangWidget"],
       //   `getLabel` must be able to find the label.
       missingLabel: null,
 
-      set: function(name, value) {
+      set: function(name, value) { // jshint ignore:line
         // summary:
         //		Override and refresh output on value change.
         // name:
@@ -55,7 +55,7 @@ define(["dojo/_base/declare", "./_MultiLangWidget"],
       _getMissingAttr: function() {
         return this.missingLabel ?
                this.getLabel(this.missingLabel) :
-               (this.missing || this.missing === "") ? this.missing : 'N/A';
+               (this.missing || this.missing === "") ? this.missing : "N/A";
       },
 
       _output: function() {

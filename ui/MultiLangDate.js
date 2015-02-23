@@ -28,6 +28,7 @@ define(["dojo/_base/declare", "./MultiLangFormatOutput", "dojo/date/locale"],
       value: null,
 
       format: function(/*Value*/ value, /*Object*/ options) {
+        //noinspection JSCheckFunctionSignatures
         return dateLocale.format(value, options);
       }
 

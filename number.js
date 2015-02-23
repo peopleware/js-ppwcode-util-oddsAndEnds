@@ -70,6 +70,7 @@ define(
         if (isNaN(value) || Math.abs(value) == Infinity) {
           return null; // null
         }
+        //noinspection JSCheckFunctionSignatures
         return this._applyPattern(value, pattern, opt); // String
       }
 

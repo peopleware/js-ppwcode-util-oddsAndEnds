@@ -21,7 +21,7 @@ define(["./main"],
       // summary:
       //   This is a prototype for a log appender that logs to a Loggly account with the given key.
       //   Levels are mapped to the levels supported by loggly/castor.
-      //   A custom field "run", which is a large random number to indentify a page app instance run,
+      //   A custom field "run", which is a large random number to identify a page app instance run,
       //   is added to each layout.
 
       this.key = logglyKey;
@@ -36,7 +36,7 @@ define(["./main"],
       return log4javascript.Appender.prototype.setLayout.apply(this, arguments);
     };
 
-    LogglyAppender.prototype.send2Loggly = function(/*log4javascript.Level*/ level, /*Object*/ formattedMsg) {
+    LogglyAppender.prototype.send2Loggly = function(/*log4javascript.Level*/ level, /*Object*/ formattedMsg) { // jshint ignore:line
       // ABSTRACT
     };
 

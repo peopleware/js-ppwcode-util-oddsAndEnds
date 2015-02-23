@@ -1,12 +1,10 @@
-define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/layout/_ContentPaneResizeMixin", "ppwcode-util-contracts/_Mixin",
-        "./DraggablePane", "dojo/dnd/move",
-        "dojo/_base/fx", "dojo/dom-class", "dojo/dom-style", "dojo/_base/lang",
-        "dijit/focus",
+define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/layout/_ContentPaneResizeMixin",
+        "ppwcode-util-contracts/_Mixin", "./DraggablePane",
+        "dojo/_base/fx", "dojo/dom-style", "dijit/focus",
         "module"],
-    function(declare, _WidgetBase, _Container, _ContentPaneResizeMixin, _ContractsMixin,
-             DraggablePane, move,
-             fx, domClass, domStyle, lang,
-             focus,
+    function(declare, _WidgetBase, _Container, _ContentPaneResizeMixin,
+             _ContractsMixin, DraggablePane,
+             fx, domStyle, focus,
              module) {
 
       var HorizontalPanesContainer = declare([_WidgetBase, _Container, _ContentPaneResizeMixin, _ContractsMixin], {
@@ -26,7 +24,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/la
 
         tabindex: 0,
 
+        // _leftSentinel: DraggablePane.LeftSentinel
         _leftSentinel: null,
+
+        // _rightSentinel: DraggablePane.RightSentinel
         _rightSentinel: null,
 
         _onTheMove: null,
@@ -87,7 +88,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/la
             function() {
               domStyle.set(pane.domNode, "opacity", "0.3");
               // a flash
-              //noinspection MagicNumberJS
+              //noinspection MagicNumberJS,JSCheckFunctionSignatures
               fx.fadeIn({
                 node: pane.domNode,
                 duration: 750

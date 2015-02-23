@@ -50,7 +50,9 @@
       ["dojo/parser", "dijit/registry", "dojo/domReady!"],
       function(parser, registry) {
         var page2Href = "page2.html";
+        //noinspection LocalVariableNamingConventionJS
         var MESSAGE_TYPE = "message";
+        //noinspection LocalVariableNamingConventionJS
         var MESSAGE_ORIGIN = window.location.protocol + "//" + window.location.host + "/"; // window.location.origin doesn't work in IE;
 
         function messageToString(event) {
@@ -198,7 +200,7 @@
                  Firefox, IE:
                    Brings WINDOW to the front, if the "window" we are addressing is the front-most tab
                    in that WINDOW. Also if it is in the Dock / minimized. If the page 2 is in a tab, in this WINDOW
-                   or another, that is not frontmost, nothing happens.
+                   or another, that is not front most, nothing happens.
 
                  The below solution for Firefox was hinted to by
                  https://support.mozilla.org/en-US/questions/965890.
@@ -246,7 +248,7 @@
             };
 
             /* Note: Conclusion
-               - There is no way in Firefox/IE to bring a window or tab that isn't a frontmost tab to the front.
+               - There is no way in Firefox/IE to bring a window or tab that isn't a front most tab to the front.
                - messaging doesn't work on IE: http://stackoverflow.com/questions/21070553/postmessage-still-broken-on-ie11
                  (also, using "onmessage" instead of "message" doesn't work either); well, half
                -- IE cannot post a message to another window; period. No error, it just doesn't.

@@ -23,6 +23,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
       return parts.join("/");
     }
 
+    //noinspection LocalVariableNamingConventionJS
     var _MultiLangAnchorParent = declare([_WidgetBase], {
       // summary:
       //   Widget mixin that makes the widget an parent anchor point for the language used

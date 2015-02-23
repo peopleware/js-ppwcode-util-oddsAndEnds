@@ -20,14 +20,14 @@ define(["ppwcode-util-contracts/doh", "../typeOf"],
     doh.register("typeOf", [
 
       function testUndefined1() {
-        var test = undefined;
+        var test = undefined; // jshint ignore:line
         var result = typeOf(test);
         doh.is("undefined", result);
         console.log("undefined: " + Object.prototype.toString.call(test));
       },
 
       function testUndefined2() {
-        var test = {someProperty: "a value"}["anotherProperty"];
+        var test = {someProperty: "a value"}["anotherProperty"]; // jshint ignore:line
         var result = typeOf(test);
         doh.is("undefined", result);
         console.log("undefined: " + Object.prototype.toString.call(test));
@@ -111,7 +111,7 @@ define(["ppwcode-util-contracts/doh", "../typeOf"],
       },
 
       function testNumber3() {
-        //noinspection JSPrimitiveTypeWrapperUsage
+        //noinspection JSPrimitiveTypeWrapperUsage,JSHint
         var test = new Number();
         var result = typeOf(test);
         doh.is("number", result);
@@ -133,7 +133,7 @@ define(["ppwcode-util-contracts/doh", "../typeOf"],
       },
 
       function testString3() {
-        //noinspection JSPrimitiveTypeWrapperUsage
+        //noinspection JSPrimitiveTypeWrapperUsage,JSHint
         var test = new String();
         var result = typeOf(test);
         doh.is("string", result);
@@ -155,7 +155,7 @@ define(["ppwcode-util-contracts/doh", "../typeOf"],
       },
 
       function testBoolean3() {
-        //noinspection JSPrimitiveTypeWrapperUsage
+        //noinspection JSPrimitiveTypeWrapperUsage,JSHint
         var test = new Boolean();
         var result = typeOf(test);
         doh.is("boolean", result);
@@ -170,6 +170,7 @@ define(["ppwcode-util-contracts/doh", "../typeOf"],
       },
 
       function testConstructorObject() {
+        //noinspection FunctionNamingConventionJS
         function Constructor(a) {
           this._a = a;
         }

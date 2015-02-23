@@ -125,7 +125,7 @@ define([],
         function(match, pattern) {
           var value;
           try {
-            var executor = new Function("return (" + pattern + ");");
+            var executor = new Function("return (" + pattern + ");"); // jshint ignore:line
             value = executor.call(context);
           }
           catch (err) {
@@ -164,11 +164,11 @@ define([],
 
       return function(o1, o2) {
         return -sort(o1, o2);
-      }
+      };
     }
 
     function sortVersionNumbers(/*Array*/ arrayToSort) {
-      //noinspection OverlyComplexFunctionJS
+      //noinspection OverlyComplexFunctionJS,JSHint
       /**
        * Compares two software version numbers (e.g. "1.7.1" or "1.2b").
        *
@@ -228,11 +228,11 @@ define([],
         }
 
         for (var i = 0; i < v1parts.length; ++i) {
-          if (v2parts.length == i) {
+          if (v2parts.length == i) { // jshint ignore:line
             return 1;
           }
 
-          if (v1parts[i] == v2parts[i]) {
+          if (v1parts[i] == v2parts[i]) { // jshint ignore:line
             // continue; go to next loop cycle
           }
           else if (v1parts[i] > v2parts[i]) {
@@ -243,7 +243,7 @@ define([],
           }
         }
 
-        if (v1parts.length != v2parts.length) {
+        if (v1parts.length != v2parts.length) { // jshint ignore:line
           return -1;
         }
 
@@ -265,9 +265,9 @@ define([],
       return charCodes.map(function(charCode) {return String.fromCharCode(charCode);}).join("");
     }
 
-    //noinspection MagicNumberJS
+    //noinspection MagicNumberJS,LocalVariableNamingConventionJS
     var MAX_INT = 9007199254740992;
-    //noinspection MagicNumberJS
+    //noinspection MagicNumberJS,LocalVariableNamingConventionJS
     var MIN_INT = -9007199254740992;
 
     // From https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Math/random
@@ -281,10 +281,11 @@ define([],
 
     function randomInts(min, max, nr) {
       var result = [];
-      var r = undefined;
+      var r = undefined; // jshint ignore:line
       for (var i = 0; i < nr; i++) {
         while (!r || result.some(function(earlierR) {//noinspection JSReferencingMutableVariableFromClosure
-          return r === earlierR;})) {
+          return r === earlierR;
+        })) { // jshint ignore:line
           r = randomInt(min, max);
         }
         result[i] = r;

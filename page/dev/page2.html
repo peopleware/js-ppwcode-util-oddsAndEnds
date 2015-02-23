@@ -41,7 +41,9 @@
     require(
       ["dojo/parser", "dijit/registry", "dojo/domReady!"],
       function(parser, registry) {
+        //noinspection LocalVariableNamingConventionJS
         var MESSAGE_TYPE = "message";
+        //noinspection LocalVariableNamingConventionJS
         var MESSAGE_ORIGIN = window.location.protocol + "//" + window.location.host + "/"; // window.location.origin doesn't work in IE;
 
         function messageToString(event) {

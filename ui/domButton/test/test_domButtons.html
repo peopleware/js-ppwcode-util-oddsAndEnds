@@ -16,25 +16,25 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
-	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>domButtons</title>
 
-	<script type="text/javascript" src="../../../../../../dojo/dojo/dojo.js" data-dojo-config="async: true, parseOnLoad: true"></script>
+	<script type="text/javascript"
+          src="../../../../../../dojo/dojo/dojo.js"
+          data-dojo-config="async: true, parseOnLoad: true"></script>
 
 	<script type="text/javascript">
 		require([
-			"dojo/_base/window",
-			"dojo/dom",
-			"dojo/ready",
-			"dojox/mobile/iconUtils",
+      "dojo/ready",
+      "dojox/mobile/iconUtils",
       "dojo/dom-construct",
-			"dojox/mobile",
-			"dojox/mobile/parser",
-			"dojox/mobile/compat"
-		], function(win, dom, ready, iconUtils, domConstruct){
-			ready(function(){
+      "dojox/mobile",
+      "dojox/mobile/parser",
+      "dojox/mobile/compat"
+    ], function(ready, iconUtils, domConstruct) {
+      ready(function() {
         var domButtons = [
           "WhiteKnob",
           "WhiteSend"
@@ -54,8 +54,8 @@
           domConstruct.create("img", {src: "../" + fullName + ".png", style: style}, cell);
           domConstruct.create("td", {innerHTML: fullName}, row);
         });
-			});
-		});
+      });
+    });
 	</script>
 </head>
 <body style="visibility:hidden;background-color:#C5CCD3;font-family:Helvetica, sans-serif;font-size:12px;">

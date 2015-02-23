@@ -20,6 +20,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
 
     // IDEA note that derivation, delegation and propagation turn out to be 3 separate mechanisms
 
+    //noinspection LocalVariableNamingConventionJS
     var _DerivedMixin = declare([Stateful], {
       // summary:
       //   Mixin that provides support for declarative definition of derived properties.
@@ -83,7 +84,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
                 previousValue = newValue;
               }
             }
-          }
+          };
         }
 
         self["-derived-"] = self.constructor._meta.bases.reduceRight(
@@ -114,7 +115,6 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
       getAllDerivedPropertyNames: function() {
         // summary:
         //   Gets a String[] containing all derived property names.
-        var self = this;
         var result = [];
         for (var dependencyPropName in this["-derived-"]) {
           result.push(dependencyPropName);

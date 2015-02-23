@@ -15,9 +15,9 @@ limitations under the License.
 */
 
 define(["dojo/_base/declare", "dijit/_WidgetBase",
-        "dojo/dom", "../xml", "dojo/_base/lang", "dojo/regexp"],
+        "dojo/dom", "../xml", "dojo/regexp"],
   function(declare, _WidgetBase,
-           dom, xml, lang, regexp) {
+           dom, xml, regexp) {
 
     return declare([_WidgetBase], {
       // summary:
@@ -62,7 +62,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         this._output();
       },
 
-      set: function(name, value) {
+      set: function(name, value) { // jshint ignore:line
         // summary:
         //		Override and refresh output on value change.
         // name:
@@ -91,9 +91,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
           exp = exp.substr(0, exp.length - 1);
           var val;
           try {
-            //noinspection WithStatementJS
+            //noinspection WithStatementJS,JSHint
             with (self) {
-              val = eval(exp);
+              val = eval(exp); // jshint ignore:line
             }
           }
           catch (err) {

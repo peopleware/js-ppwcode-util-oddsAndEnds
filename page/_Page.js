@@ -14,9 +14,9 @@
  limitations under the License.
  */
 
-define(["dojo/_base/declare", "dojo/Deferred", "dojo/_base/lang", "./_sharedKeys",
+define(["dojo/_base/declare", "./_sharedKeys",
         "ppwcode-util-oddsAndEnds/log/logger!", "module"],
-  function(declare, Deferred, lang, _sharedKeys,
+  function(declare, _sharedKeys,
            logger, module) {
 
     var Page = declare([], {
@@ -77,7 +77,7 @@ define(["dojo/_base/declare", "dojo/Deferred", "dojo/_base/lang", "./_sharedKeys
         //  If there already is a value for `name`, it is overridden.
         //  `func`will be called in the global scope, so it should probably
         //  be hitched. Since the intention of this code is to be able to call
-        // `func` from other pages, and in interwindow-communication all arguments
+        // `func` from other pages, and in inter-window-communication all arguments
         //  are passed by value (copied), this function should take that into account.
 
         this.registeredFunctions[name] = logger.isDebugEnabled() ?

@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-define(["dojo/_base/kernel", "dojo/Deferred", "../log/logger!", "module"],
-  function(kernel, Deferred, logger) {
+define(["dojo/Deferred", "../log/logger!"],
+  function(Deferred, logger) {
 
     var counter = 0;
     var continuations = [];
@@ -57,6 +57,7 @@ define(["dojo/_base/kernel", "dojo/Deferred", "../log/logger!", "module"],
       setTimeout(
         function() {
           var elapsedSinceLastReport = Date.now() - lastReportingTime;
+          //noinspection MagicNumberJS
           if (elapsedSinceLastReport > 1000) {
             lastReportingTime = Date.now();
             logger.info("continuations waiting: " + continuations.length);

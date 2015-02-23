@@ -53,6 +53,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/dom-style"],
         //   Returns null if the value is not changed.
 
         var booleanDisplayed = !!displayed; // turn truthy or falsy into true or false
+        //noinspection JSCheckFunctionSignatures
         this._set("displayed", booleanDisplayed);
         this._setDisplay();
       },

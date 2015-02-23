@@ -59,7 +59,7 @@ define(["dojo/dom", "dojo/query", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", 
       domStyle.set(realContent, "opacity", 0);
       logger.debug("preloader and real content found");
       logger.debug("going to build transition");
-      //noinspection MagicNumberJS
+      //noinspection MagicNumberJS,JSCheckFunctionSignatures
       var showAppAnimation = fx.combine([
         fx.chain([
           baseFx.animateProperty({
