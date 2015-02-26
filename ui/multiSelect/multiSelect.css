@@ -18,9 +18,6 @@
 
 .ppwCodeMultiSelect .multiSelectList li.disabled {
   color: #4c656b;
-  -webkit-appearance: 50%;
-  -moz-appearance: 50%;
-  appearance: 50%;
   cursor: default;
 }
 
