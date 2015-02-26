@@ -49,6 +49,7 @@ limitations under the License.
   top: -5px;
   left: 0;
   clip: rect(-5px, 35px, 13px, 0px);
+  /* MUDO Negative value -5px is flagged as an error by code inspection. Should be tested, and corrected or ignored. */
 }
 
 .mblDomButtonWhiteSend > div > div > div > div {
