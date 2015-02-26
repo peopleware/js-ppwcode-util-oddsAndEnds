@@ -28,6 +28,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
       //   The result of the evaluation is xml-escaped by default.
       //   Every call to "set" re-renders.
 
+      /* Note:
+         We explicitly do use innerHTML in this module, and not direct DOM-manipulation (using dom-construct).
+         The latter is what we should do, but in this case it is all about manipulating a text template representation
+         of a DOM. There might be a better way to do that, but for now we focus on the text manipulation. */
+
       // exprChar: String
       //   "$" cannot be used, because it conflicts
       //   with templated widgets, where ${} is already used.
@@ -51,7 +56,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
 
         this.srcNodeRef = dom.byId(srcNodeRef);
         if (this.srcNodeRef) {
+          // See Note for InnerHTMLJS
+          //noinspection InnerHTMLJS
           this.templateString = this.srcNodeRef.innerHTML;
+          //noinspection InnerHTMLJS
           this.srcNodeRef.innerHTML = "";
         }
         this.inherited(arguments);
@@ -106,7 +114,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         }
 
         var outputNode = this.srcNodeRef || this.domNode;
+        // See Note for InnerHTMLJS
         if (this.templateString) {
+          //noinspection InnerHTMLJS
           outputNode.innerHTML = self.templateString.replace(
             new RegExp(regexp.escapeString(self.exprChar) + "(\{.*?\})", "g"),
             transform
@@ -114,6 +124,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         }
         else {
           var cleanValue = self.escapeXml ? xml.escape(self.value, false) : self.value;
+          //noinspection InnerHTMLJS
           outputNode.innerHTML = (cleanValue || cleanValue === 0 || cleanValue === "0") ? cleanValue : self.missing;
         }
       }

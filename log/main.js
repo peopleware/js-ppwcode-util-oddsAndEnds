@@ -15,6 +15,8 @@ limitations under the License.
 */
 
 define(["dojo/_base/kernel", "dojo/has", "dojo/io-query", "module", "./log4javascript_uncompressed"],
+  /* Note: Code inspection reports a cyclic dependency with "module". This is not true: this is a special AMD
+           dependency, not a true module. See AMD documentation. */
   function(kernel, has, ioQuery, module) {
     // summary:
     //   This collection of modules makes log4javascript available in Dojo.
