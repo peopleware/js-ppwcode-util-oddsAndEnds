@@ -227,7 +227,8 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
           // propagate some properties
           var propagateEntry = getPropagateEntries(self.constructor, propName);
           if (propagateEntry) {
-            propagateEntry.forEach(function(ppChain) {ppChain.propagate(self, propName);});
+            propagateEntry.forEach(function(ppChain) {//noinspection JSCheckFunctionSignatures
+              ppChain.propagate(self, propName);});
           }
         }
         return result; // although a setter should not return a result
