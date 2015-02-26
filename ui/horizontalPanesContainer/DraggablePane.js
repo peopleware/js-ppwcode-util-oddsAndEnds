@@ -269,7 +269,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "ppwcode-util-contracts/_Mixi
         this._c_pre(function() {return this.isInList();});
 
         return this.previous._isAfter(referencePosition)
-          ? this.previous._getLastBeforeMouseAndThis(referencePosition)
+          ? this.previous._getLastBeforeMouseAndThis(referencePosition) // jshint ignore:line
           : this.previous;
       }
 

@@ -176,7 +176,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
       var parent = w && w.getParent();
       return parent &&
              parent.isInstanceOf(_MultiLangAnchorParent)
-        ? parent
+        ? parent // jshint ignore:line
         : _MultiLangAnchorParent.findEnclosing(parent);
     };
 

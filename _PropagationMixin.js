@@ -125,7 +125,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
             return (base.prototype.hasOwnProperty("-propagate-") &&
                     base.prototype["-propagate-"] &&
                     base.prototype["-propagate-"][propName])
-              ? acc.concat(base.prototype["-propagate-"][propName])
+              ? acc.concat(base.prototype["-propagate-"][propName]) // jshint ignore:line
               : acc;
           },
           []
@@ -133,7 +133,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
         logger.trace("getPropagateEntries - propagation entries for '" + propName + "' to be cached are [" +
                      propagationStrings + "]");
         Constructor["-propagateCache-"][propName] = propagationStrings.length <= 0
-          ? null
+          ? null // jshint ignore:line
           : propagationStrings.map(function(pStr) {return new PropagateEntry(pStr);});
       }
       var result = Constructor["-propagateCache-"][propName];

@@ -45,7 +45,7 @@ define(["dojo/_base/declare",
         pw = registry.getEnclosingWidget(pn);
         if (pw) {
           var relTargetProp = pw._relTargetProp || "target", pt = lang.isFunction(pw.get)
-            ? pw.get(relTargetProp)
+            ? pw.get(relTargetProp) // jshint ignore:line
             : pw[relTargetProp];
           if (pt || relTargetProp in pw.constructor.prototype) {
             return pw; // dijit/_WidgetBase

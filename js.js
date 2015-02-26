@@ -145,7 +145,7 @@ define([],
       //   undefined < null < the compare function of the objects
 
       return c1 === undefined
-        ? (c2 === undefined ? 0 : -1)
+        ? (c2 === undefined ? 0 : -1) // jshint ignore:line
         : (c1 === null ? (c2 === undefined ? +1 : c2 === null ? 0 : -1) : (!c2 ? +1 : c1.compare(c2)));
     }
 
