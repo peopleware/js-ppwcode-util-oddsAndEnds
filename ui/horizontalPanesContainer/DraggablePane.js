@@ -254,8 +254,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "ppwcode-util-contracts/_Mixi
 
         var leftPos = this.previous._getTargetRightPosition(referencePosition) + gap;
         if ((referencePosition || referencePosition === 0) &&
-            this._isAfter(referencePosition) &&
-            !this.previous._isAfter(referencePosition)) {
+            this._isAfter(referencePosition) && !this.previous._isAfter(referencePosition)) {
           leftPos += dropPositionGap;
         }
         return leftPos;
