@@ -1,26 +1,27 @@
 /*
-Copyright 2012 - $Date $ by PeopleWare n.v.
+  Copyright 2012 - $Date $ by PeopleWare n.v.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+  http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
-define(["dojo/Deferred", "../log/logger!"],
-  function(Deferred, logger) {
+define(["dojo/Deferred", "dojo/topic", "../log/logger!", "module"],
+  function(Deferred, topic, logger, module) {
 
     var counter = 0;
     var continuations = [];
     var burstStarted = null;
     var lastReportingTime = null;
+    var lastPublishTime = null;
 
     var /*Number*/ maxContinuationsWaiting = 0;
 
@@ -45,6 +46,7 @@ define(["dojo/Deferred", "../log/logger!"],
       if (!burstStarted) {
         burstStarted = Date.now();
         lastReportingTime = burstStarted;
+        lastPublishTime = burstStarted;
         logger.debug("burstStarted now true; starting continuations of relented executions (" +
                      continuations.length + ")");
         handleContinuations();
@@ -56,22 +58,51 @@ define(["dojo/Deferred", "../log/logger!"],
       logger.debug("  starting execution of continuation on next tick");
       setTimeout(
         function() {
-          var elapsedSinceLastReport = Date.now() - lastReportingTime;
+          var now = Date.now();
+          var millisElapsed = now - burstStarted;
+          var elapsedSinceLastReport = now - lastReportingTime;
           //noinspection MagicNumberJS
           if (elapsedSinceLastReport > 1000) {
-            lastReportingTime = Date.now();
+            lastReportingTime = now;
             logger.info("continuations waiting: " + continuations.length);
+          }
+          var elapsedSinceLastPublish = now - lastPublishTime;
+          //noinspection MagicNumberJS
+          if (elapsedSinceLastReport > 200) {
+            lastPublishTime = now;
+            topic.publish(
+              module.id,
+              {
+                burstBusy: true,
+                burstStarted: burstStarted,
+                millisElapsed: millisElapsed,
+                continuationsWaiting: continuations.length,
+                maxContinuationsWaiting: maxContinuationsWaiting,
+                counter: counter
+              }
+            );
           }
           logger.debug("  waking up; is there a continuation waiting?");
           var todo = continuations.shift(); // FIFO
           if (!todo) {
+            logger.debug("  no continuations left; burst done (burstStarted will be set to null)");
             //noinspection MagicNumberJS
-            var secondsElapsed = (Date.now() - burstStarted) / 1000;
-            burstStarted = null;
-            lastReportingTime = null;
-            logger.debug("  no continuations left; burst done (burstStarted set to null)");
             logger.info("max continuations waiting during this burst: " + maxContinuationsWaiting +
-                        ", duration of burst: " + secondsElapsed + "s");
+                        ", duration of burst: " + (millisElapsed / 1000) + "s");
+            topic.publish(
+              module.id,
+              {
+                burstBusy: false,
+                burstStarted: burstStarted,
+                millisElapsed: millisElapsed,
+                continuationsWaiting: continuations.length,
+                maxContinuationsWaiting: maxContinuationsWaiting,
+                counter: counter
+              }
+            );
+            lastReportingTime = null;
+            lastPublishTime = null;
+            burstStarted = null;
             maxContinuationsWaiting = 0;
             return;
           }
@@ -116,6 +147,37 @@ define(["dojo/Deferred", "../log/logger!"],
         0
       );
     }
+
+    /*=====
+    var Status = {
+
+      // burstBusy: Boolean
+      //   True while the burst is busy, false for the last event reporting about the burst.
+      burstBusy: false,
+
+      // burstBusy: Number
+      //   Milliseconds since Epoch, when the burst started.
+      burstStarted: burstStarted,
+
+      // millisElapsed: Number
+      //   Milliseconds elapsed since the burst started.
+      millisElapsed: millisElapsed,
+
+      // continuationsWaiting: Number
+      //   The number of continuations still waiting in the queue.
+      continuationsWaiting: continuations.length,
+
+      // maxContinuationsWaiting: Number
+      //   The maximum number of continuations that were waiting in the queue during this burst.
+      maxContinuationsWaiting: maxContinuationsWaiting,
+
+      // counter: Number
+      //   The number of continuations relent has handled since the application started.
+      counter: counter
+    };
+
+    relent.Status = Status;
+    =====*/
 
     return relent;
   }
