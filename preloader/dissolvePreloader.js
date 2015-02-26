@@ -56,7 +56,7 @@ define(["dojo/dom", "dojo/query", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", 
       var spinner = query(".progress", preloader)[0];
       domClass.add(preloader, "rightBorder");
       var realContent = dom.byId(realContentId);
-      domStyle.set(realContent, "opacity", 0);
+      domStyle.set(realContent, "opacity", "0");
       logger.debug("preloader and real content found");
       logger.debug("going to build transition");
       //noinspection MagicNumberJS,JSCheckFunctionSignatures
