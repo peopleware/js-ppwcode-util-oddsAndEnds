@@ -55,6 +55,7 @@ define(["dojo/_base/declare", "./_MultiLangOutput"],
 
         var render = this.label ? this.getLabel(this.label, null, this.escapeXml) : this.get("missing");
         var outputNode = this.srcNodeRef || this.domNode;
+        // TODO Don't use innerHTML. Use dom-construct to build the DOM.
         outputNode.innerHTML = (render || render === 0 || render === "0") ? render : this.missing;
       }
 

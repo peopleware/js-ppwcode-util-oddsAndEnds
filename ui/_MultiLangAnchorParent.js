@@ -101,6 +101,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dojo/_base/kernel", "dojo/i1
         //   Optional. Use otherBundleName instead of this.nlsParentDirectory and this.bundleName if provided.
         //   This is the path to the bundle, without "nls" or the language directory, and can be relative.
 
+        // TODO method too long and too complex; refactor
+
         if (logger.isDebugEnabled()) {
           logger.debug("getLabel with parameters: [labelName=" + labelName + "][lang=" + lang + "][escapeXml=" +
                        escapeXml + "][otherContext=" + !!otherContext + "][otherBundleName=" + otherBundleName +

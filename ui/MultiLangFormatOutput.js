@@ -71,6 +71,7 @@ define(["dojo/_base/declare", "ppwcode-util-oddsAndEnds/ui/_MultiLangOutput", "d
             result = xml.escape(result);
           }
         }
+        // TODO Don't use innerHTML. Use dom-construct to build the DOM.
         outputNode.innerHTML = result;
       }
 

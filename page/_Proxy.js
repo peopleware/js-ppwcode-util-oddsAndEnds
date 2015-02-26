@@ -153,6 +153,8 @@ define(["dojo/_base/declare", "dojo/sniff", "dojo/Deferred", "./_sharedKeys",
         //   window, it is not brought to the front. There doesn't seem to be any way to do that.
         //   If something goes wrong, all bets are off.
 
+        // TODO method is too long; refactor
+
         var self = this;
         return loadArbiter.guard(
           self._name,

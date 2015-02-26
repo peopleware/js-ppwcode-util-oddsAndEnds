@@ -65,6 +65,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "../xml"],
 
         var outputNode = this.srcNodeRef || this.domNode;
         var cleanValue = this.escapeXml ? xml.escape(this.value, false) : this.value;
+        // TODO Don't use innerHTML. Use dom-construct to build the DOM.
         outputNode.innerHTML = (cleanValue || cleanValue === 0 || cleanValue === "0") ? cleanValue : this.missing;
       }
 
