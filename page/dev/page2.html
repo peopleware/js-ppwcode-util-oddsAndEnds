@@ -97,6 +97,10 @@
               /* Note
                  Works on Mac and Win, but not in IE. Never seen it work.
                */
+              /* TODO
+                 JSHint says there is a problem here. I don't see it. See
+                 https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage.
+                 Yet, I documented myself that it doesn't work in IE. Verify. */
               console.log("message to opener sent.");
             });
 

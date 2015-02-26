@@ -113,6 +113,10 @@
                     console.log("Source is as expected.");
                   }
                   console.log("Posting message back to source");
+                  /* TODO:
+                     JSHint says there is a problem here. I don't see it. See
+                     https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage.
+                     Yet, I documented myself that it doesn't work in IE in another occurrence. Verify. */
                   message.source.postMessage("Back message", MESSAGE_ORIGIN);
                   console.log("Posting message back to source DONE");
                 }
@@ -172,6 +176,10 @@
               /* Note
                  Works in FF, Chrome, Safari, but not in IE.
                */
+              /* TODO:
+                 JSHint says there is a problem here. I don't see it. See
+                 https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage.
+                 Yet, I documented myself that it doesn't work in IE. Verify. */
               console.log("message to page2 sent.");
             });
 
