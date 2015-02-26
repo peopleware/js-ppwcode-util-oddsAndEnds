@@ -287,7 +287,7 @@ define([],
 
     function haveSameElements(a1, a2) {
       // summary:
-      //   Returns true if array a1 and array a2 have the samen elements, irrespective of their order.
+      //   Returns true if array a1 and array a2 have the same elements, irrespective of their order.
       //   Duplicates are allowed.
 
       return a1.every(function(a1i) {return a2.indexOf(a1i) >= 0;}) &&

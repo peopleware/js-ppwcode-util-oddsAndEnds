@@ -124,7 +124,7 @@ define(["dojo/_base/declare",
         //   One way would be to propagate the setting of lang to our children. The formatter
         //   could then use this.lang (this being the TextBox).
         //   The other way is to encapsulate the converter in a function, like we do here,
-        //   to defined a "self = this", to acces the lang later.
+        //   to defined a "self = this", to access the lang later.
 
         // note:
         //   Now we have cycles:

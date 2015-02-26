@@ -28,12 +28,12 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
       //   Add a `"-derived-"` property to the prototype of your class with syntax
       //
       //   | "-derived-": {
-      //   |   PROPERTYNAME: ["path.to.first.derivationSource", "path.to.second.derivationSource", ...],
+      //   |   PROPERTY_NAME: ["path.to.first.derivationSource", "path.to.second.derivationSource", ...],
       //   |   ...
       //   | },
       //
       //   This will create bindingChains (you can use that complete syntax) for a "virtual" derived property
-      //   PROPERTYNAME. Outside users will get events if this derived property changes.
+      //   PROPERTY_NAME. Outside users will get events if this derived property changes.
       //
       //   To define the semantics of the derived property, add a regular Stateful `_PROPRETYNAMEGetter`.
       //
@@ -45,7 +45,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
       //   appropriate. An example of the latter is when this mechanism is used to alias a property.
       //
       //   "-derived-" definitions for an instance are gathered over the entire inheritance chain.
-      //   Deeper definitions for a PROPERTYNAME have precedence.
+      //   Deeper definitions for a PROPERTY_NAME have precedence.
       //
       //   The events can be temporarily stopped and restarted with `stopDerivedEvents` and `startDerivedEvents`.
 

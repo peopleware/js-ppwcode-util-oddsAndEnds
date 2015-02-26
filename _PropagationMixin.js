@@ -149,14 +149,14 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       //   Add a `"-propagate-"` property to the prototype of your class with syntax
       //
       //   | "-propagate-": {
-      //   |   PROPERTYNAME: ["path.to.first.propagationTarget", "path.to.second.propagationTarget", ...],
+      //   |   PROPERTY_NAME: ["path.to.first.propagationTarget", "path.to.second.propagationTarget", ...],
       //   |   ...
       //   | },
       //
       //   or
       //
       //   | "-propagate-": {
-      //   |   PROPERTYNAME: [
+      //   |   PROPERTY_NAME: [
       //   |    {path: "path.to.first.propagationTarget", map: function(v) {return v.something;}),
       //   |    "path.to.second.propagationTarget",
       //   |    ...
@@ -167,7 +167,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       //   or
       //
       //   | "-propagate-": {
-      //   |   PROPERTYNAME: [
+      //   |   PROPERTY_NAME: [
       //   |    {path: "path.to.first.propagationTarget", exec: true),
       //   |    "path.to.second.propagationTarget",
       //   |    ...
@@ -175,7 +175,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       //   |   ...
       //   | },
       //
-      //   When PROPERTYNAME is `set`, the new value is propagated to all mentioned propagation targets,
+      //   When PROPERTY_NAME is `set`, the new value is propagated to all mentioned propagation targets,
       //   if no `null` or `undefined` are encountered in the mentioned paths. If intermediate objects
       //   are Stateful (i.e., have a `get` method), `get` is used to go down the path. If not, regular
       //   property access is used. If the final intermediate object is Stateful (i.e., has a `set` method)
@@ -186,7 +186,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       //   changes we made with `set`.
       //
       //   When the propagation entry is a String, the value set on the propagation target
-      //   is the value with which PROPERTYNAME is `set`. If it is an object, it can have
+      //   is the value with which PROPERTY_NAME is `set`. If it is an object, it can have
       //   an optional `map` function. In that case, the value set on the propagation target
       //   is `map(value, this)`. If it is an object, it can have an optional `exec` property.
       //   If this is try, the path should resolve to a void function, which is then executed
@@ -200,8 +200,8 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       //   Note that, in contrast to bidirectional binding, propagation is one way, from this
       //   to the targets. If the propagation targets are changed outside this mechanism, there is no reaction.
       //   Often, propagation is done to realize the invariant
-      //   | this.get("PROPERTYNAME") === this.get("path").get("to").get("first").get("propagationTarget")
-      //   This mechanism does, one way. If our PROPERTYNAME is changed, the propagation target is changed
+      //   | this.get("PROPERTY_NAME") === this.get("path").get("to").get("first").get("propagationTarget")
+      //   This mechanism does, one way. If our PROPERTY_NAME is changed, the propagation target is changed
       //   to. But the invariant is not guaranteed automatically the other way around.
       //   This mechanism is only useful therefor if all intermediate objects are wholly owned (private)
       //   by the previous object in the path, or at leas when the graph is wholly owned (private)
