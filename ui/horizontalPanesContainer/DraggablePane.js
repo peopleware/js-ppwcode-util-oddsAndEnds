@@ -564,6 +564,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "ppwcode-util-contracts/_Mixi
         // summary:
         //   The center of this is after the mouse.
 
+        // getMarginBox parameter annotation is wrong. Documentation says the second parameter is optional.
+        //noinspection JSCheckFunctionSignatures
         var margins = domGeom.getMarginBox(this.domNode);
         var center = margins.l + (margins.w / 2);
         return referencePosition < center;
@@ -623,6 +625,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "ppwcode-util-contracts/_Mixi
           top = 7;
         }
         var animations = this.next._repositionFromHereToRightAnimations(referencePosition);
+        // getMarginBox parameter annotation is wrong. Documentation says the second parameter is optional.
+        //noinspection JSCheckFunctionSignatures
         var margins = domGeom.getMarginBox(this.domNode);
         var targetLeft = this._getTargetLeftPosition(referencePosition);
         if ((referencePosition || referencePosition === 0) && Math.abs(targetLeft - margins.l) <= gap) {
@@ -674,6 +678,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "ppwcode-util-contracts/_Mixi
         if (this.container._onTheMove === this) {
           this.domNode.style.zIndex = 1;
           this.domNode.style.opacity = 1;
+          // getMarginBox parameter annotation is wrong. Documentation says the second parameter is optional.
+          //noinspection JSCheckFunctionSignatures
           var margins = domGeom.getMarginBox(this.domNode);
           var center = margins.l + (margins.w / 2);
           this.container._onTheMove = null;
