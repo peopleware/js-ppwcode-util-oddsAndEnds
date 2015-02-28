@@ -34,6 +34,7 @@ define(["dojo/Deferred", "dojo/topic", "../log/logger!", "module"],
       //   `continuation` must be a zero-arg function.
       // description:
       //   This code is based on http://dbaron.org/log/20100309-faster-timeouts
+      //   Use RelentProgressBar to show progress to the user.
 
       logger.debug("Call for relented execution. Storing with id " + counter + ". (stored continuations: " +
                    continuations.length + ")");
