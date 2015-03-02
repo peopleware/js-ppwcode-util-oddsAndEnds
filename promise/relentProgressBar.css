@@ -15,7 +15,7 @@
 */
 
 .relentProgressBar {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
@@ -40,8 +40,12 @@
   height: 5px;
 }
 
+.relentProgressBar .dijitProgressBarEmpty {
+  border: none;
+}
+
 .relentProgressBar .dijitProgressBarTile {
-  background-color: #115d83;
+  background-color: #1616fd;
 }
 
 .relentProgressBar .dijitProgressBarLabel {
