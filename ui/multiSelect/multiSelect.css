@@ -34,6 +34,7 @@
 .ppwCodeMultiSelect .mblListItemLabel {
   position: relative;
   overflow: hidden;
+  display: block; /* to make ellipsis work */ /* TODO or inline-block? */
   white-space: nowrap;
   text-overflow: ellipsis;
   height: 100%;
