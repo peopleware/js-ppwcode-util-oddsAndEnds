@@ -34,10 +34,14 @@
 .ppwCodeMultiSelect .mblListItemLabel {
   position: relative;
   overflow: hidden;
-  display: block; /* to make ellipsis work */ /* TODO or inline-block? */
+  display: inline-block; /* to make ellipsis work */
   white-space: nowrap;
   text-overflow: ellipsis;
-  height: 100%;
+  margin-top: 5px;
+  /* formCommons.css label, label.fixedLabel */
+  color: darkslategrey;
+  font-weight: normal; /* these are not labels, but values */
+  font-size: 90%;
 }
 
 .ppwCodeMultiSelect .mblListItemChecked {
@@ -48,13 +52,10 @@
   position: relative;
   overflow: hidden;
   padding: 0 8px;
-  height: 43px;
+  height: 30px;
   list-style-type: none;
-  line-height: 43px;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   border-bottom: 1px solid #adaaad;
-  font-weight: bold;
-  color: black;
 }
 
 .ppwCodeMultiSelect .mblListItemChecked .mblListItemRightIcon {
@@ -62,15 +63,14 @@
 }
 
 .ppwCodeMultiSelect .mblListItemUnchecked .mblListItemRightIcon {
-  visibility: hidden;
+  display: none;
 }
 
 .ppwCodeMultiSelect .mblListItemRightIcon, .ppwCodeMultiSelect .mblListItemRightIcon2, .ppwCodeMultiSelect .mblListItemUncheckIcon {
+  display: inline-block;
   position: relative;
   float: right;
   line-height: normal;
-  margin-top: 7px;
-  margin-bottom: -7px;
 }
 
 .ppwCodeMultiSelect .mblDomButtonDarkBlueCheck, .ppwCodeMultiSelect .mblDomButtonCheck {
