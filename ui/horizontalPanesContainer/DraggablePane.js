@@ -15,13 +15,23 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "ppwcode-util-contracts/_Mixi
     //   The gap, in pixels, to visualize between neighbouring instances.
     //   To be applied left.
     //noinspection MagicNumberJS
-    var gap = 12; // px
+    var gap = 2; // px
+
+    // top: Number
+    //   The distance, in pixels, between the pane and the top of the container in rest.
+    //noinspection MagicNumberJS
+    var top = 0; // px
 
     // extraGapForFocused: Number
     //   The extra gap, in pixels, to visualize between neighbouring instances when the pane is focused.
     //   To be applied left and right.
     //noinspection MagicNumberJS
-    var extraGapForFocused = 40; // px
+    var extraGapForFocused = 5; // px
+
+    // topForFocused: Number
+    //   The distance, in pixels, between the pane and the top of the container when the pane is focused.
+    //noinspection MagicNumberJS
+    var topForFocused = 0; // px
 
     // dropPositionGap: Number
     //   During a drag, the position where the dragged pane would be positioned when the mouse is released
@@ -618,10 +628,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "ppwcode-util-contracts/_Mixi
 
         var focused = this.get("focused");
         domClass.toggle(this.domNode, "focused", focused);
-        var top = 10;
+        var top = this.top;
         if (focused) {
           this.domNode.scrollIntoView();
-          top = 7;
+          top = this.topForFocused;
         }
         var animations = this.next._repositionFromHereToRightAnimations(referencePosition);
         // getMarginBox parameter annotation is wrong. Documentation says the second parameter is optional.

@@ -1,13 +1,13 @@
 .draggablePane {
   position: absolute;
-  top: 10px;
-  bottom: 10px;
-  box-shadow: 3px 3px 10px rgba(131, 130, 143, 0.66);
+  top: 0;
+  bottom: 0;
+  box-shadow: 1px 1px 3px rgba(131, 130, 143, 0.66);
 }
 
 .draggablePane.focused {
   /* 3 pixels "above" */
-  top: 3px;
-  bottom: 13px;
-  box-shadow: 12px 14px 10px rgba(48, 100, 196, 0.66);
+  top: 0;
+  bottom: 0;
+  box-shadow: 2px 3px 3px rgba(48, 100, 196, 0.66);
 }
