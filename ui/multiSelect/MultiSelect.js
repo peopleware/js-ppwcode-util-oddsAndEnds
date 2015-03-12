@@ -40,7 +40,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       // sorted: Boolean
       //   If true, the options will be sorted by label.
-      sorted: false,
+      sorted: false, // TODO make it possible to sort by something else
 
       // _getValueAttr: Function
       //    Override of the 'value' getter. This getter returns a copy of the value array instead of the array itself.
