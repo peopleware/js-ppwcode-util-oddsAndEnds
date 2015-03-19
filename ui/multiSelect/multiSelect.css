@@ -1,3 +1,7 @@
+/* Misuse of a dojox/mobile component. When dojox/mobile/common is loaded (when we actually do load a dojox/mobile
+   component e.g.), the whole mobile stylesheet comes in too. The styles here take that into account, and try to work
+   whether these are loaded or not. */
+
 .ppwCodeMultiSelect.multiSelectListContainer {
   margin: 0;
   padding: 0;
@@ -55,6 +59,13 @@
   list-style-type: none;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   line-height: normal;
+  /* undo the damage done by the mobile stylesheet */
+  border-style: none;
+  border-width: 0;
+  font-family: Myriad, Helvetica, Tahoma, Arial, clean, sans-serif; /* sorry about the C/P */
+  color: inherit;
+  font-weight: normal;
+  height: inherit;
 }
 
 .ppwCodeMultiSelect .mblListItemChecked .mblListItemRightIcon {
@@ -65,19 +76,27 @@
   display: none;
 }
 
-.ppwCodeMultiSelect .mblListItemRightIcon, .ppwCodeMultiSelect .mblListItemRightIcon2, .ppwCodeMultiSelect .mblListItemUncheckIcon {
+.ppwCodeMultiSelect .mblListItemRightIcon,
+.ppwCodeMultiSelect .mblListItemRightIcon2,
+.ppwCodeMultiSelect .mblListItemUncheckIcon {
   display: inline-block;
   position: relative;
   float: right;
   line-height: normal;
+  /* undo the damage done by the mobile stylesheet ListItem.css */
+  margin: 0;
 }
 
-.ppwCodeMultiSelect .mblDomButtonDarkBlueCheck, .ppwCodeMultiSelect .mblDomButtonCheck {
+.ppwCodeMultiSelect .mblDomButtonDarkBlueCheck,
+.ppwCodeMultiSelect .mblDomButtonCheck {
   position: relative;
   width: 10px;
+  /* undo the damage done by the mobile stylesheet DomButtonDarkBlueCheck.css */
+  height: auto;
 }
 
-.ppwCodeMultiSelect.mblDomButtonDarkBlueCheck > div, .ppwCodeMultiSelect .mblDomButtonCheck > div {
+.ppwCodeMultiSelect.mblDomButtonDarkBlueCheck > div,
+.ppwCodeMultiSelect .mblDomButtonCheck > div {
   position: absolute;
   left: 0;
   top: 3px;
