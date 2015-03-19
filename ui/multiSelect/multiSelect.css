@@ -52,10 +52,9 @@
   position: relative;
   overflow: hidden;
   padding: 0 8px;
-  height: 30px;
   list-style-type: none;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-  border-bottom: 1px solid #adaaad;
+  line-height: normal;
 }
 
 .ppwCodeMultiSelect .mblListItemChecked .mblListItemRightIcon {
@@ -75,21 +74,19 @@
 
 .ppwCodeMultiSelect .mblDomButtonDarkBlueCheck, .ppwCodeMultiSelect .mblDomButtonCheck {
   position: relative;
-  width: 20px;
-  height: 29px;
+  width: 10px;
 }
 
 .ppwCodeMultiSelect.mblDomButtonDarkBlueCheck > div, .ppwCodeMultiSelect .mblDomButtonCheck > div {
   position: absolute;
   left: 0;
-  top: 8px;
-  width: 16px;
-  height: 6px;
-  font-size: 1px;
+  top: 3px;
+  width: 11px;
+  height: 4px;
   -webkit-transform: scaleX(0.7) rotate(135deg);
   transform: scaleX(0.7) rotate(135deg);
-  border-top-width: 3px;
-  border-right-width: 4px;
+  border-top-width: 1px;
+  border-right-width: 2px;
   border-left-width: 0;
   border-bottom-width: 0;
   border-style: solid;
