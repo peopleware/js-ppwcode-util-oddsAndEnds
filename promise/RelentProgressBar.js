@@ -45,7 +45,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       postCreate: function() {
         var self = this;
-        topic.subscribe(relentMid, function(/*relent.Status*/ relentStatus) {
+        this.own(topic.subscribe(relentMid, function(/*relent.Status*/ relentStatus) {
           if (relentStatus.burstBusy) {
             self._progressBar.set({
               maximum: relentStatus.maxContinuationsWaiting,
@@ -57,7 +57,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
             self._progressBar.set({maximum: 1, value: 1});
           }
           domClass.toggle(self.domNode, "relentProgressBarShowing", relentStatus.burstBusy);
-        });
+        }));
 
       }
 
