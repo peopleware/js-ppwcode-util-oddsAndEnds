@@ -1,0 +1,64 @@
+/* Generalized styles for mobile-like rows in a list, with a left-upper-main information part, and a
+   right-lower-secondary information part. Can be used with dgrid and mobile lists, or anywhere where
+   you need to create a div for a list row, which does not have to be updated live. Update happens
+   by removing the row, and creating a new one.
+   The list itself should have a border on all sides. */
+
+div.listRow {
+  padding: 5px;
+  margin: 0;
+  border-left-style: none;
+  border-right-style: none;
+  border-top-style: none;
+  border-bottom-style: solid;
+  border-color: gray;
+  border-width: 1px;
+}
+
+/* All listRows, except the last
+   This is not very stable, but there is no way to do it like for the first
+   (see http://stackoverflow.com/questions/2717480/css-selector-for-first-element-with-class for selector.),
+   since there is no "before" equivalent for "~".
+   This depends on the fact that the list contains 1 more div, the "dgrid-preload", after the last listRow. */
+div.listRow:nth-last-child(2) {
+  margin-bottom: -1px;
+  /* so we don't see the bottom border if the container is full,
+                           but we do see it if it is not full */
+}
+
+.claro div.listRow.ui-state-default:hover {
+  background-color: #e9f2fe !important;
+}
+
+.claro div.listRow.ui-state-active {
+  background-color: #cee6fa !important;
+}
+
+.claro div.listRow.ui-state-active:hover {
+  background-color: #9bc6f2 !important;
+}
+
+.claro div.listRow.ui-state-highlight {
+  background-color: #ffff66 !important;
+}
+
+div.listRow div {
+  display: block;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+div.listRow div.listRowIdentifyingField {
+  font-weight: bolder;
+}
+
+div.listRow div.listRowBottomRightMinor {
+  margin-top: 4px;
+  padding-right: 2px; /*allow space for italic last letter*/
+  color: gray;
+  font-size: 75%;
+  text-align: right;
+}
+
