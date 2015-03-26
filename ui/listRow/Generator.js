@@ -64,20 +64,16 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
         //   optional array of CSS class names to be applied to the label too
         this._c_pre(function() {return !!this.listRowNode;});
 
-        var classNames = [className];
+        var attributes = {className: [className]};
         if (extraClassNames) {
-          classNames = classNames.concat(extraClassNames);
+          attributes.className = attributes.className.concat(extraClassNames);
         }
-        classNames = classNames.join(" ");
+        attributes.className = attributes.className.join(" ");
+        if (text || text === "0" || text === "false") {
+          attributes.textContent = text;
+        }
         //noinspection JSValidateTypes,UnnecessaryLocalVariableJS
-        var /*DOMNode*/ upperLabel = domConstruct.create(
-          "div",
-          {
-            textContent: text,
-            className: classNames
-          },
-          this.listRowNode
-        );
+        var /*DOMNode*/ upperLabel = domConstruct.create("div", attributes, this.listRowNode);
         return upperLabel; // return DOMNode
       },
 
@@ -132,10 +128,12 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
 
       lowerLabelText: function() {
         // summary:
-        //   Override to supply the string to show in the upper label.
+        //   Lower label text is optional. There will always be a lower label, but it might not contain a text node.
+        //   Override to supply the string to show in the upper label. If this returns `null`, there will be no
+        //   text node.
         this._c_pre(function() {return !!this.semanticObject;});
 
-        return this._c_ABSTRACT(); // return String
+        return null;
       },
 
       lowerLabelExtraClassNames: function() { // TODO chain
