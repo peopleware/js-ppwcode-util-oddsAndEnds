@@ -166,7 +166,18 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
         this.createUpperLabel();
         this.createLowerLabel();
         return this.listRowNode; // return DOMNode
+      },
+
+      reset: function() {
+        // summary:
+        //   Reset the references to the created DOM nodes to null.
+        //   The references to "input" data and "configuration" data, such as css class names and the `semanticObject`
+        //   are not touched.
+        this.listRowNode = null;
+        this.upperLabelNode = null;
+        this.lowerLabelNode = null;
       }
+
     });
 
     ListRowGenerator.mid = module.id;
