@@ -62,3 +62,15 @@ div.listRow div.listRowBottomRightMinor {
   text-align: right;
 }
 
+div.listRow div.listRowSecondary {
+  display: block;
+  font-weight: normal;
+}
+
+div.listRow div.listRowIdentifyingField div.listRowSecondary {
+  color: #404040;
+  font-size: 85%;
+  white-space: normal;
+}
+
+

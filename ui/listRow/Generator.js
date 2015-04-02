@@ -40,6 +40,8 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
       //   The general CSS class name to use for listRows. The default is "listRowBottomRightMinor".
       lowerLabelClassName: "listRowBottomRightMinor",
 
+      secondaryLabelClassName: "listRowSecondary",
+
       // semanticObject: SemanticObject
       //   The SemanticObject to create a listRow for.
       semanticObject: null,
@@ -51,6 +53,10 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
       // upperLabelNode: DOMNode
       //    DOMNode of the upper label, after generation.
       upperLabelNode: null,
+
+      // upperLabelSecondNode: DOMNode
+      //    DOMNode of the upper label, second line, after generation.
+      upperLabelSecondaryNode: null,
 
       // lowerLabelNode: DOMNode
       //    DOMNode of the lower label, after generation.
@@ -64,24 +70,31 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
 
       createLabel: function(/*String*/ className,
                             /*String*/ text,
-                            /*String[]?*/ extraClassNames) {
+                            /*String[]?*/ extraClassNames,
+                            /*DOMNOde*/ parentNode,
+                            /*Boolean*/ forceEmptyNode) {
         // className: String
         //   the main CSS class name
         // extraClassNames: String[]
         //   optional array of CSS class names to be applied to the label too
-        this._c_pre(function() {return !!this.listRowNode;});
+        this._c_pre(function() {return !!parentNode;});
 
+        var thereIsText = text || text === "0" || text === "false";
+        if (!forceEmptyNode && !thereIsText) {
+          return;
+        }
+        // we want a node in any case; there is text, or we need to force an empty node
         var attributes = {className: [className]};
         if (extraClassNames) {
           attributes.className = attributes.className.concat(extraClassNames);
         }
         attributes.className = attributes.className.join(" ");
-        if (text || text === "0" || text === "false") {
+        if (thereIsText) {
           attributes.textContent = text;
         }
         //noinspection JSValidateTypes,UnnecessaryLocalVariableJS
-        var /*DOMNode*/ upperLabel = domConstruct.create("div", attributes, this.listRowNode);
-        return upperLabel; // return DOMNode
+        var /*DOMNode*/ label = domConstruct.create("div", attributes, parentNode);
+        return label; // return DOMNode
       },
 
       createUpperLabel: function() {
@@ -91,7 +104,16 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
         this.upperLabelNode = this.createLabel(
           this.upperLabelClassName,
           this.upperLabelText(),
-          this.upperLabelExtraClassNames()
+          this.upperLabelExtraClassNames(),
+          this.listRowNode,
+          true
+        );
+        this.upperLabelSecondaryNode = this.createLabel(
+          this.secondaryLabelClassName,
+          this.upperLabelSecondaryText(),
+          null,
+          this.upperLabelNode,
+          false
         );
       },
 
@@ -102,7 +124,9 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
         this.lowerLabelNode = this.createLabel(
           this.lowerLabelClassName,
           this.lowerLabelText(),
-          this.lowerLabelExtraClassNames()
+          this.lowerLabelExtraClassNames(),
+          this.listRowNode,
+          true
         );
       },
 
@@ -133,10 +157,20 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
         return []; // String[]
       },
 
+      upperLabelSecondaryText: function() {
+        // summary:
+        //   Upper label secondary text is optional. There will be no node if this returns `null`, and a block
+        //   with this text if it returns a text.
+        //   Override to supply the string to show in the upper label secondary position.
+        this._c_pre(function() {return !!this.semanticObject;});
+
+        return null;
+      },
+
       lowerLabelText: function() {
         // summary:
         //   Lower label text is optional. There will always be a lower label, but it might not contain a text node.
-        //   Override to supply the string to show in the upper label. If this returns `null`, there will be no
+        //   Override to supply the string to show in the lower label. If this returns `null`, there will be no
         //   text node.
         this._c_pre(function() {return !!this.semanticObject;});
 
