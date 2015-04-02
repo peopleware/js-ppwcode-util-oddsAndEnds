@@ -14,12 +14,19 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
       //   This is an abstract class. Methods to get the text for the upper and lower label need to be filled out
       //   for subclasses or instances.
       //
-      //   Create a new generator each time you need to generate a row, to avoid memory leaks. Set the semantic
-      //   object before calling `generate`, e.g., in the constructor:
+      //   Create a new generator each time you need to generate a row, or reset after each row generation,
+      //   to avoid memory leaks. Set the semantic object before calling `generate`, e.g., in the constructor:
       //   | var listRowNode = new MySemanticObjectTypeListGenerator({semanticObject: mySemanticObject}).generate();
       //
       //   During generation, a `div` is created as listRow DOMNode, with inside it an upper- and lower label.
-      //   These are also available as properties after generation.
+      //   These are also available as properties after generation, and removed by `reset`.
+      //
+      //   Subclasses are often used in different contexts, where more or less information should be shown.
+      //   Showing more or less information can best be handled by adding "show yes or no"-boolean properties.
+      //   The default should always be to show everything. By setting some properties to false in the constructor
+      //   using the kwargs-object, less can be shown. This is the sensible default, because less information
+      //   should be shown in more specific contexts, where at construction time we know the context we are in,
+      //   and it is easy to make the choice explicit, and this can be done statically.
 
       // listRowClassName: String
       //   The general CSS class name to use for listRows. The default is "listRow".
