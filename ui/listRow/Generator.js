@@ -216,7 +216,19 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
         //   are not touched.
         this.listRowNode = null;
         this.upperLabelNode = null;
+        this.upperLabelSecondaryNode = null;
         this.lowerLabelNode = null;
+      },
+
+      generateFor: function(/*SemanticObject*/ semanticObject) {
+        // summary:
+        //   Sets the semantic object, calls generate and remembers the result, resets this, and returns the result.
+        //   Since this is the most-used pattern, introduced for convenience.
+
+        this.semanticObject = semanticObject;
+        var result = this.generate();
+        this.reset();
+        return result;
       }
 
     });
