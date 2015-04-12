@@ -153,29 +153,30 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       _initAutoCompleteInputField: function() {
         var self = this;
-        var loaded = self.getData && self.getData();
-        if (loaded) {
-          loaded.then(
-            function(result) {
-              var myStore = new Memory({data: result});
-              self._txtAdd = new ComboBox({
-                  id: "propertyComboBox",
-                  store: myStore,
-                  autocomplete: result && result.length > 0,
-                  searchAttr: "displayValue",
-                  placeholder: self.placeHolder
-                },
-                self._propertySelect);
-              self._txtAdd.startup();
-            },
-            function(ignore) {
-              logger.error("Error loading emergency numbers used");
-            }
-          );
+        if (!self.getData) {
+          throw "ERROR: No getData function specified";
         }
-        else {
-          logger.error("No getData function specified");
-        }
+        var loaded = self.getData();
+        var txtAddInitialiased = loaded.then(
+          function(result) {
+            var myStore = new Memory({data: result});
+            self._txtAdd = new ComboBox(
+              {
+                store: myStore,
+                autocomplete: result && result.length > 0,
+                searchAttr: "displayValue",
+                placeholder: self.placeHolder
+              },
+              self._propertySelect
+            );
+            self._txtAdd.startup();
+          },
+          function(err) {
+            logger.error("Error loading emergency numbers used: ", err);
+            throw err;
+          }
+        );
+        return txtAddInitialiased;
       },
 
       // _destroyAutoCompleteInputField: function
@@ -183,10 +184,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       //   Destroys the auto-complete input box and re-creates the original DIV element that was replaced on creation.
       _destroyAutoCompleteInputField: function() {
         if (this._txtAdd) {
-          this._txtAdd.destroy();
+          this._txtAdd.destroyRecursive();
           this._txtAdd = null;
-          domConstruct.destroy("propertyComboBox");
-          this._propertySelect = domConstruct.create("div", {}, this._addTextWrapperNode, "first");
+          //this._propertySelect = domConstruct.create("div", {}, this._addTextWrapperNode, "first");
         }
       },
 
