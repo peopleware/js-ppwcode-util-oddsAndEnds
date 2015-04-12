@@ -1,17 +1,22 @@
 <div class="ppwCodeOnePropertyCrdList" data-dojo-type="dojox/mobile/Container">
   <script type="dojo/require">at: "dojox/mvc/at", lang: "dojo/_base/lang"</script>
-  <div class="ppwCodeOnePropertyCrdListFields" data-dojo-attach-point="_addTextWrapperNode">
-    <div data-dojo-attach-point="_propertySelect"></div>
-    <button class="rightAddButton"
+  <div class="onePropertyCrdListFields" data-dojo-attach-point="_addTextWrapperNode">
+    <span class="comboBox"
+          data-dojo-type="dijit/form/ComboBox"
+          data-dojo-props="searchAttr: 'displayValue',
+                           placeholder: '${placeHolder}',
+                           store: this._autoCompleteStore"
+          data-dojo-attach-point="_comboBox"></span>
+    <button class="addButton"
             data-dojo-type="dijit/form/Button"
             data-dojo-props="iconClass: 'dijitIconNewTask',
                              showLabel: false,
                              onClick: lang.hitch(this, this.addClicked)"></button>
   </div>
-  <div class="listContainer" data-dojo-attach-point="_ulNodeWrapper">
-    <ul data-dojo-type="dojox/mobile/EdgeToEdgeList"
+  <div class="onePropertyCrdListContainer" data-dojo-attach-point="_edgeToEdgeListNodeWrapperNode">
+    <ul class="onePropertyCrdListList"
+        data-dojo-type="dojox/mobile/EdgeToEdgeList"
         data-dojo-props="select:''"
-        data-dojo-attach-point="_ulNode"
-        class="list"></ul>
+        data-dojo-attach-point="_edgeToEdgeList"></ul>
   </div>
 </div>

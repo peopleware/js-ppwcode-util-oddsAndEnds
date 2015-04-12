@@ -3,23 +3,63 @@
   padding: 0;
 }
 
-.ppwCodeOnePropertyCrdList .listContainer {
+.ppwCodeOnePropertyCrdList .onePropertyCrdListFields {
+  display: none;
+  margin-top: 5px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  padding: 0;
+  position: relative;
+  height: 30px;
+}
+
+.ppwCodeOnePropertyCrdList .onePropertyCrdListFields.enabled {
+  display: block;
+}
+
+.ppwCodeOnePropertyCrdList .onePropertyCrdListFields .comboBox {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 30px;
+}
+
+.ppwCodeOnePropertyCrdList .onePropertyCrdListFields .addButton {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.ppwCodeOnePropertyCrdList .onePropertyCrdListContainer {
   margin: 0;
   padding: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  border: 1px solid #4c656b;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #4c656b;
 }
 
-.ppwCodeOnePropertyCrdList .list {
+.ppwCodeOnePropertyCrdList .onePropertyCrdListContainer .onePropertyCrdListList {
+  margin: 0;
+  padding: 0;
   background: transparent !important;
 }
 
-.ppwCodeOnePropertyCrdList .list li.disabled {
+.ppwCodeOnePropertyCrdList .onePropertyCrdListContainer .onePropertyCrdListList li {
+  cursor: default;
+}
+
+.ppwCodeOnePropertyCrdList .onePropertyCrdListContainer .onePropertyCrdListList li.disabled {
   color: #4c656b;
 }
 
-.ppwCodeOnePropertyCrdList .mblListItem {
+.ppwCodeOnePropertyCrdList .onePropertyCrdListContainer .onePropertyCrdListList .mblListItem {
   position: relative;
   overflow: hidden;
   padding: 0 8px;
@@ -34,7 +74,7 @@
   height: inherit;
 }
 
-.ppwCodeOnePropertyCrdList .list li .mblListItemLabel {
+.ppwCodeOnePropertyCrdList .onePropertyCrdListContainer .onePropertyCrdListList li .mblListItemLabel {
   float: left;
   overflow: hidden;
   display: inline-block;
@@ -46,29 +86,9 @@
   font-size: 90%;
 }
 
-.ppwCodeOnePropertyCrdList .list li .deleteIcon {
-  margin: 8px 0;
+.ppwCodeOnePropertyCrdList .onePropertyCrdListContainer .onePropertyCrdListList li .deleteIcon {
+  margin: 0;
   padding: 0;
   float: right;
   display: block;
-  width: 32px;
-  height: 26px;
-  line-height: 26px;
-  text-align: right;
-}
-
-.ppwCodeOnePropertyCrdList .list li:first-child {
-  border-top: none;
-}
-
-.ppwCodeOnePropertyCrdList .list li:last-child {
-  border-bottom: none;
-}
-
-.ppwCodeOnePropertyCrdList .ppwCodeOnePropertyCrdListFields {
-  padding: 4px 8px;
-  border-top: 1px solid #4c656b;
-  border-right: 1px solid #4c656b;
-  border-bottom: none;
-  border-left: 1px solid #4c656b;
 }

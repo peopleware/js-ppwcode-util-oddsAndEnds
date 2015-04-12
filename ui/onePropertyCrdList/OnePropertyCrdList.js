@@ -17,41 +17,44 @@
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
         "dojo/text!./onePropertyCrdList.html", "dojo/store/Memory",
         "ppwcode-util-oddsAndEnds/_PropagationMixin", "dojox/mobile/ListItem",
-        "dojo/dom-style", "dojo/dom-class", "dojo/Stateful", "dojo/dom-construct",
-        "dijit/form/Button", "dojo/i18n!./nls/labels", "dijit/form/ComboBox", "../../log/logger!", "dojo/Deferred",
+        "dojo/dom-style", "dojo/dom-class", "dojo/dom-construct",
+        "dijit/form/Button", "../../log/logger!", "dojo/Deferred",
 
-        "dojox/mobile/Container", "dojox/mobile/EdgeToEdgeList",
-        "xstyle/css!dojox/mobile/themes/iphone/iphone.css",
+        "dojox/mobile/Container", "dojox/mobile/EdgeToEdgeList", "dijit/form/ComboBox",
         "xstyle/css!./onePropertyCrdList.css"],
   function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
            template, Memory,
            _PropagationMixin, ListItem,
-           domStyle, domClass, Stateful, domConstruct,
-           Button, labels, ComboBox, logger, Deferred) {
+           domStyle, domClass, domConstruct,
+           Button, ComboBox, logger, Deferred) {
 
-    return declare([Stateful, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _PropagationMixin], {
+    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _PropagationMixin], {
       // summary:
       //   Widget that is specially made to represent a list with only 1 property per element.
       //   Elements can be added or removed.
       //   When the getData() function is overridden, the input box will support auto-complete.
 
       templateString: template,
-      labels: labels,
 
-      // _ulNode: UL HTML element in template
-      _ulNode: null,
-
-      _ulNodeWrapper: null,
-
-      _txtAdd: null,
-
+      // _addTextWrapperNode: DOMNode
       _addTextWrapperNode: null,
 
-      _propertySelect: null,
+      // _comboBox: ComboBox
+      _comboBox: null,
+
+      // _edgeToEdgeList: EdgeToEdgeList
+      _edgeToEdgeList: null,
+
+      // _edgeToEdgeListNodeWrapperNode: DOMNode
+      _edgeToEdgeListNodeWrapperNode: null,
+
+      // _autoCompleteStore: Memory
+      _autoCompleteStore: null,
 
       // getData: function
       // summary:
-      //   Function that gets the data to use in the auto-complete.
+      //   Function that gets the data to use in the auto-complete. Returns a Promise for the
+      //   array of data.
       // description:
       //   This function should return an array with objects that have a displayValue.
       //   This is a property that is used to search on when trying to auto-complete.
@@ -65,60 +68,61 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
       height: null,
 
-      // value: Array
-      value: [],
+      // value: Array, never null
+      value: null,
+
       // disabled: Boolean
       disabled: null,
 
       "-propagate-": {
-        value: [
-          {path: "_propagateValue", exec: true}
-        ]
+        value: [{path: "_propagateValue", exec: true}]
+      },
+
+      constructor: function() {
+        this.value = [];
+        this._autoCompleteStore = new Memory();
+      },
+
+      _clearList: function() {
+        // summary:
+        //   Clears all the list items from the UL list.
+
+        if (this._edgeToEdgeList && this._edgeToEdgeList._started && !this._edgeToEdgeList._destroyed) {
+          // method is called during destruction, when the target is unset
+          this._edgeToEdgeList.destroyDescendants();
+          domConstruct.empty(this._edgeToEdgeList.domNode);
+        }
       },
 
       _propagateValue: function(/*Array*/ valueArray) {
         var self = this;
-        if (self._ulNode) {
-          domConstruct.empty(self._ulNode.domNode);
-          if (valueArray && valueArray.length > 0) {
-            valueArray.forEach(function(element) {
-              var li = new ListItem({label: self.format(element)});
-              if (!self.get("disabled")) {
-                var deleteIcon = new Button({showLabel: false, iconClass: "dijitIconDelete"});
-                domClass.add(deleteIcon.domNode, "deleteIcon");
-                li.own(deleteIcon.on("click", function() {
+        self._clearList();
+        if (self._edgeToEdgeList && valueArray && valueArray.length > 0) {
+          valueArray.forEach(function(element) {
+            var li = new ListItem({label: self.format(element)});
+            if (!self.get("disabled")) {
+              var deleteIcon = new Button({showLabel: false, iconClass: "dijitIconDelete"});
+              domClass.add(deleteIcon.domNode, "deleteIcon");
+              li.own(deleteIcon.on(
+                "click",
+                function() {
                   if (!self.get("disabled")) {
-                    if (confirm(labels.confirmDelete1 + self.format(element) + labels.confirmDelete2)) {
-                      var arr = self.get("value");
-                      var idx = arr.indexOf(element);
-                      arr.splice(idx, 1);
-                      // Set the array to null before setting de real value to force events being fired.
-                      self.set("value", null);
-                      self.set("value", arr);
-                    }
+                    var arr = self.get("value");
+                    var idx = arr.indexOf(element);
+                    arr.splice(idx, 1);
+                    self.set("value", arr);
                   }
-                }));
-                li.addChild(deleteIcon);
-              }
-              if (!self.get("disabled")) {
-                domClass.remove(li.domNode, "disabled");
-              }
-              else {
-                domClass.add(li.domNode, "disabled");
-              }
-              self._ulNode.addChild(li);
-            });
-          }
+                }
+              ));
+              li.addChild(deleteIcon);
+            }
+            self._edgeToEdgeList.addChild(li);
+          });
         }
       },
 
       _getValueAttr: function() {
-        if (this.value) {
-          return this.value.slice();
-        }
-        else {
-          return undefined;
-        }
+        return this.value.slice();
       },
 
       _getDisabledAttr: function() {
@@ -126,29 +130,28 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       },
 
       format: function(val) {
-        return val ? val.toString() : "";
+        return val ? val.toString() : "N/A";
       },
 
       parse: function(formattedValue) {
-        return formattedValue ? formattedValue.toString() : "";
+        return formattedValue ? formattedValue.toString() : "N/A";
       },
 
-      _setHeightAttr: function(height) {
+      _setHeightAttr: function(/*String*/ height) {
         this.inherited(arguments);
-        domStyle.set(this._ulNodeWrapper, "height", height);
+        domStyle.set(this._edgeToEdgeListNodeWrapperNode, "height", height);
       },
 
       _setDisabledAttr: function(disabled) {
-        this.inherited(arguments);
-        this.disabled = disabled;
+        this._set("disabled", disabled);
         if (!disabled) {
           this._initAutoCompleteInputField();
         }
         else {
-          this._destroyAutoCompleteInputField();
+          this._deInitAutoCompleteInputField();
         }
-        domStyle.set(this._addTextWrapperNode, "display", (!!disabled ? "none" : "block"));
-        this._propagateValue(this._getValueAttr());
+        domClass.toggle(this._addTextWrapperNode, "enabled", !disabled);
+        this._propagateValue(this.get("value")); // to clear the list and render it completely fresh
       },
 
       _initAutoCompleteInputField: function() {
@@ -157,49 +160,39 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           throw "ERROR: No getData function specified";
         }
         var loaded = self.getData();
-        var txtAddInitialiased = loaded.then(
+        var comboBoxInitialiased = loaded.then(
           function(result) {
-            var myStore = new Memory({data: result});
-            self._txtAdd = new ComboBox(
-              {
-                store: myStore,
-                autocomplete: result && result.length > 0,
-                searchAttr: "displayValue",
-                placeholder: self.placeHolder
-              },
-              self._propertySelect
-            );
-            self._txtAdd.startup();
+            if (self._comboBox) {
+              self._autoCompleteStore.setData(result);
+              self._comboBox.set("autocomplete", !!(result && result.length > 0));
+            }
           },
           function(err) {
             logger.error("Error loading emergency numbers used: ", err);
             throw err;
           }
         );
-        return txtAddInitialiased;
       },
 
-      // _destroyAutoCompleteInputField: function
-      // summary:
-      //   Destroys the auto-complete input box and re-creates the original DIV element that was replaced on creation.
-      _destroyAutoCompleteInputField: function() {
-        if (this._txtAdd) {
-          this._txtAdd.destroyRecursive();
-          this._txtAdd = null;
-          //this._propertySelect = domConstruct.create("div", {}, this._addTextWrapperNode, "first");
+      _deInitAutoCompleteInputField: function() {
+        if (this._comboBox) {
+          this._comboBox.set("autocomplete", false);
         }
       },
 
+      // TODO add "enter from keyboard"
+
       addClicked: function() {
-        var fieldValue = this._txtAdd.get("value");
+        var fieldValue = this._comboBox.get("value");
         var valueToAdd = this.parse(fieldValue);
         if (valueToAdd && valueToAdd.trim() !== "") {
           var arr = this.get("value");
           if (arr.indexOf(valueToAdd) < 0) {
             arr.push(valueToAdd);
+            arr.sort();
             this.set("value", arr);
           }
-          this._txtAdd.set("value", "");
+          this._comboBox.set("value", "");
         }
       }
 
