@@ -54,13 +54,20 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
       //    DOMNode of the upper label, after generation.
       upperLabelNode: null,
 
-      // upperLabelSecondNode: DOMNode
+      // upperLabelSecondaryNode: DOMNode
       //    DOMNode of the upper label, second line, after generation.
       upperLabelSecondaryNode: null,
 
       // lowerLabelNode: DOMNode
       //    DOMNode of the lower label, after generation.
       lowerLabelNode: null,
+
+      // forceUpperLabelSecondaryNode: Boolean
+      //   When false, if `upperLabelSecondaryText` returns null or the empty string,
+      //   there will be no `upperLabelSecondaryNode`. When true, there will always be
+      //   an `upperLabelSecondaryNode`, which is empty if `upperLabelSecondaryText`
+      //   returns null or the empty string,
+      forceUpperLabelSecondaryNode: false,
 
       constructor: function(kwargs) {
         if (kwargs) {
@@ -113,7 +120,7 @@ define(["dojo/_base/declare", "ppwcode-util-contracts/_Mixin",
           this.upperLabelSecondaryText(),
           null,
           this.upperLabelNode,
-          false
+          this.forceUpperLabelSecondaryNode
         );
       },
 
