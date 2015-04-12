@@ -2,13 +2,11 @@
   <script type="dojo/require">at: "dojox/mvc/at", lang: "dojo/_base/lang"</script>
   <div class="ppwCodeOnePropertyCrdListFields" data-dojo-attach-point="_addTextWrapperNode">
     <div data-dojo-attach-point="_propertySelect"></div>
-    <button
-      class="rightAddButton"
-      data-dojo-type="dijit/form/Button"
-      data-dojo-props="iconClass: 'dijitIconNewTask',
-                       showLabel: false,
-                       onClick: lang.hitch(this, this.addClicked)">
-    </button>
+    <button class="rightAddButton"
+            data-dojo-type="dijit/form/Button"
+            data-dojo-props="iconClass: 'dijitIconNewTask',
+                             showLabel: false,
+                             onClick: lang.hitch(this, this.addClicked)"></button>
   </div>
   <div class="listContainer" data-dojo-attach-point="_ulNodeWrapper">
     <ul data-dojo-type="dojox/mobile/EdgeToEdgeList"

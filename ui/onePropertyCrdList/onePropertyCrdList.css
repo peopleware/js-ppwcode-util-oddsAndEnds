@@ -19,8 +19,31 @@
   color: #4c656b;
 }
 
+.ppwCodeOnePropertyCrdList .mblListItem {
+  position: relative;
+  overflow: hidden;
+  padding: 0 8px;
+  list-style-type: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  line-height: normal;
+  border-style: none;
+  border-width: 0;
+  font-family: Myriad, Helvetica, Tahoma, Arial, clean, sans-serif;
+  color: inherit;
+  font-weight: normal;
+  height: inherit;
+}
+
 .ppwCodeOnePropertyCrdList .list li .mblListItemLabel {
   float: left;
+  overflow: hidden;
+  display: inline-block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-top: 5px;
+  color: darkslategrey;
+  font-weight: normal;
+  font-size: 90%;
 }
 
 .ppwCodeOnePropertyCrdList .list li .deleteIcon {
