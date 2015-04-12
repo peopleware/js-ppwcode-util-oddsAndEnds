@@ -13,6 +13,8 @@
 }
 
 .ppwCodeMultiSelect .multiSelectList {
+  margin: 0;
+  padding: 0;
   background: transparent !important;
 }
 
@@ -23,33 +25,6 @@
 .ppwCodeMultiSelect .multiSelectList li.disabled {
   color: #4c656b;
   cursor: default;
-}
-
-.ppwCodeMultiSelect .multiSelectList li:last-child {
-  border-bottom: none;
-}
-
-.ppwCodeMultiSelect .mblEdgeToEdgeList {
-  margin: 0;
-  padding: 0;
-  background-color: white;
-}
-
-.ppwCodeMultiSelect .mblListItemLabel {
-  position: relative;
-  overflow: hidden;
-  display: inline-block; /* to make ellipsis work */
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  margin-top: 5px;
-  /* formCommons.css label, label.fixedLabel */
-  color: darkslategrey;
-  font-weight: normal; /* these are not labels, but values */
-  font-size: 90%;
-}
-
-.ppwCodeMultiSelect .mblListItemChecked {
-  color: #314e84;
 }
 
 .ppwCodeMultiSelect .mblListItem {
@@ -68,6 +43,22 @@
   height: inherit;
 }
 
+.ppwCodeMultiSelect .mblListItemLabel {
+  position: relative;
+  overflow: hidden;
+  display: inline-block; /* to make ellipsis work */
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-top: 5px;
+  /* formCommons.css label, label.fixedLabel */
+  color: darkslategrey;
+  font-weight: normal; /* these are not labels, but values */
+  font-size: 90%;
+}
+
+.ppwCodeMultiSelect .mblListItemChecked {
+  color: #314e84;
+}
 .ppwCodeMultiSelect .mblListItemChecked .mblListItemRightIcon {
   visibility: visible;
 }
