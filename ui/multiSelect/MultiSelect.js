@@ -15,12 +15,15 @@
  */
 
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
+        "dojo/_base/lang",
         "dojo/text!./multiSelect.html",
         "dojox/mobile/ListItem", "dojo/dom-construct", "../../js",
 
         "dojox/mobile/Container", "dojox/mobile/EdgeToEdgeList",
         "xstyle/css!./multiSelect.css"],
-  function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, ListItem, domConstruct, js) {
+  function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
+           lang,
+           template, ListItem, domConstruct, js) {
 
     function alphabeticLabelSort(one, other) {
       // summary:
@@ -103,7 +106,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         // summary:
         //   Clears all the list items from the UL list.
 
-        if (this._edgeToEdgeList) {
+        if (this._edgeToEdgeList && this._edgeToEdgeList._started && !this._edgeToEdgeList._destroyed) {
+          // method is called during destruction, when the target is unset
           this._edgeToEdgeList.destroyDescendants();
           domConstruct.empty(this._edgeToEdgeList.domNode);
         }
@@ -162,7 +166,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
           var sortFunction = self.get("sort");
           if (js.typeOf(sortFunction) === "function" && (sortFunction !== alphabeticLabelSort || self.get("sorted"))) {
             options = options.slice(); // others could be using the array
-            options.sort(sortFunction);
+            options.sort(lang.hitch(this, sortFunction));
           }
           var listItems = options.map(function(element) {
             var li = new ListItem({
