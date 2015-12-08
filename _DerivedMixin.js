@@ -93,7 +93,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "ppwcode-util-oddsAndEnds/binding
             if (dependencies) {
               for (var dependencyPropName in dependencies) {
                 //noinspection JSUnfilteredForInLoop
-                acc[dependencyPropName] = dependencies[dependencyPropName];
+                acc[dependencyPropName] = dependencies[dependencyPropName].slice();
                 //noinspection JSUnfilteredForInLoop
                 acc[dependencyPropName].changed = dependentPropertyChanged(dependencyPropName);
                 //noinspection JSUnfilteredForInLoop
