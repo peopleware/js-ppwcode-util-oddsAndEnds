@@ -17,7 +17,7 @@
 define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
         "dojo/text!./onePropertyCrdList.html", "dojo/store/Memory",
         "ppwcode-util-oddsAndEnds/_PropagationMixin", "dojox/mobile/ListItem",
-        "dojo/dom-style", "dojo/dom-class", "dojo/dom-construct",
+        "dojo/dom-style", "dojo/dom-class", "dojo/dom-construct", "dojo/on",
         "dijit/form/Button", "../../log/logger!", "dojo/Deferred",
 
         "dojox/mobile/Container", "dojox/mobile/EdgeToEdgeList", "dijit/form/ComboBox",
@@ -25,7 +25,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
   function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
            template, Memory,
            _PropagationMixin, ListItem,
-           domStyle, domClass, domConstruct,
+           domStyle, domClass, domConstruct, on,
            Button, ComboBox, logger, Deferred) {
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _PropagationMixin], {
@@ -97,27 +97,48 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
       _propagateValue: function(/*Array*/ valueArray) {
         var self = this;
         self._clearList();
-        if (self._edgeToEdgeList && valueArray && valueArray.length > 0) {
-          valueArray.forEach(function(element) {
-            var li = new ListItem({label: self.format(element)});
-            if (!self.get("disabled")) {
-              var deleteIcon = new Button({showLabel: false, iconClass: "dijitIconDelete"});
-              domClass.add(deleteIcon.domNode, "deleteIcon");
-              li.own(deleteIcon.on(
-                "click",
-                function() {
-                  if (!self.get("disabled")) {
-                    var arr = self.get("value");
-                    var idx = arr.indexOf(element);
-                    arr.splice(idx, 1);
-                    self.set("value", arr);
-                  }
-                }
-              ));
-              li.addChild(deleteIcon);
+        var enabled = !self.get("disabled");
+
+        function listenForDelete(liElements, count) {
+          if (count > 20) {
+            logger.warn("Could not create listeners for delete clicks for 20 iterations. Giving up.");
+            self.set("disabled", true);
+          }
+          var leftOver = [];
+          liElements.forEach(function(liElement) {
+            if (!liElement.li.rightIconNode) {
+              leftOver.push(liElement);
+              return;
             }
-            self._edgeToEdgeList.addChild(li);
+            liElement.li.own(on(
+              liElement.li.rightIconNode,
+              "click",
+              function() {
+                if (!self.get("disabled")) {
+                  var arr = self.get("value");
+                  var idx = arr.indexOf(liElement.value);
+                  arr.splice(idx, 1);
+                  self.set("value", arr);
+                }
+              }
+            ));
           });
+          if (leftOver.length > 0) {
+            listenForDelete(leftOver, count + 1);
+          }
+        }
+
+
+        if (self._edgeToEdgeList && valueArray && valueArray.length > 0) {
+          var liElements = valueArray.map(function(element) {
+            var li = new ListItem({label: self.format(element), rightIcon: enabled ? "mblDomButtonRedCross" : null});
+            self._edgeToEdgeList.addChild(li);
+            return {li: li, value: element};
+          });
+          if (enabled) {
+            // the rightIconNode is added later, on a future tick; we can only connect after it appears
+            listenForDelete(liElements, 1);
+          }
         }
       },
 

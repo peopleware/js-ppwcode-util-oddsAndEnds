@@ -75,9 +75,8 @@
 }
 
 .ppwCodeOnePropertyCrdList .onePropertyCrdListContainer .onePropertyCrdListList li .mblListItemLabel {
-  float: left;
   overflow: hidden;
-  display: inline-block;
+  display: block;
   white-space: nowrap;
   text-overflow: ellipsis;
   margin-top: 5px;
@@ -86,9 +85,29 @@
   font-size: 90%;
 }
 
-.ppwCodeOnePropertyCrdList .onePropertyCrdListContainer .onePropertyCrdListList li .deleteIcon {
-  margin: 0;
-  padding: 0;
+.ppwCodeOnePropertyCrdList .onePropertyCrdListContainer .onePropertyCrdListList li .mblListItemRightIcon {
+  display: inline-block;
   float: right;
-  display: block;
+  line-height: normal;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 10px;
+  /* clickable */
+  z-index: 99999;
+  height: 18px;
+  top: 2px;
+  width: 20px;
+  margin-right: -5px;
+}
+
+.ppwCodeOnePropertyCrdList .onePropertyCrdListContainer .onePropertyCrdListList li .mblListItemRightIcon .mblDomButtonRedCross.mblDomButton {
+  position: relative;
+  width: 10px;
+  height: auto;
+}
+
+.ppwCodeOnePropertyCrdList .onePropertyCrdListContainer .onePropertyCrdListList li .mblListItemRightIcon .mblDomButtonRedCross.mblDomButton > div {
+  top: 8px;
+  left: 2px;
 }
