@@ -86,13 +86,15 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/la
         //noinspection MagicNumberJS
         setTimeout(
           function() {
-            domStyle.set(pane.domNode, "opacity", "0.3");
-            // a flash
-            //noinspection MagicNumberJS,JSCheckFunctionSignatures
-            fx.fadeIn({
-              node: pane.domNode,
-              duration: 750
-            }).play();
+            if (pane.domNode) {
+              domStyle.set(pane.domNode, "opacity", "0.3");
+              // a flash
+              //noinspection MagicNumberJS,JSCheckFunctionSignatures
+              fx.fadeIn({
+                node: pane.domNode,
+                duration: 750
+              }).play();
+            }
           },
           200 // time to focus
         );
