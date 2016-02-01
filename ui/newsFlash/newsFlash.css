@@ -42,11 +42,11 @@ div.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed {
 
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-confirmation {
   color: slategrey;
-  background-color: lightgrey;
+  background-color: #f4f4f4;
 }
 
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-confirmation.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed {
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-notification {

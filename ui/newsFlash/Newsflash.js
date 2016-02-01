@@ -16,13 +16,13 @@ limitations under the License.
 
 define(["dojo/_base/declare", "dijit/_WidgetBase",
         "dojo/topic", "dojo/_base/lang", "dojo/on",
-        "dojo/dom-class", "dojo/dom-construct",
+        "dojo/dom-construct", "dojo/dom-class", "dojo/dom-style", "dojo/dom-geometry",
         "module",
 
         "xstyle/css!./newsFlash.css"],
   function(declare, _WidgetBase,
            topic, lang, on,
-           domClass, domConstruct,
+           domConstruct, domClass, domStyle, domGeometry,
            module) {
 
     var baseClassName = "ppwcode-util-oddsAndEnds_ui_NewsFlash";
@@ -31,6 +31,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
     var levelClassNameBase = baseClassName + "-level-";
     var displayedClassName = baseClassName + "-displayed";
     var endClassName = baseClassName + "-end";
+
+    var firstTop = 54; // top of top message element is this
+    var topSpacing = 2; // spacing between message elements
 
     var MessageLevel = {
 
@@ -85,6 +88,25 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
       //   HTML fragment
       html: ""
     };
+
+    var Handle = {
+
+      // remove: Function
+      remove: null
+
+    };
+
+    var MessageElement = {
+
+      // element: DomNode
+      element: null,
+
+      // goAwayTimeout: Number?
+      goAwayTimeout: null,
+
+      // clickHandle: Handle
+      clickHandle: null
+    };
     =====*/
 
     var NewsFlash = declare([_WidgetBase], {
@@ -114,12 +136,16 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
       //   Message instance for each event.
       translate: null,
 
-      // _topicHandles: {remove: /*Function*/}[]
+      // _topicHandles: Handle[]
       _topicsHandles: null,
+
+      // _messageElements: MessageElement[]
+      _messageElements: null,
 
       constructor: function() {
         this.topics = [];
         this._topicsHandles = [];
+        this._messageElements = [];
       },
 
       postCreate: function() {
@@ -145,9 +171,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
       },
 
       _listener: function(/*Object*/ event) {
+        var self = this;
         if (event) {
           var /*Message*/ message = this.translate(event);
           if (message) {
+            var messageElements = this._messageElements;
             var element = domConstruct.create(
               "div",
               {
@@ -161,24 +189,28 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
                          0;
             var messageElement = {element: element, clickHandle: null, goAwayTimeout: null};
 
+            function destroy() {
+              domConstruct.destroy(element);
+              messageElements.splice(messageElements.indexOf(messageElement), 1);
+            }
+
+            function endTransitionDone() {
+              destroy();
+              self._reposition();
+            }
+
             function disappear(/*Boolean*/ noTransition) {
               if (messageElement.goAwayTimeout) {
                 clearTimeout(messageElement.goAwayTimeout);
               }
               messageElement.clickHandle.remove();
               if (noTransition) {
-                domConstruct.destroy(messageElement.element);
+                destroy();
               }
               else {
-                messageElement.element.addEventListener(
-                  "transitionend",
-                  function() {
-                    domConstruct.destroy(messageElement.element);
-                  },
-                  true
-                );
+                element.addEventListener("transitionend", endTransitionDone, true);
                 // start transition
-                domClass.add(messageElement.element, endClassName);
+                domClass.add(element, endClassName);
               }
             }
 
@@ -188,11 +220,30 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
             }
             messageElement.remove = function() {disappear(true);};
             this.own(messageElement);
+            messageElements.unshift(messageElement);
             // transition
-            setTimeout(function() {domClass.add(element, displayedClassName);}, 50);
+            setTimeout(
+              function() {
+                self._reposition();
+                domClass.add(element, displayedClassName);
+              },
+              50
+            );
           }
         }
         // NOP silently
+      },
+
+      _reposition: function() {
+        this._messageElements.reduce(
+          function(top, /*MessageElement*/ me, i) {
+            domStyle.set(me.element, "top", top + "px");
+            var height = domGeometry.getMarginBox(me.element).h;
+            return top + height + topSpacing;
+          },
+          firstTop
+        );
+
       }
 
     });
