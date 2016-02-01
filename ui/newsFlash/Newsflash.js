@@ -156,33 +156,43 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
               },
               document.body
             );
-            var disappear = lang.hitch(this, this._makeItDisappear, element);
-            var handle = on(element, "click", disappear);
-            this.own(handle);
             var goAway = message.level === MessageLevel.CONFIRMATION ? 3500 : // it takes 1s to appear
                          message.level === MessageLevel.ADVISE ? 8000 :
                          0;
-            if (goAway) {
-              element.goAway = setTimeout(disappear, goAway);
+            var messageElement = {element: element, clickHandle: null, goAwayTimeout: null};
+
+            function disappear(/*Boolean*/ noTransition) {
+              if (messageElement.goAwayTimeout) {
+                clearTimeout(messageElement.goAwayTimeout);
+              }
+              messageElement.clickHandle.remove();
+              if (noTransition) {
+                domConstruct.destroy(messageElement.element);
+              }
+              else {
+                messageElement.element.addEventListener(
+                  "transitionend",
+                  function() {
+                    domConstruct.destroy(messageElement.element);
+                  },
+                  true
+                );
+                // start transition
+                domClass.add(messageElement.element, endClassName);
+              }
             }
+
+            messageElement.clickHandle = on(element, "click", disappear);
+            if (goAway) {
+              messageElement.goAwayTimeout = setTimeout(disappear, goAway);
+            }
+            messageElement.remove = function() {disappear(true);};
+            this.own(messageElement);
             // transition
             setTimeout(function() {domClass.add(element, displayedClassName);}, 50);
           }
         }
         // NOP silently
-      },
-
-      _makeItDisappear: function(/*DomNode*/ element) {
-        clearTimeout(element.goAway);
-        element.addEventListener(
-          "transitionend",
-          function() {
-            domConstruct.destroy(element);
-          },
-          true
-        );
-        // start transition
-        domClass.add(element, endClassName);
       }
 
     });
