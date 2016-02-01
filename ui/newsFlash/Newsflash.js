@@ -16,13 +16,13 @@ limitations under the License.
 
 define(["dojo/_base/declare", "dijit/_WidgetBase",
         "dojo/topic", "dojo/_base/lang", "dojo/on",
-        "dojo/dom-style", "dojo/dom-class", "dojo/dom-construct",
+        "dojo/dom-class", "dojo/dom-construct",
         "module",
 
         "xstyle/css!./newsFlash.css"],
   function(declare, _WidgetBase,
            topic, lang, on,
-           domStyle, domClass, domConstruct,
+           domClass, domConstruct,
            module) {
 
     var baseClassName = "ppwcode-util-oddsAndEnds_ui_NewsFlash";
