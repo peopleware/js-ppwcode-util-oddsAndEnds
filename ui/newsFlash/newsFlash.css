@@ -80,3 +80,9 @@ div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_Ne
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-warning.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed {
   font-size: 110%;
 }
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed.ppwcode-util-oddsAndEnds_ui_NewsFlash-end {
+  transition: all 2s ease-in;
+  opacity: 0;
+  font-size: 0;
+}

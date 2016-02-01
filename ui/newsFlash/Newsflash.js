@@ -174,7 +174,15 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
 
       _makeItDisappear: function(/*DomNode*/ element) {
         clearTimeout(element.goAway);
-        domConstruct.destroy(element);
+        element.addEventListener(
+          "transitionend",
+          function() {
+            domConstruct.destroy(element);
+          },
+          true
+        );
+        // start transition
+        domClass.add(element, endClassName);
       }
 
     });
