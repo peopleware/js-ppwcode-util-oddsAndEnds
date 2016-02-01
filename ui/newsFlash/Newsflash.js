@@ -15,13 +15,13 @@ limitations under the License.
 */
 
 define(["dojo/_base/declare", "dijit/_WidgetBase",
-        "dojo/topic", "dojo/_base/lang",
+        "dojo/topic", "dojo/_base/lang", "dojo/on",
         "dojo/dom-style", "dojo/dom-class", "dojo/dom-construct",
         "module",
 
         "xstyle/css!./newsFlash.css"],
   function(declare, _WidgetBase,
-           topic, lang,
+           topic, lang, on,
            domStyle, domClass, domConstruct,
            module) {
 
@@ -151,9 +151,23 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
               },
               document.body
             );
+            var disappear = lang.hitch(this, this._makeItDisappear, element);
+            var handle = on(element, "click", disappear);
+            this.own(handle);
+            var goAway = message.level === MessageLevel.CONFIRMATION ? 3500 : // it takes 1s to appear
+                         message.level === MessageLevel.ADVISE ? 8000 :
+                         0;
+            if (goAway) {
+              element.goAway = setTimeout(disappear, goAway);
+            }
           }
         }
         // NOP silently
+      },
+
+      _makeItDisappear: function(/*DomNode*/ element) {
+        clearTimeout(element.goAway);
+        domConstruct.destroy(element);
       }
 
     });
