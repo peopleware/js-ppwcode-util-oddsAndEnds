@@ -18,11 +18,12 @@ limitations under the License.
   display: none;
 }
 
-.ppwcode-util-oddsAndEnds_ui_NewsFlash-message {
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message {
   display: block;
   position: absolute;
   z-index: 5001;
-  top: 54px;
+  opacity: 0; /* initial */
+  top: -50px; /* initial */
   left: 10%;
   right: 10%;
   margin: 0;
@@ -30,33 +31,52 @@ limitations under the License.
   padding: 10px;
   text-align: center;
   text-shadow: rgba(244, 254, 247, 0.6) 0 -1px 0;
+  font-size: 0; /* initial */
+  transition: all 1s ease-out;
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed {
+  top: 54px;
+  font-size: 100%;
 }
 
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-confirmation {
   color: slategrey;
   background-color: lightgrey;
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-confirmation.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed {
   opacity: 0.8;
 }
 
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-notification {
   color: black;
   background-color: whitesmoke;
-  opacity: 0.95;
   font-weight: bold;
-  font-size: 110%;
 }
 
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-advise {
   color: black;
   background-color: deepskyblue;
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-notification.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-advise.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed {
   opacity: 0.95;
-  font-size: 110%;
 }
 
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-warning {
   color: whitesmoke;
   font-weight: bold;
   background-color: red;
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-warning.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed {
   opacity: 1;
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-notification.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-advise.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-warning.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed {
   font-size: 110%;
 }

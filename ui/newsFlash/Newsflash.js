@@ -160,6 +160,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
             if (goAway) {
               element.goAway = setTimeout(disappear, goAway);
             }
+            // transition
+            setTimeout(function() {domClass.add(element, baseClassName + "-displayed");}, 50);
           }
         }
         // NOP silently
