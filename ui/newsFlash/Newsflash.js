@@ -26,6 +26,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
            module) {
 
     var baseClassName = "ppwcode-util-oddsAndEnds_ui_NewsFlash";
+    var widgetClassName = baseClassName + "-widget";
+    var messageClassName = baseClassName + "-message";
+    var levelClassNameBase = baseClassName + "-level-";
+    var displayedClassName = baseClassName + "-displayed";
+    var endClassName = baseClassName + "-end";
 
     var MessageLevel = {
 
@@ -119,7 +124,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
 
       postCreate: function() {
         if (this.domNode) {
-          domClass.add(this.domNode, baseClassName + "-widget");
+          domClass.add(this.domNode, widgetClassName);
         }
       },
 
@@ -146,7 +151,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
             var element = domConstruct.create(
               "div",
               {
-                className: [baseClassName + "-message", baseClassName + "-level-" + message.level].join(" "),
+                className: [messageClassName, levelClassNameBase + message.level].join(" "),
                 innerHTML: message.html
               },
               document.body
@@ -161,7 +166,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
               element.goAway = setTimeout(disappear, goAway);
             }
             // transition
-            setTimeout(function() {domClass.add(element, baseClassName + "-displayed");}, 50);
+            setTimeout(function() {domClass.add(element, displayedClassName);}, 50);
           }
         }
         // NOP silently
