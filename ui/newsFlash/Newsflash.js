@@ -34,6 +34,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
 
     var firstTop = 54; // top of top message element is this
     var topSpacing = 2; // spacing between message elements
+    var minimumHeight = 35; // 10 + 10 padding, and there is at least some text
 
     var MessageLevel = {
 
@@ -224,7 +225,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
             // transition
             setTimeout(
               function() {
-                self._reposition();
+                self._reposition(true);
                 domClass.add(element, displayedClassName);
               },
               50
@@ -234,16 +235,29 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         // NOP silently
       },
 
-      _reposition: function() {
+      _reposition: function(/*Boolean*/ appearing) {
+        var everyThingInplace = true;
         this._messageElements.reduce(
           function(top, /*MessageElement*/ me, i) {
-            domStyle.set(me.element, "top", top + "px");
-            var height = domGeometry.getMarginBox(me.element).h;
+            var marginBox = domGeometry.getMarginBox(me.element);
+            var height = marginBox.h;
+            if (0.5 < Math.abs(top - marginBox.t)) {
+              // me is not yet where it is supposed to be
+              domStyle.set(me.element, "top", top + "px");
+              if (appearing) {
+                // me will also still grow in height! So the position of the next element is not correct yet!
+                // we adjust for a minimum expected height already, but we need to revisit
+                height = Math.max(marginBox.h, minimumHeight);
+                everyThingInplace = false;
+              }
+            }
             return top + height + topSpacing;
           },
           firstTop
         );
-
+        if (!everyThingInplace) {
+          setTimeout(lang.hitch(this, this._reposition, true), 50);
+        }
       }
 
     });
