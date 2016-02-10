@@ -16,13 +16,13 @@ limitations under the License.
 
 define(["dojo/_base/declare", "dijit/_WidgetBase",
         "dojo/topic", "dojo/_base/lang", "dojo/on",
-        "dojo/dom-construct", "dojo/dom-class", "dojo/dom-style", "dojo/dom-geometry",
+        "dojo/dom-construct", "dojo/dom-class", "dojo/dom-style", "dojo/dom-geometry", "../../js",
         "module",
 
         "xstyle/css!./newsFlash.css"],
   function(declare, _WidgetBase,
            topic, lang, on,
-           domConstruct, domClass, domStyle, domGeometry,
+           domConstruct, domClass, domStyle, domGeometry, js,
            module) {
 
     var baseClassName = "ppwcode-util-oddsAndEnds_ui_NewsFlash";
@@ -35,6 +35,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
     var firstTop = 54; // top of top message element is this
     var topSpacing = 2; // spacing between message elements
     var minimumHeight = 35; // 10 + 10 padding, and there is at least some text
+
+    // NOTE cannot use EnumerationValue: it is in semantics; that would create a depedency cycle
 
     var MessageLevel = {
 
@@ -78,6 +80,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
       // TODO this doesn't belong here. Use an alert, and reload the page.
       WARNING: "warning"
     };
+    MessageLevel.values =
+      [MessageLevel.CONFIRMATION, MessageLevel.NOTIFICATION, MessageLevel.ADVISE, MessageLevel.WARNING];
+    MessageLevel.DEFAULT = MessageLevel.CONFIRMATION;
 
     /*=====
     var Message = {
@@ -120,6 +125,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
       //   and the message level. `message.html` should be a HTML fragment that can
       //   be used in a `div` element. It can be just a text.
       //
+      //   If the event itself can be duck-typed to a Message (i.e., it has a supported `level`, and a
+      //   `html` property that is a string), it is not translated, but used as is.
+      //
       //   The message level is `CONFIRMATION`, `NOTIFICATION`, `INTERACTION_REQUIRED`, or `WARNING`.
       //
       //   What is show to the user is a `div`, with a bunch of classes.
@@ -155,6 +163,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         }
       },
 
+      isMessage: function(/*Object?*/ event) {
+        return event &&
+               MessageLevel.values.indexOf(event.level) >= 0 &&
+               js.typeOf(event.html) === "string";
+      },
+
       _getTopicsAttr: function() {
         return this.topics.slice();
       },
@@ -171,10 +185,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
         });
       },
 
-      _listener: function(/*Object*/ event) {
+      _listener: function(/*Object|Message*/ event) {
         var self = this;
         if (event) {
-          var /*Message*/ message = this.translate(event);
+          var /*Message*/ message = this.isMessage(event) ? event : this.translate(event);
           if (message) {
             var messageElements = this._messageElements;
             var element = domConstruct.create(
