@@ -31,6 +31,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
     var levelClassNameBase = baseClassName + "-level-";
     var displayedClassName = baseClassName + "-displayed";
     var endClassName = baseClassName + "-end";
+    var clickToCloseHintClassName = baseClassName + "-clickToCloseHint";
+    var timedCloseHintClassName = baseClassName + "-timedCloseHint";
 
     var firstTop = 54; // top of top message element is this
     var topSpacing = 2; // spacing between message elements
@@ -199,9 +201,22 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
               },
               document.body
             );
+            domConstruct.create( // does nothing, just a visible hint to the user that a click will close
+              "div",
+              {
+                className: clickToCloseHintClassName
+              },
+              element
+            );
+            domConstruct.create("div", {className: timedCloseHintClassName}, element);
+            // does nothing, just a visible hint to the user that the message will close automatically
             var goAway = message.level === MessageLevel.CONFIRMATION ? 3500 : // it takes 1s to appear
                          message.level === MessageLevel.ADVISE ? 8000 :
                          0;
+            if (goAway) {
+              domConstruct.create("div", {className: timedCloseHintClassName}, element);
+            }
+            // does nothing, just a visible hint to the user that the message will close automatically
             var messageElement = {element: element, clickHandle: null, goAwayTimeout: null};
 
             function destroy() {

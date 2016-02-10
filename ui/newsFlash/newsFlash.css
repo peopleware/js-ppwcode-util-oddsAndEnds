@@ -35,6 +35,76 @@ div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message {
   transition: all 1s ease-out;
 }
 
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-clickToCloseHint,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-clickToCloseHint:after,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-timedCloseHint,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-timedCloseHint:before,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-timedCloseHint:after {
+  position: absolute;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-clickToCloseHint:after,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-timedCloseHint:before,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-timedCloseHint:after {
+  content: "";
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-clickToCloseHint,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-clickToCloseHint:after {
+  border-left-style: solid;
+  border-left-width: 1px;
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-clickToCloseHint,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-clickToCloseHint:after {
+  height: 10px; /*smaller than 10x10, because that would be 14 = 10.sqrt(2) (Pythagoras)*/
+  width: 0;
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-clickToCloseHint {
+  top: 3px;
+  right: 8px;
+  transform: rotate(45deg);
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-clickToCloseHint:after {
+  top: 0;
+  right: 0;
+  transform: rotate(90deg);
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-timedCloseHint,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-timedCloseHint:before,
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-timedCloseHint:after {
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(190, 190, 190, 0.98);
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-timedCloseHint {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  top: 2px;
+  right: 17px;
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-timedCloseHint:before {
+  height: 5px;
+  top: 0;
+  right: 2px;
+  transform: rotate(30deg);
+}
+
+div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message div.ppwcode-util-oddsAndEnds_ui_NewsFlash-timedCloseHint:after {
+  height: 2px;
+  top: 2px;
+  right: 5px;
+}
+
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message p {
   padding: 0;
   margin-left: 0;
