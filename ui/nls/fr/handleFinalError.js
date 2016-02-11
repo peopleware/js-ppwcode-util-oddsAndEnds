@@ -15,12 +15,9 @@
  */
 
 define({
-  root: {
-    apologies: "An unexpected situation has occured. We apologize, but your last changes are not saved.",
-    retry:     "Do you want to try again?",
-    reload:    "Reload the page, and try again.\n" +
-               "If the issue persists, you can contact us."
-  },
-  nl: true,
-  fr: true
+  apologies: "Er heeft zich een onverwachte situatie voorgedaan. " +
+             "We verontschuldigen ons, maar uw laatste wijzigingen zijn niet opgeslagen.",
+  retry:     "Wil u opnieuw proberen?",
+  reload:    "Herlaad de pagina, en probeer opnieuw.\n" +
+             "Indien de fout zich blijft herhalen, kan u ons contacteren."
 });
