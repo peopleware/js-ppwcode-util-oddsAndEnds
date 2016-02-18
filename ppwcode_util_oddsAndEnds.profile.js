@@ -23,7 +23,7 @@ var profile = (function() { // jshint ignore:line
 
   //noinspection JSUnusedLocalSymbols,JSHint
   function isCopyOnly(filename, mid) {
-    return filename.indexOf("log4javascript_uncompressed.js") >= 0;
+    return false;
   }
 
   //noinspection JSUnusedLocalSymbols,JSHint
