@@ -30,54 +30,30 @@
  * Website: http://log4javascript.org
  */
 
+/* NOTE ppwcode: This file is edited to make it usable in an AMD context, and cleaned up
+                 to remove old fallbacks, polyfills, etc.
+                 See EDIT notes. */
+
+
 /* -------------------------------------------------------------------------- */
 // Array-related stuff
 
-// Next three methods are solely for IE5, which is missing them
-if (!Array.prototype.push) {
-  Array.prototype.push = function() {
-    for (var i = 0, len = arguments.length; i < len; i++) {
-      this[this.length] = arguments[i];
-    }
-    return this.length;
-  };
-}
-
-if (!Array.prototype.shift) {
-  Array.prototype.shift = function() {
-    if (this.length > 0) {
-      var firstItem = this[0];
-      for (var i = 0, len = this.length - 1; i < len; i++) {
-        this[i] = this[i + 1];
-      }
-      this.length = this.length - 1;
-      return firstItem;
-    }
-  };
-}
-
-if (!Array.prototype.splice) {
-  Array.prototype.splice = function(startIndex, deleteCount) {
-    var itemsAfterDeleted = this.slice(startIndex + deleteCount);
-    var itemsDeleted = this.slice(startIndex, startIndex + deleteCount);
-    this.length = startIndex;
-    // Copy the arguments into a proper Array object
-    var argumentsArray = [];
-    for (var i = 0, len = arguments.length; i < len; i++) {
-      argumentsArray[i] = arguments[i];
-    }
-    var itemsToAppend = (argumentsArray.length > 2) ?
-                        itemsAfterDeleted = argumentsArray.slice(2).concat(itemsAfterDeleted) : itemsAfterDeleted;
-    for (i = 0, len = itemsToAppend.length; i < len; i++) {
-      this.push(itemsToAppend[i]);
-    }
-    return itemsDeleted;
-  };
-}
+/* EDIT: removed IE5 Array polyfills */
 
 /* -------------------------------------------------------------------------- */
 
-var log4javascript = (function() {
+/* EDIT: surround with UMD magic (see https://github.com/umdjs/umd/blob/master/templates/amdWeb.js) */
+
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define([], factory);
+  }
+  else {
+    // Browser globals
+    root.log4javascript = factory(root.b);
+  }
+}(this, function() {
 
   function isUndefined(obj) {
     return typeof obj == "undefined";
@@ -6009,10 +5985,13 @@ var log4javascript = (function() {
     }
   }
 
+  /* EDIT don't do this
+
   // Ensure that the log4javascript object is available in the window. This
   // is necessary for log4javascript to be available in IE if loaded using
   // Dojo's module system
   window.log4javascript = log4javascript;
+  */
 
   return log4javascript;
-})();
+}));

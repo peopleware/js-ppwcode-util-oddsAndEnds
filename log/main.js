@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-define(["dojo/_base/kernel", "dojo/has", "dojo/io-query", "module", "./log4javascript_uncompressed"],
+define(["dojo/_base/kernel", "dojo/has", "dojo/io-query", "./log4javascript_uncompressed", "module"],
   /* Note: Code inspection reports a cyclic dependency with "module". This is not true: this is a special AMD
            dependency, not a true module. See AMD documentation. */
-  function(kernel, has, ioQuery, module) {
+  function(kernel, has, ioQuery, log4javascript_uncompressed, module) {
     // summary:
     //   This collection of modules makes log4javascript available in Dojo.
     //   This module returns the log4javascript object, and does some initialisation.
@@ -59,10 +59,7 @@ define(["dojo/_base/kernel", "dojo/has", "dojo/io-query", "module", "./log4javas
       return level;
     }
 
-    //noinspection JSUnresolvedVariable
-    var log4javascript = kernel.global.log4javascript;
-    //noinspection JSUnresolvedVariable
-    delete kernel.global.log4javascript;
+    var log4javascript = log4javascript_uncompressed;
 
     log4javascript.mid = module.id;
     log4javascript.loggerName2Mid = loggerName2Mid;
