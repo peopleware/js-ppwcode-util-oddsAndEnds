@@ -14,26 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-define(["dojo/dom", "dojo/query", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", "dojo/dom-style", "dojo/dom-construct",
+define(["dojo/dom", "dojo/query", "dojo/dom-class", "dojo/dom-construct", "dojo/Deferred",
         "../log/logger!"],
-  function(dom, query, baseFx, fx, domClass, domStyle, domConstruct, logger) {
+  function(dom, query, domClass, domConstruct, Deferred, logger) {
 
     var preloaderId = "preloader";
 
-    function dissolvePreloader(realContentId) {
+    function dissolvePreloader(/*String*/ preloaderId) {
       // summary:
-      //   A function that returns an Animation that will dissolve a preloader defined in the page, and
-      //   expose the real content of a page.
-      //   The user has to call `play()` on the result.
+      //   A function that dissolves a preloader defined in the page, and
+      //   expose the real content of a page. Returns a Promise for the end of the transition, with `preloaderId`
+      //   as resolution.
       // description:
       //   Due to the nature of a preloader, we cannot define it completely in a widget. The preloader
       //   must be there immediately in the HTML, _before_ dojo is loaded.
       //
       //   Users should include the accompanying css style sheet directly in the HTML page, and the
       //   first body-element should be
-      //   | <div id="preloader"><div></div></div>
-      //   The id of the first div must be "preloader".
-      //   The function argument is the id of the main real content element.
+      //   | <div id="preloader"><div class="progress"><div></div></div></div>
+      //   The function argument is the id of the preloader content element.
+      //   | dissolvePreloader("preloader");
       //
       //   An applicable logo can be added by extending the #preloader style with a background-image:
       //   | #preloader {
@@ -45,59 +45,29 @@ define(["dojo/dom", "dojo/query", "dojo/_base/fx", "dojo/fx", "dojo/dom-class", 
          * a slight jump during parse
          * on iPad, in landscape
          *   Chrome:
-         *     a large second jump (the body is to large)
+         *     a large second jump (the body is too large)
          *   Safari:
-         *     a large second jump (the body is to large), and furthermore the AllDocuments is too large too
+         *     a large second jump (the body is too large), and furthermore the AllDocuments is too large too
          * There is no problem in portrait.
        */
 
-      logger.debug("Roles set and most recent items loaded. Visualising.");
+      var deferred = new Deferred();
+      logger.debug("Prepping preloader.");
       var preloader = dom.byId(preloaderId);
       var spinner = query(".progress", preloader)[0];
-      domClass.add(preloader, "rightBorder");
-      var realContent = dom.byId(realContentId);
-      domStyle.set(realContent, "opacity", "0");
-      logger.debug("preloader and real content found");
-      logger.debug("going to build transition");
-      //noinspection MagicNumberJS,JSCheckFunctionSignatures
-      var showAppAnimation = fx.combine([
-        fx.chain([
-          baseFx.animateProperty({
-            node: spinner,
-            properties: {
-              opacity: 0
-            },
-            duration: 100
-          }),
-          baseFx.animateProperty({
-            node: preloader,
-            properties: {
-              opacity: 0.7
-            },
-            duration: 500
-          }),
-          baseFx.animateProperty({
-            node: preloader,
-            properties: {
-              width: 0
-            },
-            duration: 1000
-          })
-        ]),
-        baseFx.animateProperty({
-          node: realContent,
-          properties: {
-            opacity: 1
-          },
-          duration: 2000
-        })
-      ]);
-      showAppAnimation.onEnd = function() {
-        logger.debug("transition done; destroying preloader");
-        domConstruct.destroy("preloader");
-        logger.debug("Preloader gone. Ready for operation.");
-      };
-      return showAppAnimation;
+      logger.debug("preloader and real content found, starting transition");
+      preloader.addEventListener(
+        "transitionend",
+        function() {
+          logger.debug("transition done; destroying preloader");
+          domConstruct.destroy("preloader");
+          logger.debug("Preloader gone. Ready for operation.");
+          deferred.resolve(preloaderId);
+        },
+        true
+      );
+      domClass.add(preloader, "dissolved");
+      return deferred.promise;
     }
 
     return dissolvePreloader;

@@ -48,12 +48,13 @@ limitations under the License.
   width: 100%;
   height: 100%;
   text-align: center;
+  transition: all 0.75s linear;
 }
 
-#preloader .rightBorder {
-  border-right-color: darkblue;
-  border-right-style: solid;
-  border-right-width: 2px;
+#preloader.dissolved {
+  opacity: 0;
+  transform: skewx(90deg) rotate(-90deg);
+  /* NOTE background-size animation does not work nicely */
 }
 
 @-webkit-keyframes spin {
@@ -86,8 +87,7 @@ limitations under the License.
   }
 }
 
-.progress {
-  position: relative;
+#preloader .progress {
   display: inline-block;
   width: 5em;
   height: 5em;
@@ -102,10 +102,10 @@ limitations under the License.
   animation: spin 1s infinite steps(8);
 }
 
-.progress:before,
-.progress:after,
-.progress > div:before,
-.progress > div:after {
+#preloader .progress:before,
+#preloader .progress:after,
+#preloader .progress > div:before,
+#preloader .progress > div:after {
   content: '';
   position: absolute;
   top: 0;
@@ -121,11 +121,11 @@ limitations under the License.
 
 }
 
-.progress:before {
+#preloader .progress:before {
   background: #555555;
 }
 
-.progress:after {
+#preloader .progress:after {
   -webkit-transform: rotate(-45deg);
   -moz-transform: rotate(-45deg);
   -ms-transform: rotate(-45deg);
@@ -134,7 +134,7 @@ limitations under the License.
   background: #777777;
 }
 
-.progress > div:before {
+#preloader .progress > div:before {
   -webkit-transform: rotate(-90deg);
   -moz-transform: rotate(-90deg);
   -ms-transform: rotate(-90deg);
@@ -143,11 +143,15 @@ limitations under the License.
   background: #999999;
 }
 
-.progress > div:after {
+#preloader .progress > div:after {
   -webkit-transform: rotate(-135deg);
   -moz-transform: rotate(-135deg);
   -ms-transform: rotate(-135deg);
   -o-transform: rotate(-135deg);
   transform: rotate(-135deg);
   background: #bbbbbb;
+}
+
+#preloader.dissolved .progress {
+  display: none;
 }
