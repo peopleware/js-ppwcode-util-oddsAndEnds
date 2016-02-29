@@ -34,7 +34,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
     var clickToCloseHintClassName = baseClassName + "-clickToCloseHint";
     var timedCloseHintClassName = baseClassName + "-timedCloseHint";
 
-    var firstTop = 54; // top of top message element is this
+    var firstTop = 5; // top of top message element is this
     var topSpacing = 2; // spacing between message elements
     var minimumHeight = 35; // 10 + 10 padding, and there is at least some text
 
@@ -229,26 +229,21 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
               self._reposition();
             }
 
-            function disappear(/*Boolean*/ noTransition) {
+            function disappear() {
               if (messageElement.goAwayTimeout) {
                 clearTimeout(messageElement.goAwayTimeout);
               }
               messageElement.clickHandle.remove();
-              if (noTransition) {
-                destroy();
-              }
-              else {
-                element.addEventListener("transitionend", endTransitionDone, true);
-                // start transition
-                domClass.add(element, endClassName);
-              }
+              element.addEventListener("transitionend", endTransitionDone, true);
+              // start transition
+              domClass.add(element, endClassName);
             }
 
             messageElement.clickHandle = on(element, "click", disappear);
             if (goAway) {
               messageElement.goAwayTimeout = setTimeout(disappear, goAway);
             }
-            messageElement.remove = function() {disappear(true);};
+            messageElement.remove = disappear;
             this.own(messageElement);
             messageElements.unshift(messageElement);
             // transition
@@ -274,8 +269,8 @@ define(["dojo/_base/declare", "dijit/_WidgetBase",
               // me is not yet where it is supposed to be
               domStyle.set(me.element, "top", top + "px");
               if (appearing) {
-                // me will also still grow in height! So the position of the next element is not correct yet!
-                // we adjust for a minimum expected height already, but we need to revisit
+                // If a style is used where me will also still grow in height, the position of the next element is
+                // not correct yet! We adjust for a minimum expected height already, but we need to revisit.
                 height = Math.max(marginBox.h, minimumHeight);
                 everyThingInplace = false;
               }

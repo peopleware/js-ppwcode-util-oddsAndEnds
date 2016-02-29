@@ -31,7 +31,6 @@ div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message {
   padding: 10px;
   text-align: center;
   text-shadow: rgba(244, 254, 247, 0.6) 0 -1px 0;
-  font-size: 0; /* initial */
   transition: all 1s ease-out;
 }
 
@@ -137,8 +136,7 @@ div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message .objectLabel {
 }
 
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed {
-  top: 54px;
-  font-size: 100%;
+  top: 5px;
 }
 
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-confirmation {
@@ -176,14 +174,13 @@ div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_Ne
   opacity: 1;
 }
 
-div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-notification.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed,
-div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-advise.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed,
-div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-warning.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed {
-  font-size: 110%;
-}
+/*div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-notification.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed,*/
+/*div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-advise.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed,*/
+/*div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-level-warning.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed {*/
+  /*font-size: 110%;*/
+/*}*/
 
 div.ppwcode-util-oddsAndEnds_ui_NewsFlash-message.ppwcode-util-oddsAndEnds_ui_NewsFlash-displayed.ppwcode-util-oddsAndEnds_ui_NewsFlash-end {
-  transition: all 2s ease-in;
+  transition: all 1s ease-in;
   opacity: 0;
-  font-size: 0;
 }
