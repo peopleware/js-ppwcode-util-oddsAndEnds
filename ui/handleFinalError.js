@@ -136,8 +136,12 @@ define(["dojo/_base/declare", "../js", "dojo/i18n!./nls/handleFinalError", "ppwc
         }
         apologies = "";
       }
-      alert(apologies + messages["reload"]);
-      document.location.reload(true);
+      var reload = confirm(apologies + messages["reload"]);
+      if (reload) {
+        document.location.reload(true);
+      }
+      // we would like to close the window, but the browser doesn't allow this
+      // IDEA redirect to "save" page; see possibly http://stackoverflow.com/questions/1369450/sending-user-to-their-browsers-home-page-using-javascript
     }
 
     return handleFinalError;

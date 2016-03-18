@@ -15,8 +15,7 @@
  */
 
 define({
-  apologies: "Une situation imprévue se est produite. Veuillez nous excuser, mais votre dernières modifications " +
-             "ne sont pas enregistrés.",
+  apologies: "Une situation imprévue se est produite. Veuillez nous excuser.",
   retry:     "Est-ce que vous voulez essayer à nouveau?",
   reload:    "Recharger la page, et essayez à nouveau.\n" +
              "Si le problème persiste, vous pouvez nous contacter."

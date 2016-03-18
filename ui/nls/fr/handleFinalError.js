@@ -15,8 +15,7 @@
  */
 
 define({
-  apologies: "Er heeft zich een onverwachte situatie voorgedaan. " +
-             "We verontschuldigen ons, maar uw laatste wijzigingen zijn niet opgeslagen.",
+  apologies: "Er heeft zich een onverwachte situatie voorgedaan. Onze excuses.",
   retry:     "Wil u opnieuw proberen?",
   reload:    "Herlaad de pagina, en probeer opnieuw.\n" +
              "Indien de fout zich blijft herhalen, kan u ons contacteren."
