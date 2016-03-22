@@ -15,8 +15,8 @@
  */
 
 define({
-  apologies: "Er heeft zich een onverwachte situatie voorgedaan. Onze excuses.",
-  retry:     "Wil u opnieuw proberen?",
-  reload:    "Herlaad de pagina, en probeer opnieuw.\n" +
-             "Indien de fout zich blijft herhalen, kan u ons contacteren."
+  apologies: "Une situation imprévue se est produite. Veuillez nous excuser.",
+  retry:     "Est-ce que vous voulez essayer à nouveau?",
+  reload:    "Recharger la page, et essayez à nouveau.\n" +
+             "Si le problème persiste, vous pouvez nous contacter."
 });
