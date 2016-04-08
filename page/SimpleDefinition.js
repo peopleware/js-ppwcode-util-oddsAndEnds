@@ -14,8 +14,8 @@
  limitations under the License.
  */
 
-define(["dojo/_base/declare", "./Definition", "module"],
-  function(declare, Definition, module) {
+define(["dojo/_base/declare", "./Definition", "dojo/_base/config", "module"],
+  function(declare, Definition, config, module) {
 
     var SimpleDefinition = declare([Definition], {
       // summary:
@@ -32,7 +32,8 @@ define(["dojo/_base/declare", "./Definition", "module"],
       constructor: function(kwargs) {
         if (kwargs) {
           this.name = this.removeDiacritics(kwargs.name);
-          this.href = kwargs.href;
+          var configureHrefOverride = config.pageDefinitions && config.pageDefinitions[this.name];
+          this.href = configureHrefOverride || kwargs.href;
         }
       },
 
