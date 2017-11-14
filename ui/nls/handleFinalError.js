@@ -16,7 +16,7 @@
 
 define({
   root: {
-    apologies: "An unexpected situation has occured. We apologize",
+    apologies: "An unexpected situation has occured. We apologize.",
     retry:     "Do you want to try again?",
     reload:    "Reload the page, and try again.\n" +
                "If the issue persists, you can contact us."
