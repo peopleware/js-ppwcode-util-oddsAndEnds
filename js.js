@@ -76,12 +76,12 @@ define([],
       //   Like keys, but for the entire prototype chain. The array starts with the properties
       //   of Object.prototype, and works down the chain.
 
-      return getPrototypeChain(obj).reduceRight(
+      return nub(getPrototypeChain(obj).reduceRight(
         function(acc, proto) {
-          return nub(acc.concat(Object.keys(proto)));
+          return acc.concat(Object.keys(proto));
         },
         []
-      );
+      ));
     }
 
     function isInt(/*Number*/ n) {
