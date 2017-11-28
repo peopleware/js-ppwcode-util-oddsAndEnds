@@ -53,8 +53,8 @@ limitations under the License.
 
 #preloader.dissolved {
   opacity: 0;
-  transform: skewx(90deg) rotate(-90deg);
-  /* NOTE background-size animation does not work nicely */
+  /* NOTE background-size animation does not work nicely; transform removed to try to work around stop-rendering-bug
+          since Chrome 58 */
 }
 
 @-webkit-keyframes spin {
