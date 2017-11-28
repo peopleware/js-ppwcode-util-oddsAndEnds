@@ -60,9 +60,24 @@ define(["dojo/dom", "dojo/query", "dojo/dom-class", "dojo/dom-construct", "dojo/
         "transitionend",
         function() {
           logger.debug("transition done; destroying preloader");
-          domConstruct.destroy("preloader");
-          logger.debug("Preloader gone. Ready for operation.");
-          deferred.resolve(preloaderId);
+          var preloader = dom.byId(preloaderId);
+          if (!preloader) {
+            /* We get 3 events (font-size, opacity and transform). font-size is unexpected. In general we cannot know
+               how many events we will get, so we will react to the first one. */
+            logger.debug("Preloader already gone. NOP.");
+            return;
+          }
+          setTimeout(
+            function() {
+              domConstruct.destroy("preloader");
+              logger.debug("Preloader gone. Ready for operation.");
+              deferred.resolve(preloaderId);
+            },
+            1034
+            /* NOTE The wait is necessary, because visually it is clear that the transition event comes too soon. We
+                    see a jolt. By waiting a while, the dissolve is complete before we yank the preloader element away.
+                    This also means user interaction is impossible for 1 more second. */
+          )
         },
         true
       );
