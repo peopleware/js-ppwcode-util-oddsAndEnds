@@ -19,7 +19,9 @@ function logFunction(level) {
   return function(msg) {
     if (this._logger[enabledName]()) {
       var message = typeof msg === "function" ? msg() : msg;
-      this._logger[level](message);
+      var args = Array.prototype.slice.call(arguments, 1)
+      args.unshift(message)
+      this._logger[level].apply(this._logger, args)
     }
   }
   return;
