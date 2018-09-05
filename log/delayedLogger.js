@@ -23,8 +23,7 @@ function logFunction(level) {
       args.unshift(message)
       this._logger[level].apply(this._logger, args)
     }
-  }
-  return;
+  };
 }
 
 define(["./main", "module"],
