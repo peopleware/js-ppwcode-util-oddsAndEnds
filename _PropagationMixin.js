@@ -189,7 +189,7 @@ define(["dojo/_base/declare", "dojo/Stateful", "./js", "module", "ppwcode-util-o
       //   is the value with which PROPERTY_NAME is `set`. If it is an object, it can have
       //   an optional `map` function. In that case, the value set on the propagation target
       //   is `map(value, this)`. If it is an object, it can have an optional `exec` property.
-      //   If this is try, the path should resolve to a void function, which is then executed
+      //   If this is true, the path should resolve to a void function, which is then executed
       //   in the context of the last context, with the mapped value and this as argument:
       //   | lastContext.lastContext[lastName](map(value, this), this))
       //
