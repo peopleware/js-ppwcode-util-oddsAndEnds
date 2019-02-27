@@ -339,6 +339,35 @@ define([],
       return result.join("/");
     }
 
+    function deepEqual(one, other, visited) {
+      var v = visited || [];
+      if (v.indexOf(one) >= 0) {
+        throw new Error("deepEqual does not support cyclic structures");
+      }
+      if (one === other) {
+        return true;
+      }
+      if (!one || !other) {
+        return false;
+      }
+      var oneType = typeOf(one);
+      if (oneType !== typeOf(other)) {
+        return false;
+      }
+      v.push(one);
+      if (oneType === "array") {
+        return one.every(function(e, index) {
+          return other.length > index && deepEqual(e, other[index], v);
+        });
+      }
+      if (oneType === "object") {
+        return Object.keys(one).every(function(key) {
+          return deepEqual(one[key], other[key], v);
+        })
+      }
+      return false
+    }
+
     var js = {
       // summary:
       //   Methods to aid with the JavaScript language.
@@ -359,7 +388,8 @@ define([],
       randomInt: randomInt,
       randomInts: randomInts,
       haveSameElements: haveSameElements,
-      compactPath: compactPath
+      compactPath: compactPath,
+      deepEqual: deepEqual
     };
 
     return js;
