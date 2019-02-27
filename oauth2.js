@@ -101,7 +101,7 @@ define(["crypto-js/sha256", "crypto-js/enc-base64", "./jwt"], function(sha256, e
    * @param {number=} sBefore
    * @returns {boolean}
    */
-  function isValidId(jwt, sBefore) {
+  function isValidId(id, sBefore) {
     return jwt.isValid(id, sBefore) &&
            id.token_use === "id" &&
            typeof id.email === "string" &&
