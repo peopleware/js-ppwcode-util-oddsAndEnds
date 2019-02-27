@@ -80,7 +80,7 @@ define([], function() {
            typeof jwt.sub === "string" &&
            typeof jwt.exp === "number" &&
            typeof jwt.iat === "number" &&
-           jwt.isLaterThenNow(jwt.exp, 60);
+           isLaterThenNow(jwt.exp, sBefore);
   }
 
   return {
