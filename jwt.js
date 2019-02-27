@@ -46,8 +46,46 @@ define([], function() {
     return JSON.parse(json);
   }
 
+  /**
+   * Is the time expressed by `sSinceEpoch` in seconds-since-epoch-at-UTC strictly later than `sBefore` seconds before
+   * now?
+   *
+   * Times in JWT tokens (`iat`, `exp`, …) are expressed in seconds-since-epoch-at-UTC. In JavaScript, times are
+   * expressed as _milli_seconds-since-epoch-at-UTC.
+   *
+   * @param {number=} sSinceEpoch
+   * @param {number=} sBefore
+   * @returns {boolean}
+   */
+  function isLaterThenNow(sSinceEpoch, sBefore) {
+    return sSinceEpoch && ((sSinceEpoch * 1000) - Date.now() > ((sBefore || 0) * 1000));
+  }
+
+  /**
+   * @typedef {Object} Jwt
+   * @property {string} sub
+   * @property {number} exp
+   * @property {number} iat
+   */
+
+  /**
+   * Is `jwt` a valid JWT payload object, at the `sBefore` seconds before now?
+   *
+   * @param {Jwt} jwt
+   * @param {number=} sBefore
+   * @returns {boolean}
+   */
+  function isValid(jwt, sBefore) {
+    return jwt &&
+           typeof jwt.sub === "string" &&
+           typeof jwt.exp === "number" &&
+           typeof jwt.iat === "number" &&
+           jwt.isLaterThenNow(jwt.exp, 60);
+  }
 
   return {
-    payload: payload
+    payload: payload,
+    isLaterThenNow: isLaterThenNow,
+    isValid: isValid
   };
 });
